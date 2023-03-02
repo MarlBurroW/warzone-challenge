@@ -14,17 +14,23 @@ export function computePlayerScoreFromBacklog(player, games) {
   player.requiredBalanceToUpgrade = 2;
   player.level = 1;
 
+  // Sort games by createdDate asc to compute in the right order
+
   games = games.sort((a, b) => {
     return a.createdDate - b.createdDate;
   });
 
+  // Iterate over games
+
   for (let i = 0; i < games.length; i++) {
     const game = games[i];
+
+    // Check if player has played in this game, and only compute score if so
 
     if (game.scores.hasOwnProperty(player._id)) {
       playerKills = game.scores[player._id];
 
-      // Variables
+      // Retreiving player data from previous iteration
 
       let newBalance = player.balance + playerKills - player.requiredKills;
       let newLastGameKills = playerKills;
