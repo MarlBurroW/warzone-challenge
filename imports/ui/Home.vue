@@ -67,10 +67,37 @@
 
             <span class="text-2xl font-bold">{{ player.lastGameKills }}</span>
           </div> -->
+
+          <div
+            class="lex flex-col bg-fuchsia-400 p-2 rounded-lg flex-col flex mb-5"
+          >
+            <span class="mb-3 font-bold">Last/Current session stats</span>
+            <span
+              >Game played:
+              <strong>{{
+                numeral(currentSessionStats[player._id].totalGames).format("0")
+              }}</strong></span
+            >
+
+            <span
+              >Total kill::
+              <strong>{{
+                numeral(currentSessionStats[player._id].totalKill).format("0")
+              }}</strong></span
+            >
+            <span class="mb-3"
+              >Avg kills/game:
+              <strong>{{
+                numeral(currentSessionStats[player._id].averageKill).format(
+                  "0,0.00"
+                )
+              }}</strong></span
+            >
+          </div>
           <div
             class="lex flex-col bg-purple-400 p-2 rounded-lg flex-col flex mb-5"
           >
-            <span class="mb-3 font-bold">Statistics</span>
+            <span class="mb-3 font-bold">Global stats</span>
             <span
               >Game played:
               <strong>{{
@@ -91,6 +118,7 @@
               }}</strong></span
             >
           </div>
+
           <button
             class="bg-red-500 text-white flex items-center justify-center px-5 py-2 rounded-md hover:bg-red-300 transition-all"
             @click="deletePlayer(player._id)"
@@ -421,6 +449,47 @@ export default {
 
       return playersStats;
     },
+
+    currentSessionStats() {
+      const stats = {};
+
+      if (this.currentSession) {
+        for (let i = 0; i < this.players.length; i++) {
+          const player = this.players[i];
+
+          stats[player._id] = {
+            totalKill: 0,
+            totalGames: 0,
+            averageKill: 0,
+          };
+
+          const playedGames = this.currentSession
+            .filter((game) =>
+              game.scores.map((s) => s.playerId).includes(player._id)
+            )
+            .filter(
+              (game) =>
+                game.scores.find((s) => s.playerId == player._id).score !== null
+            );
+
+          stats[player._id].totalGames = playedGames.length;
+          stats[player._id].totalKill = playedGames
+            .map(
+              (game) => game.scores.find((s) => s.playerId === player._id).score
+            )
+            .reduce((a, b) => a + b, 0);
+          stats[player._id].averageKill =
+            stats[player._id].totalKill / stats[player._id].totalGames;
+        }
+      }
+
+      return stats;
+    },
+
+    currentSession() {
+      return this.groupedComputedGames[0] ? this.groupedComputedGames[0] : null;
+    },
+
     groupedComputedGames() {
       // return computedGames grouped by sessionId in an array
 
@@ -508,6 +577,7 @@ export default {
 
   methods: {
     numeral,
+
     getSessionTotalKills(session, player) {
       let totalKills = 0;
 
