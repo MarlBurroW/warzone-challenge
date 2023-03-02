@@ -1,17 +1,23 @@
 <template>
-  <div class="bg-blue-300 p-5 rounded-md">
+  <div class="bg-[#181107] p-5 rounded-md">
+
+    <div class="flex justify-center p-5">
+      <img class="justify-center" src="https://www.zupimages.net/up/23/09/hybm.png">
+    </div>
     <h1 class="text-center mb-10 text-5xl font-bold text-white">
       WARZONE CHALLENGE
     </h1>
 
-    <div class="bg-blue-200 p-5 rounded-md mb-5">
+
+
+    <div class="bg-[#EEEEEE] p-5 rounded-md mb-5">
       <h1 class="font-bold text-3xl mb-10 text-center">Players</h1>
 
       <div class="flex w-full justify-center">
         <div
           key="player._id"
           v-for="player in players"
-          class="bg-blue-300 relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
+          class="bg-[#24281E] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
           <div class="w-[100px] absolute -top-12 right-5">
             <img class="" :src="getLevelLogo(player.level)" />
