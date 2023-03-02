@@ -147,7 +147,7 @@
         <thead>
           <th class="w-96">
             <div
-              class="bg-purple-300 uppercase text-center text-white p-2 rounded-lg font-bold"
+              class="bg-purple-500 uppercase text-center text-white p-2 rounded-lg font-bold"
             >
               Date
             </div>
@@ -168,7 +168,7 @@
           </th>
           <th class="w-40">
             <div
-              class="bg-purple-300 uppercase text-center text-white p-2 rounded-lg font-bold"
+              class="bg-purple-500 uppercase text-center text-white p-2 rounded-lg font-bold"
             >
               Actions
             </div>
@@ -180,11 +180,25 @@
             :key="sessionIndex"
           >
             <tr>
-              <td class="text-center" colspan="7">
+              <td>
+                <div
+                  class="bg-teal-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+                >
+                  -
+                </div>
+              </td>
+              <td class="text-center" :colspan="players.length">
                 <div
                   class="bg-teal-400 uppercase text-center text-white p-2 rounded-lg font-bold"
                 >
                   Session {{ groupedComputedGames.length - sessionIndex }}
+                </div>
+              </td>
+              <td colspan="2">
+                <div
+                  class="bg-teal-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+                >
+                  -
                 </div>
               </td>
             </tr>
@@ -192,7 +206,7 @@
             <tr>
               <td>
                 <div
-                  class="bg-teal-400 text-center text-white p-2 rounded-lg font-bold"
+                  class="bg-teal-500 text-center text-white p-2 rounded-lg font-bold"
                 >
                   Session total
                 </div>
@@ -206,14 +220,14 @@
               </td>
               <td>
                 <div
-                  class="bg-teal-400 text-center text-xl text-white p-2 rounded-lg font-bold"
+                  class="bg-teal-500 text-center text-xl text-white p-2 rounded-lg font-bold"
                 >
                   {{ getSessionTotalKills(session) }}
                 </div>
               </td>
               <td>
                 <div
-                  class="bg-teal-400 text-center text-white p-2 rounded-lg font-bold"
+                  class="bg-teal-500 text-center text-white p-2 rounded-lg font-bold"
                 >
                   -
                 </div>
