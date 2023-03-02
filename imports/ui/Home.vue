@@ -149,20 +149,25 @@
           <th class="text-left" v-for="player in players" :key="player._id">
             {{ player.nickname }}
           </th>
+          <th>Total</th>
           <th class="w-40">Actions</th>
         </thead>
         <tbody>
-          <template v-for="(game, index) in computedGames" :key="game._id">
-            <tr v-if="game.sessionId !== computedGames[index - 1]?.sessionId">
-              <td class="text-center" colspan="6">
+          <template
+            v-for="(session, sessionIndex) in groupedComputedGames"
+            :key="sessionIndex"
+          >
+            <tr>
+              <td class="text-center" colspan="7">
                 <div
                   class="bg-teal-400 uppercase text-center text-white p-2 rounded-lg font-bold"
                 >
-                  Session {{ game.sessionId }}
+                  Session {{ groupedComputedGames.length - sessionIndex }}
                 </div>
               </td>
             </tr>
-            <tr>
+
+            <tr v-for="(game, index) in session" :key="game._id">
               <td class="text-center">
                 <div
                   class="bg-blue-400 text-center text-white p-2 flex rounded-lg items-center"
@@ -257,6 +262,16 @@
                 </div>
               </td>
               <td>
+                <div
+                  class="bg-blue-400 text-center font-bold text-white p-2 rounded-lg text-2xl"
+                >
+                  {{
+                    game.scores.map((s) => s.score).reduce((a, b) => a + b, 0)
+                  }}
+                </div>
+              </td>
+
+              <td>
                 <button
                   class="bg-red-500 px-5 py-2 flex items-center rounded-md text-white hover:bg-blue-200 transition-all w-full"
                   @click="deleteGame(game._id)"
@@ -266,6 +281,9 @@
                 </button>
               </td>
             </tr>
+          </template>
+
+          <template v-for="(game, index) in computedGames" :key="game._id">
           </template>
         </tbody>
       </table>
@@ -288,6 +306,7 @@ import Games from "../api/collections/Games";
 import Players from "../api/collections/Players";
 import moment from "moment";
 import numeral from "numeral";
+import _ from "lodash";
 
 // load a
 // switch between locales
@@ -337,6 +356,19 @@ export default {
       }
 
       return playersStats;
+    },
+    groupedComputedGames() {
+      // return computedGames grouped by sessionId in an array
+
+      const groupedGames = _.groupBy(this.computedGames, "sessionId");
+
+      const groupedGamesArray = [];
+
+      for (let key in groupedGames) {
+        groupedGamesArray.push(groupedGames[key]);
+      }
+
+      return groupedGamesArray.reverse();
     },
 
     computedGames() {
