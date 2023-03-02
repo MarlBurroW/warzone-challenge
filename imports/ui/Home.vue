@@ -188,7 +188,7 @@
                     "
                   >
                     <div
-                      class="inline"
+                      class="inline text-xl"
                       v-if="!editedCells[game._id + '-' + score.playerId]"
                     >
                       {{ score ? score.score : "-" }}
