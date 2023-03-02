@@ -1,7 +1,7 @@
 import { check } from "meteor/check";
 import Games from "../collections/Games.js";
 import Players from "../collections/Players.js";
-import { computePlayerScoreFromBacklog } from "../utils.js";
+import { computePlayerScoreFromBacklog, computeGames } from "../utils.js";
 
 function updatePlayerScores() {
   // Fetch players
@@ -28,12 +28,14 @@ Meteor.methods({
     });
 
     updatePlayerScores();
+    computeGames();
 
     return gameCreated;
   },
   deleteGame(id) {
     Games.remove(id);
     updatePlayerScores();
+    computeGames();
   },
 
   updateGameScore(gameId, playerId, score) {
@@ -49,6 +51,7 @@ Meteor.methods({
       },
     });
     updatePlayerScores();
+    computeGames();
   },
 });
 console.log("Game methods registered");

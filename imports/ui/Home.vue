@@ -5,7 +5,7 @@
     </h1>
 
     <div class="bg-blue-200 p-5 rounded-md mb-5">
-      <h1 class="font-bold text-xl mb-5">Players</h1>
+      <h1 class="font-bold text-3xl mb-10 text-center">Players</h1>
 
       <div class="flex w-full justify-center">
         <div
@@ -31,27 +31,29 @@
           </div>
           <div class="flex gap-2 mb-5 w-full">
             <div class="flex flex-col bg-orange-400 p-2 rounded-lg flex-1">
-              <span>Required kills per game</span>
+              <span class="mb-3">Required kills per game</span>
 
               <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
             </div>
 
             <div class="flex flex-col bg-pink-400 p-2 rounded-lg flex-1">
-              <span>Required balance to level up</span>
+              <span class="mb-3">Required balance to level up</span>
 
-              <div class="flex justify-center">
-                <span class="text-4xl font-bold mr-2">{{
+              <div class="flex justify-center items-center">
+                <span class="text-4xl font-bold mr-5">{{
                   player.requiredBalanceToUpgrade
                 }}</span>
 
-                <img class="w-10" :src="getLevelLogo(player.level + 1)" />
+                <img class="w-8" :src="getLevelLogo(player.level + 1)" />
               </div>
             </div>
           </div>
 
           <div class="flex gap-2 mb-5 w-full">
             <div class="flex flex-col bg-teal-500 p-2 rounded-lg flex-1">
-              <span>Kill(s) needed to level up in the next game</span>
+              <span class="mb-3"
+                >Kill(s) needed to level up in the next game</span
+              >
 
               <span class="text-4xl font-bold">{{
                 player.requiredBalanceToUpgrade -
@@ -68,6 +70,7 @@
           <div
             class="lex flex-col bg-purple-400 p-2 rounded-lg flex-col flex mb-5"
           >
+            <span class="mb-3 font-bold">Statistics</span>
             <span
               >Game played:
               <strong>{{
@@ -110,7 +113,7 @@
       </form>
     </div>
     <div class="bg-blue-200 p-5 rounded-md">
-      <h1 class="font-bold text-xl mb-5">Games backlog</h1>
+      <h1 class="font-bold text-3xl mb-10 text-center">Games backlog</h1>
       <form
         class="flex flex-col items-center bg-blue-100 p-5 mb-5"
         @submit.prevent="addGame"
@@ -145,96 +148,120 @@
           <th class="w-xs">Actions</th>
         </thead>
         <tbody>
-          <tr v-for="game in computedGames" :key="game._id">
-            <td class="text-center">
-              {{ game.date }}
-            </td>
-            <td v-for="(score, index) in game.scores" :key="index" class="p-1">
-              <div
-                class="bg-blue-300 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
+          <template v-for="(game, index) in computedGames" :key="game._id">
+            <tr v-if="game.sessionId !== computedGames[index - 1]?.sessionId">
+              <td class="text-center" colspan="6">
+                <div
+                  class="bg-teal-400 uppercase text-center text-white p-2 rounded-lg font-bold"
+                >
+                  Session {{ game.sessionId }}
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="text-center">
+                <div
+                  class="bg-blue-400 text-center text-white p-2 flex rounded-lg items-center"
+                >
+                  <ClockIcon
+                    class="h-6 w-6 text-white-300 cursor-pointer mr-3"
+                  ></ClockIcon>
+                  {{ game.date }}
+                </div>
+              </td>
+              <td
+                v-for="(score, index) in game.scores"
+                :key="index"
+                class="p-1"
               >
                 <div
-                  v-if="
-                    (score && score.score != null) ||
-                    editedCells[game._id + '-' + score.playerId]
-                  "
+                  class="bg-blue-300 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
                 >
                   <div
-                    class="inline"
-                    v-if="!editedCells[game._id + '-' + score.playerId]"
+                    v-if="
+                      (score && score.score != null) ||
+                      editedCells[game._id + '-' + score.playerId]
+                    "
                   >
-                    {{ score ? score.score : "-" }}
-                    <span v-if="score && score.playerId == game.bestPlayerId"
-                      >👑</span
+                    <div
+                      class="inline"
+                      v-if="!editedCells[game._id + '-' + score.playerId]"
                     >
+                      {{ score ? score.score : "-" }}
+                      <span v-if="score && score.playerId == game.bestPlayerId"
+                        >👑</span
+                      >
 
-                    <span v-if="score">{{ getHotIndicator(score.score) }}</span>
-                  </div>
-                  <div v-else>
-                    <form
-                      @submit.prevent="
-                        updateScore(
-                          game._id,
-                          score.playerId,
-                          editedValues[game._id + '-' + score.playerId]
-                        )
-                      "
-                      class="flex items-center"
-                    >
-                      <input
-                        class="bg-blue-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
-                        type="number"
-                        :value="score.score"
-                        :ref="game._id + '-' + score.playerId"
-                        @input="
-                          editedValues[game._id + '-' + score.playerId] =
-                            $event.target.value
-                        "
-                      />
-                      <XCircleIcon
-                        @click="
-                          editedCells[game._id + '-' + score.playerId] = false
-                        "
-                        class="h-8 w-8 text-red-300 cursor-pointer"
-                      />
-                      <CheckCircleIcon
-                        @click="
+                      <span v-if="score">{{
+                        getHotIndicator(score.score)
+                      }}</span>
+                    </div>
+                    <div v-else>
+                      <form
+                        @submit.prevent="
                           updateScore(
                             game._id,
                             score.playerId,
                             editedValues[game._id + '-' + score.playerId]
                           )
                         "
-                        class="h-8 w-8 text-green-300 cursor-pointer"
-                      />
-                    </form>
+                        class="flex items-center"
+                      >
+                        <input
+                          class="bg-blue-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
+                          type="number"
+                          :value="score.score"
+                          :ref="game._id + '-' + score.playerId"
+                          @input="
+                            editedValues[game._id + '-' + score.playerId] =
+                              $event.target.value
+                          "
+                        />
+                        <XCircleIcon
+                          @click="
+                            editedCells[game._id + '-' + score.playerId] = false
+                          "
+                          class="h-8 w-8 text-red-300 cursor-pointer"
+                        />
+                        <CheckCircleIcon
+                          @click="
+                            updateScore(
+                              game._id,
+                              score.playerId,
+                              editedValues[game._id + '-' + score.playerId]
+                            )
+                          "
+                          class="h-8 w-8 text-green-300 cursor-pointer"
+                        />
+                      </form>
+                    </div>
                   </div>
-                </div>
-                <div v-else>Not played</div>
-                <PencilIcon
-                  v-if="!editedCells[game._id + '-' + score.playerId]"
-                  @click="
-                    ($event) => {
-                      focusInput(game._id + '-' + score.playerId);
+                  <div v-else>Not played</div>
+                  <PencilIcon
+                    v-if="!editedCells[game._id + '-' + score.playerId]"
+                    @click="
+                      ($event) => {
+                        focusInput(game._id + '-' + score.playerId);
 
-                      editedCells[game._id + '-' + score.playerId] = true;
-                      editedValues[game._id + '-' + score.playerId] =
-                        score.score;
-                    }
-                  "
-                  class="h-6 w-6 text-blue-500 cursor-pointer"
-                />
-              </div>
-            </td>
-            <td class="w-xs">
-              <button
-                class="bg-blue-400 px-5 py-2 rounded-md text-white hover:bg-blue-200 transition-all w-full"
-                @click="deleteGame(game._id)"
-              >
-                Supprimer
-              </button>
-            </td>
-          </tr>
+                        editedCells[game._id + '-' + score.playerId] = true;
+                        editedValues[game._id + '-' + score.playerId] =
+                          score.score;
+                      }
+                    "
+                    class="h-6 w-6 text-blue-500 cursor-pointer"
+                  />
+                </div>
+              </td>
+              <td class="w-xs">
+                <button
+                  class="bg-blue-400 px-5 py-2 rounded-md text-white hover:bg-blue-200 transition-all w-full"
+                  @click="deleteGame(game._id)"
+                >
+                  Supprimer
+                </button>
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>
@@ -246,6 +273,7 @@ import {
   PencilIcon,
   CheckCircleIcon,
   XCircleIcon,
+  ClockIcon,
 } from "@heroicons/vue/24/solid";
 </script>
 
@@ -313,6 +341,7 @@ export default {
 
         const computedGame = {
           _id: game._id,
+          sessionId: game.sessionId,
           scores: [],
           date:
             moment(game.createdAt).format("DD/MM/YYYY HH:mm") +

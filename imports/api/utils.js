@@ -1,9 +1,48 @@
 import Players from "./collections/Players.js";
-// Constants
+import Games from "./collections/Games.js";
+import moment from "moment";
 
-const UPGRADE_FACTOR = 0.5;
+export function computeGames() {
+  let games = Games.find().fetch();
+
+  let sessionCounter = 1;
+
+  // Sort games by createdDate asc to compute in the right order
+
+  games = games.sort((a, b) => {
+    return a.createdAt - b.createdAt;
+  });
+
+  for (let i = 0; i < games.length; i++) {
+    const game = games[i];
+
+    const currentGameDate = moment(game.createdAt);
+
+    const previousGame = games[i - 1];
+
+    if (previousGame) {
+      const previousGameDate = moment(previousGame.createdAt);
+
+      const diff = currentGameDate.diff(previousGameDate, "minutes");
+
+      if (diff >= 60) {
+        sessionCounter = sessionCounter + 1;
+      }
+    }
+
+    Games.update(game._id, {
+      $set: {
+        sessionId: sessionCounter,
+      },
+    });
+  }
+}
 
 export function computePlayerScoreFromBacklog(player, games) {
+  // Constants
+
+  const UPGRADE_FACTOR = 0.5;
+
   // Order games by createdDate asc
 
   // Reset player attributes
@@ -20,7 +59,7 @@ export function computePlayerScoreFromBacklog(player, games) {
   // Sort games by createdDate asc to compute in the right order
 
   games = games.sort((a, b) => {
-    return a.createdDate - b.createdDate;
+    return a.createdAt - b.createdAt;
   });
 
   // Iterate over games
