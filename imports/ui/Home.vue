@@ -11,8 +11,11 @@
         <div
           key="player._id"
           v-for="player in players"
-          class="bg-blue-300 p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
+          class="bg-blue-300 relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
+          <div class="w-[100px] absolute -top-12 right-5">
+            <img class="" :src="getLevelLogo(player.level)" />
+          </div>
           <span class="text-3xl mb-3 font-black">{{ player.nickname }}</span>
 
           <div class="flex flex-col mb-5">
@@ -24,9 +27,6 @@
                 }`"
                 >{{ player.balance }}</span
               >
-              <div class="w-[100px]">
-                <img :src="getLevelLogo(player.level)" />
-              </div>
             </div>
           </div>
           <div class="flex gap-2 mb-5 w-full">
