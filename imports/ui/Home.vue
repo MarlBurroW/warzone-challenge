@@ -462,7 +462,7 @@ export default {
             totalGames: 0,
             averageKill: 0,
           };
-          console.log(this.currentSession);
+
           const playedGames = this.currentSession
             .filter((game) =>
               game.scores.map((s) => s.playerId).includes(player._id)
@@ -472,7 +472,6 @@ export default {
                 game.scores.find((s) => s.playerId == player._id).score !== null
             );
 
-          console.log(playedGames);
           stats[player._id].totalGames = playedGames.length;
           stats[player._id].totalKill = playedGames
             .map(
