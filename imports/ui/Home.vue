@@ -122,13 +122,13 @@
         class="flex flex-col items-center bg-blue-100 p-5 mb-5"
         @submit.prevent="addGame"
       >
-        <div class="flex justify-between mb-5 gap-2 text-center">
-          <div key="player._id" v-for="player in players">
-            <div class="font-bold">{{ player.nickname }}</div>
+        <div class="flex mb-5 gap-2 text-center w-full">
+          <div class="w-full" key="player._id" v-for="player in players">
+            <div class="font-bold mb-2">{{ player.nickname }}</div>
             <input
-              class="px-5 py-2 rounded-md ring-blue-600 focus:ring-1"
+              class="px-5 py-5 text-xl font-bold w-full text-center rounded-md ring-blue-600 focus:ring-1"
               type="number"
-              placeholder="Kill(s)"
+              placeholder="Kills (Leave empty if not played)"
               v-model="gameScore[player._id]"
             />
           </div>
@@ -281,9 +281,6 @@
                 </button>
               </td>
             </tr>
-          </template>
-
-          <template v-for="(game, index) in computedGames" :key="game._id">
           </template>
         </tbody>
       </table>
