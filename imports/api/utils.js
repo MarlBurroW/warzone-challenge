@@ -51,7 +51,7 @@ export function computePlayerScoreFromBacklog(player, games) {
   player.lastGameKills = 0;
   player.requiredKills = 1;
   player.requiredBalanceToUpgrade = 2;
-  player.level = 1;
+  player.level = 0;
   player.totalKills = 0;
   player.avgKills = 0;
   player.gamesPlayed = 0;
@@ -135,8 +135,10 @@ export function computePlayerScoreFromBacklog(player, games) {
         newLevel = 3;
       } else if (newRequiredKills <= 5) {
         newLevel = 4;
-      } else {
+      }else if (newRequiredKills <= 6) {
         newLevel = 5;
+      } else {
+        newLevel = 6;
       }
 
       player.balance = newBalance;
