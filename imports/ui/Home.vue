@@ -71,7 +71,7 @@
           <div
             class="lex flex-col bg-fuchsia-400 p-2 rounded-lg flex-col flex mb-5"
           >
-            <span class="mb-3 font-bold">Last/Current session stats</span>
+            <span class="mb-3 font-bold">Latest/Current session stats</span>
             <span
               >Game played:
               <strong>{{
