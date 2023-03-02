@@ -91,7 +91,11 @@
               }}</strong></span
             >
           </div>
-          <button class="text-red-600 mb-3" @click="deletePlayer(player._id)">
+          <button
+            class="bg-red-500 text-white flex items-center justify-center px-5 py-2 rounded-md hover:bg-red-300 transition-all"
+            @click="deletePlayer(player._id)"
+          >
+            <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
             Supprimer
           </button>
         </div>
@@ -145,7 +149,7 @@
           <th class="text-left" v-for="player in players" :key="player._id">
             {{ player.nickname }}
           </th>
-          <th class="w-xs">Actions</th>
+          <th class="w-40">Actions</th>
         </thead>
         <tbody>
           <template v-for="(game, index) in computedGames" :key="game._id">
@@ -252,11 +256,12 @@
                   />
                 </div>
               </td>
-              <td class="w-xs">
+              <td>
                 <button
-                  class="bg-blue-400 px-5 py-2 rounded-md text-white hover:bg-blue-200 transition-all w-full"
+                  class="bg-red-500 px-5 py-2 flex items-center rounded-md text-white hover:bg-blue-200 transition-all w-full"
                   @click="deleteGame(game._id)"
                 >
+                  <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
                   Supprimer
                 </button>
               </td>
@@ -274,6 +279,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ClockIcon,
+  XMarkIcon,
 } from "@heroicons/vue/24/solid";
 </script>
 
