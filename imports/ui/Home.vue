@@ -37,10 +37,26 @@
             </div>
 
             <div class="flex flex-col bg-pink-400 p-2 rounded-lg flex-1">
-              <span>Required balance to levelup</span>
+              <span>Required balance to level up</span>
+
+              <div class="flex justify-center">
+                <span class="text-4xl font-bold mr-2">{{
+                  player.requiredBalanceToUpgrade
+                }}</span>
+
+                <img class="w-10" :src="getLevelLogo(player.level + 1)" />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-2 mb-5 w-full">
+            <div class="flex flex-col bg-teal-500 p-2 rounded-lg flex-1">
+              <span>Kill(s) needed to level up in the next game</span>
 
               <span class="text-4xl font-bold">{{
-                player.requiredBalanceToUpgrade
+                player.requiredBalanceToUpgrade -
+                player.balance +
+                player.requiredKills
               }}</span>
             </div>
           </div>
