@@ -70,16 +70,22 @@
           >
             <span
               >Game played:
-              <strong>{{ stats[player._id]?.totalGames }}</strong></span
+              <strong>{{
+                numeral(player.gamesPlayed).format("0")
+              }}</strong></span
             >
 
             <span
               >Total kill:
-              <strong>{{ stats[player._id]?.totalKill }}</strong></span
+              <strong>{{
+                numeral(player.totalKills).format("0")
+              }}</strong></span
             >
             <span class="mb-3"
               >Avg kills/game:
-              <strong>{{ stats[player._id]?.averageKill }}</strong></span
+              <strong>{{
+                numeral(player.avgKills).format("0,0.00")
+              }}</strong></span
             >
           </div>
           <button class="text-red-600 mb-3" @click="deletePlayer(player._id)">
@@ -133,7 +139,7 @@
       <table class="w-full table-fixed">
         <thead>
           <th class="w-96">Date</th>
-          <th v-for="player in players" :key="player._id">
+          <th class="text-left" v-for="player in players" :key="player._id">
             {{ player.nickname }}
           </th>
           <th class="w-xs">Actions</th>
@@ -145,17 +151,79 @@
             </td>
             <td v-for="(score, index) in game.scores" :key="index" class="p-1">
               <div
-                class="bg-blue-300 text-center text-white p-2 rounded-lg font-bold"
+                class="bg-blue-300 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
               >
-                {{ score ? score.score : "-" }}
-
-                <div class="inline">
-                  <span v-if="score && score.playerId == game.bestPlayerId"
-                    >👑</span
+                <div
+                  v-if="
+                    (score && score.score != null) ||
+                    editedCells[game._id + '-' + score.playerId]
+                  "
+                >
+                  <div
+                    class="inline"
+                    v-if="!editedCells[game._id + '-' + score.playerId]"
                   >
+                    {{ score ? score.score : "-" }}
+                    <span v-if="score && score.playerId == game.bestPlayerId"
+                      >👑</span
+                    >
 
-                  <span v-if="score">{{ getHotIndicator(score.score) }}</span>
+                    <span v-if="score">{{ getHotIndicator(score.score) }}</span>
+                  </div>
+                  <div v-else>
+                    <form
+                      @submit.prevent="
+                        updateScore(
+                          game._id,
+                          score.playerId,
+                          editedValues[game._id + '-' + score.playerId]
+                        )
+                      "
+                      class="flex items-center"
+                    >
+                      <input
+                        class="bg-blue-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
+                        type="number"
+                        :value="score.score"
+                        :ref="game._id + '-' + score.playerId"
+                        @input="
+                          editedValues[game._id + '-' + score.playerId] =
+                            $event.target.value
+                        "
+                      />
+                      <XCircleIcon
+                        @click="
+                          editedCells[game._id + '-' + score.playerId] = false
+                        "
+                        class="h-8 w-8 text-red-300 cursor-pointer"
+                      />
+                      <CheckCircleIcon
+                        @click="
+                          updateScore(
+                            game._id,
+                            score.playerId,
+                            editedValues[game._id + '-' + score.playerId]
+                          )
+                        "
+                        class="h-8 w-8 text-green-300 cursor-pointer"
+                      />
+                    </form>
+                  </div>
                 </div>
+                <div v-else>Not played</div>
+                <PencilIcon
+                  v-if="!editedCells[game._id + '-' + score.playerId]"
+                  @click="
+                    ($event) => {
+                      focusInput(game._id + '-' + score.playerId);
+
+                      editedCells[game._id + '-' + score.playerId] = true;
+                      editedValues[game._id + '-' + score.playerId] =
+                        score.score;
+                    }
+                  "
+                  class="h-6 w-6 text-blue-500 cursor-pointer"
+                />
               </div>
             </td>
             <td class="w-xs">
@@ -173,6 +241,14 @@
   </div>
 </template>
 
+<script setup>
+import {
+  PencilIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+} from "@heroicons/vue/24/solid";
+</script>
+
 <script>
 import Games from "../api/collections/Games";
 import Players from "../api/collections/Players";
@@ -187,6 +263,8 @@ export default {
     return {
       nickname: "",
       gameScore: {},
+      editedCells: {},
+      editedValues: {},
     };
   },
 
@@ -248,16 +326,13 @@ export default {
 
         for (let j = 0; j < this.players.length; j++) {
           const player = this.players[j];
-
-          if (game.scores.hasOwnProperty(player._id)) {
-            computedGame.scores.push({
-              score: game.scores[player._id],
-              nickname: player.nickname,
-              playerId: player._id,
-            });
-          } else {
-            computedGame.scores.push(null);
-          }
+          computedGame.scores.push({
+            score: game.scores.hasOwnProperty(player._id)
+              ? game.scores[player._id]
+              : null,
+            nickname: player.nickname,
+            playerId: player._id,
+          });
 
           // Find the best player of the game by comparing all scores and add this id to the game object
 
@@ -299,7 +374,23 @@ export default {
       return Players.find({});
     },
   },
+
   methods: {
+    numeral,
+    focusInput(ref) {
+      setTimeout(() => {
+        // Focus and select the input
+        this.$refs[ref][0].focus();
+        this.$refs[ref][0].select();
+      }, 1);
+    },
+    updateScore(gameId, playerId, score) {
+      console.log(gameId, playerId, score);
+      Meteor.call("updateGameScore", gameId, playerId, score);
+
+      this.editedCells[gameId + "-" + playerId] = false;
+    },
+
     getHotIndicator(kills) {
       if (kills >= 12) return "🔥🔥🔥";
       if (kills >= 9) return "🔥🔥";
@@ -311,6 +402,7 @@ export default {
 
     getLevelLogo(level) {
       const map = {
+        0: "https://i.ibb.co/7jBTZ0B/image.png",
         1: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d45ura4-0e4d9cc8-a76d-4300-8708-166143429f8a.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ1dXJhNC0wZTRkOWNjOC1hNzZkLTQzMDAtODcwOC0xNjYxNDM0MjlmOGEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.S9y6fk1WxMUBX_SQWXtQ8SwjCmCtNa3rjzat8UfkqHQ",
         2: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d45us0s-3b0c0b21-dc76-4f6a-a219-91fdd9c39320.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ1dXMwcy0zYjBjMGIyMS1kYzc2LTRmNmEtYTIxOS05MWZkZDljMzkzMjAucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.NmrL-u0gJQsXx65G7LgQpqLlRR2gquSa-3r8dwPionU",
         3: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d45utzv-ba626858-bd36-4afb-a797-eb534bdbea05.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ1dXR6di1iYTYyNjg1OC1iZDM2LTRhZmItYTc5Ny1lYjUzNGJkYmVhMDUucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.13cEdl7joHu4UPxrRLuQcK5xlzsl0Wd8WFqDQ6Onn0Q",
@@ -323,7 +415,7 @@ export default {
     },
 
     deleteGame(gameId) {
-      // if (!confirm("Êtes-vous sûr de vouloir supprimer cette partie ?")) return;
+      if (!confirm("Êtes-vous sûr de vouloir supprimer cette partie ?")) return;
       Meteor.call("deleteGame", gameId);
     },
     deletePlayer(playerId) {

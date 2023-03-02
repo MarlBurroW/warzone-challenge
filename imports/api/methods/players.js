@@ -11,7 +11,10 @@ Meteor.methods({
       requiredBalanceToUpgrade: 2,
       balance: 0,
       lastGameKills: 0,
-      level: 1,
+      level: 0,
+      totalKills: 0,
+      avgKills: 0,
+      gamesPlayed: 0,
     });
   },
 

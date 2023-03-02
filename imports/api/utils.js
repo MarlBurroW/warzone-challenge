@@ -13,6 +13,9 @@ export function computePlayerScoreFromBacklog(player, games) {
   player.requiredKills = 1;
   player.requiredBalanceToUpgrade = 2;
   player.level = 1;
+  player.totalKills = 0;
+  player.avgKills = 0;
+  player.gamesPlayed = 0;
 
   // Sort games by createdDate asc to compute in the right order
 
@@ -27,10 +30,13 @@ export function computePlayerScoreFromBacklog(player, games) {
 
     // Check if player has played in this game, and only compute score if so
 
-    if (game.scores.hasOwnProperty(player._id)) {
-      playerKills = game.scores[player._id];
+    if (
+      game.scores.hasOwnProperty(player._id) &&
+      game.scores[player._id] !== null
+    ) {
+      let playerKills = game.scores[player._id];
 
-      // Retreiving player data from previous iteration
+      // Retreiving player data from previous iteration to work on it
 
       let newBalance = player.balance + playerKills - player.requiredKills;
       let newLastGameKills = playerKills;
@@ -38,6 +44,16 @@ export function computePlayerScoreFromBacklog(player, games) {
       let newRequiredBalanceToUpgrade = player.requiredBalanceToUpgrade;
       let newLevel = player.level;
       let levelChanged = false;
+
+      // Update some player attributes directly
+
+      player.gamesPlayed = player.gamesPlayed + 1;
+      player.totalKills = player.totalKills + playerKills;
+      if (player.gamesPlayed > 0) {
+        player.avgKills = player.totalKills / player.gamesPlayed;
+      } else {
+        player.avgKills = 0;
+      }
 
       // Check level up/down
 
@@ -70,7 +86,9 @@ export function computePlayerScoreFromBacklog(player, games) {
 
       // Compute level
 
-      if (newRequiredKills <= 2) {
+      if (newRequiredKills <= 1) {
+        newLevel = 0;
+      } else if (newRequiredKills <= 2) {
         newLevel = 1;
       } else if (newRequiredKills <= 3) {
         newLevel = 2;
@@ -78,10 +96,8 @@ export function computePlayerScoreFromBacklog(player, games) {
         newLevel = 3;
       } else if (newRequiredKills <= 5) {
         newLevel = 4;
-      } else if (newRequiredKills <= 6) {
-        newLevel = 5;
       } else {
-        newLevel = 6;
+        newLevel = 5;
       }
 
       player.balance = newBalance;
@@ -99,6 +115,9 @@ export function computePlayerScoreFromBacklog(player, games) {
       requiredKills: player.requiredKills,
       requiredBalanceToUpgrade: player.requiredBalanceToUpgrade,
       level: player.level,
+      gamesPlayed: player.gamesPlayed,
+      totalKills: player.totalKills,
+      avgKills: player.avgKills,
     },
   });
 }

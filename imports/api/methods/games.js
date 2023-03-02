@@ -1,5 +1,5 @@
 import { check } from "meteor/check";
-import Game from "../collections/Games.js";
+import Games from "../collections/Games.js";
 import Players from "../collections/Players.js";
 import { computePlayerScoreFromBacklog } from "../utils.js";
 
@@ -10,7 +10,7 @@ function updatePlayerScores() {
 
   // Fetch updated game backlog
 
-  const games = Game.find().fetch();
+  const games = Games.find().fetch();
 
   // Compute player scores from backlog
 
@@ -22,7 +22,7 @@ function updatePlayerScores() {
 
 Meteor.methods({
   createGame(scores) {
-    const gameCreated = Game.insert({
+    const gameCreated = Games.insert({
       createdAt: new Date(),
       scores,
     });
@@ -32,7 +32,22 @@ Meteor.methods({
     return gameCreated;
   },
   deleteGame(id) {
-    Game.remove(id);
+    Games.remove(id);
+    updatePlayerScores();
+  },
+
+  updateGameScore(gameId, playerId, score) {
+    let newScore = parseInt(score);
+
+    if (isNaN(newScore)) {
+      newScore = null;
+    }
+
+    Games.update(gameId, {
+      $set: {
+        [`scores.${playerId}`]: newScore,
+      },
+    });
     updatePlayerScores();
   },
 });
