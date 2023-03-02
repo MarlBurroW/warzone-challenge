@@ -145,12 +145,34 @@
 
       <table class="w-full table-fixed">
         <thead>
-          <th class="w-96">Date</th>
-          <th class="text-left" v-for="player in players" :key="player._id">
-            {{ player.nickname }}
+          <th class="w-96">
+            <div
+              class="bg-purple-300 uppercase text-center text-white p-2 rounded-lg font-bold"
+            >
+              Date
+            </div>
           </th>
-          <th>Total</th>
-          <th class="w-40">Actions</th>
+          <th class="text-left" v-for="player in players" :key="player._id">
+            <div
+              class="bg-purple-400 uppercase text-center text-white p-2 rounded-lg font-bold"
+            >
+              {{ player.nickname }}
+            </div>
+          </th>
+          <th>
+            <div
+              class="bg-purple-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+            >
+              Total
+            </div>
+          </th>
+          <th class="w-40">
+            <div
+              class="bg-purple-300 uppercase text-center text-white p-2 rounded-lg font-bold"
+            >
+              Actions
+            </div>
+          </th>
         </thead>
         <tbody>
           <template
@@ -163,6 +185,37 @@
                   class="bg-teal-400 uppercase text-center text-white p-2 rounded-lg font-bold"
                 >
                   Session {{ groupedComputedGames.length - sessionIndex }}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div
+                  class="bg-teal-400 text-center text-white p-2 rounded-lg font-bold"
+                >
+                  Session total
+                </div>
+              </td>
+              <td v-for="player in players" :key="player._id">
+                <div
+                  class="bg-teal-400 text-center text-white p-2 rounded-lg font-bold"
+                >
+                  {{ getSessionTotalKills(session, player) }}
+                </div>
+              </td>
+              <td>
+                <div
+                  class="bg-teal-400 text-center text-xl text-white p-2 rounded-lg font-bold"
+                >
+                  {{ getSessionTotalKills(session) }}
+                </div>
+              </td>
+              <td>
+                <div
+                  class="bg-teal-400 text-center text-white p-2 rounded-lg font-bold"
+                >
+                  -
                 </div>
               </td>
             </tr>
@@ -441,6 +494,38 @@ export default {
 
   methods: {
     numeral,
+    getSessionTotalKills(session, player) {
+      let totalKills = 0;
+
+      if (player) {
+        for (let i = 0; i < session.length; i++) {
+          const game = session[i];
+
+          const playerScore = game.scores.find(
+            (s) => s.playerId === player._id
+          );
+
+          if (playerScore && playerScore.score) {
+            totalKills += playerScore.score;
+          }
+        }
+      } else {
+        for (let i = 0; i < session.length; i++) {
+          const game = session[i];
+
+          for (let j = 0; j < game.scores.length; j++) {
+            const score = game.scores[j];
+
+            if (score.score) {
+              totalKills += score.score;
+            }
+          }
+        }
+      }
+
+      return totalKills;
+    },
+
     focusInput(ref) {
       setTimeout(() => {
         // Focus and select the input
