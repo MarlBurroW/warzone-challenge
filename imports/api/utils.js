@@ -137,8 +137,10 @@ export function computePlayerScoreFromBacklog(player, games) {
         newLevel = 4;
       }else if (newRequiredKills <= 6) {
         newLevel = 5;
-      } else {
+      }else if (newRequiredKills <= 7) {
         newLevel = 6;
+      } else {
+        newLevel = 7;
       }
 
       player.balance = newBalance;
