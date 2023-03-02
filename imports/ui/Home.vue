@@ -1,23 +1,25 @@
 <template>
-  <div class="bg-[#181107] p-5 rounded-md">
-
+  <div class="bg-zinc-900 py-5">
     <div class="flex justify-center p-5">
-      <img class="justify-center" src="https://www.zupimages.net/up/23/09/hybm.png">
+      <img
+        class="justify-center"
+        src="https://www.zupimages.net/up/23/09/hybm.png"
+      />
     </div>
     <h1 class="text-center mb-10 text-5xl font-bold text-white">
       WARZONE CHALLENGE
     </h1>
 
-
-
-    <div class="bg-[#EEEEEE] p-5 rounded-md mb-5">
-      <h1 class="font-bold text-3xl mb-10 text-center">Players</h1>
+    <div class="bg-zinc-700 p-5 mb-5">
+      <h1 class="font-bold text-3xl mb-[50px] text-center text-white">
+        Players
+      </h1>
 
       <div class="flex w-full justify-center">
         <div
           key="player._id"
           v-for="player in players"
-          class="bg-[#24281E] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
+          class="bg-zinc-800 relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
           <div class="w-[100px] absolute -top-12 right-5">
             <img class="" :src="getLevelLogo(player.level)" />
@@ -36,13 +38,13 @@
             </div>
           </div>
           <div class="flex gap-2 mb-5 w-full">
-            <div class="flex flex-col bg-orange-400 p-2 rounded-lg flex-1">
+            <div class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1">
               <span class="mb-3">Required kills per game</span>
 
               <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
             </div>
 
-            <div class="flex flex-col bg-pink-400 p-2 rounded-lg flex-1">
+            <div class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1">
               <span class="mb-3">Required balance to level up</span>
 
               <div class="flex justify-center items-center">
@@ -56,7 +58,7 @@
           </div>
 
           <div class="flex gap-2 mb-5 w-full">
-            <div class="flex flex-col bg-teal-500 p-2 rounded-lg flex-1">
+            <div class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1">
               <span class="mb-3"
                 >Kill(s) needed to level up in the next game</span
               >
@@ -75,7 +77,7 @@
           </div> -->
 
           <div
-            class="lex flex-col bg-fuchsia-400 p-2 rounded-lg flex-col flex mb-5"
+            class="lex flex-col bg-zinc-700 p-2 rounded-lg flex-col flex mb-5"
           >
             <span class="mb-3 font-bold">Latest/Current session stats</span>
             <span
@@ -101,7 +103,7 @@
             >
           </div>
           <div
-            class="lex flex-col bg-purple-400 p-2 rounded-lg flex-col flex mb-5"
+            class="lex flex-col bg-zinc-700 p-2 rounded-lg flex-col flex mb-5"
           >
             <span class="mb-3 font-bold">Global stats</span>
             <span
@@ -136,7 +138,7 @@
       </div>
       <form @submit.prevent="addPlayer" class="flex w-full">
         <input
-          class="px-5 py-2 rounded-md mr-5 ring-blue-600 focus:ring-1 grow"
+          class="px-5 py-2 text-white bg-zinc-500 rounded-md mr-5 ring-blue-600 focus:ring-1 grow"
           type="text"
           v-model="nickname"
           placeholder="Nickname"
@@ -150,17 +152,19 @@
         </button>
       </form>
     </div>
-    <div class="bg-blue-200 p-5 rounded-md">
-      <h1 class="font-bold text-3xl mb-10 text-center">Games backlog</h1>
+    <div class="bg-zinc-700 p-5 rounded-md">
+      <h1 class="font-bold text-3xl mb-10 text-white text-center">
+        Games backlog
+      </h1>
       <form
-        class="flex flex-col items-center bg-blue-100 p-5 mb-5"
+        class="flex flex-col items-center bg-zinc-800 p-5 mb-5"
         @submit.prevent="addGame"
       >
         <div class="flex mb-5 gap-2 text-center w-full">
           <div class="w-full" key="player._id" v-for="player in players">
-            <div class="font-bold mb-2">{{ player.nickname }}</div>
+            <div class="font-bold mb-2 text-white">{{ player.nickname }}</div>
             <input
-              class="px-5 py-5 text-xl font-bold w-full text-center rounded-md ring-blue-600 focus:ring-1"
+              class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-blue-600 focus:ring-1"
               type="number"
               placeholder="Kills (Leave empty if not played)"
               v-model="gameScore[player._id]"
@@ -648,7 +652,7 @@ export default {
         4: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d45uqbc-1dc02a2c-781f-4924-a198-fde181d92580.png/v1/fill/w_900,h_1026,strp/platinum_league_icon_starcraft_by_corydbhs15_d45uqbc-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAyNiIsInBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ1dXFiYy0xZGMwMmEyYy03ODFmLTQ5MjQtYTE5OC1mZGUxODFkOTI1ODAucG5nIiwid2lkdGgiOiI8PTkwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.QysRMWLimjfROpT9HRXEQQ7xzTJ9xtOQ5ROaM35xQwU",
         5: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d464sdf-004cdad7-135c-44c4-b4e2-256ec8fb099f.png/v1/fill/w_900,h_1019,strp/diamond_league_icon_by_corydbhs15_d464sdf-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAxOSIsInBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ2NHNkZi0wMDRjZGFkNy0xMzVjLTQ0YzQtYjRlMi0yNTZlYzhmYjA5OWYucG5nIiwid2lkdGgiOiI8PTkwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.pzhUvckoJxV33MD037stOYqRwBNQoje72dOxATTyFDU",
         6: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d47nbzv-b59850d7-0589-40e1-8b6b-25f4dc6c2dc1.png/v1/fill/w_900,h_1026,strp/masters_league_icon_by_corydbhs15_d47nbzv-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAyNiIsInBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ3bmJ6di1iNTk4NTBkNy0wNTg5LTQwZTEtOGI2Yi0yNWY0ZGM2YzJkYzEucG5nIiwid2lkdGgiOiI8PTkwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.dAnURLWIxWeB5wNrFhDcbIVj4HE0tPy-aWh-_Geqxx8",
-        7: "https://www.zupimages.net/up/23/09/al8o.png"
+        7: "https://www.zupimages.net/up/23/09/al8o.png",
       };
 
       return map[level];
