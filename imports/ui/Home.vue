@@ -52,10 +52,23 @@
             <div
               class="flex flex-col bg-zinc-700 p-2 flex-1 rounded-md border-l-4 border-green-400"
             >
-              <span class="mb-3">Required balance to level up</span>
+              <span class="mb-3">Required balance to level down/up</span>
 
               <div class="flex justify-center items-center">
-                <span class="text-4xl font-bold mr-5">{{
+                <img
+                  v-if="player.level != 0"
+                  class="w-8 mr-2"
+                  :src="getLevelLogo(player.level - 1)"
+                />
+
+                <span v-if="player.level != 0" class="text-2xl font-bold">{{
+                  -player.requiredBalanceToUpgrade
+                }}</span
+                ><span class="text-2xl font-bold" v-if="player.level != 0"
+                  >&nbsp;/&nbsp;</span
+                >
+
+                <span class="text-2xl font-bold mr-2">{{
                   player.requiredBalanceToUpgrade
                 }}</span>
 
@@ -79,14 +92,9 @@
               }}</span>
             </div>
           </div>
-          <!-- <div class="flex flex-col">
-            <span>Last game kills</span>
-
-            <span class="text-2xl font-bold">{{ player.lastGameKills }}</span>
-          </div> -->
 
           <div
-            class="lex flex-col bg-zinc-600 p-2 rounded-lg flex-col flex mb-5"
+            class="lex flex-col bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex-col flex mb-5"
           >
             <span class="mb-3 font-bold">Latest/Current session stats</span>
             <span
@@ -112,7 +120,7 @@
             >
           </div>
           <div
-            class="lex flex-col bg-zinc-600 p-2 rounded-lg flex-col flex mb-5"
+            class="lex flex-col bg-zinc-600 p-2 border-l-4 border-indigo-400 rounded-lg flex-col flex mb-5"
           >
             <span class="mb-3 font-bold">Global stats</span>
             <span
@@ -135,33 +143,21 @@
               }}</strong></span
             >
           </div>
+          <div
+            class="lex flex-col bg-zinc-600 p-2 border-l-4 border-pink-400 rounded-lg flex-col flex mb-5"
+          >
+            <Bar
+              class="mb-3"
+              :options="chartOptions"
+              :data="playerChartData[player._id].avgKills"
+            />
 
-          <Bar
-            class="mb-3"
-            :options="{
-              animation: false,
-              scales: {
-                y: {
-                  ticks: { color: 'white', beginAtZero: true },
-                },
-                x: {
-                  ticks: { color: 'white', beginAtZero: true },
-                },
-              },
-              plugins: {
-                legend: {
-                  labels: {
-                    color: 'white',
-
-                    font: {
-                      size: 15,
-                    },
-                  },
-                },
-              },
-            }"
-            :data="playerChartData[player._id].avgKills"
-          />
+            <Bar
+              class="mb-3"
+              :options="chartOptions"
+              :data="playerChartData[player._id].latestSessionKills"
+            />
+          </div>
           <button
             class="bg-red-500 text-white flex items-center justify-center px-5 py-2 rounded-md hover:bg-red-300 transition-all"
             @click="deletePlayer(player._id)"
@@ -491,6 +487,28 @@ export default {
       gameScore: {},
       editedCells: {},
       editedValues: {},
+      chartOptions: {
+        animation: false,
+        scales: {
+          y: {
+            ticks: { color: "white", beginAtZero: true },
+          },
+          x: {
+            ticks: { color: "white", beginAtZero: true },
+          },
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: "white",
+
+              font: {
+                size: 15,
+              },
+            },
+          },
+        },
+      },
     };
   },
 
@@ -505,6 +523,18 @@ export default {
       for (let i = 0; i < this.players.length; i++) {
         const player = this.players[i];
 
+        const playerSessionsKills = sessions.map((s) => {
+          return s
+            .map((g) => {
+              const score = g.scores.find((s) => s.playerId == player._id);
+              return score ? score.score : 0;
+            })
+            .reverse();
+        });
+
+        const latestSessionKills =
+          playerSessionsKills[playerSessionsKills.length - 1];
+
         const playerStats = sessionsStats.map((s) => s[player._id]);
 
         options[player._id] = {
@@ -515,6 +545,17 @@ export default {
                 label: "Avg kills / game",
                 backgroundColor: "#60a5fa",
                 data: playerStats.map((s) => s.averageKill),
+              },
+            ],
+          },
+          latestSessionKills: {
+            labels: [...latestSessionKills.map((s, index) => index + 1)],
+            datasets: [
+              {
+                label: "Latest/current session kills / games",
+                backgroundColor: "#60a5fa",
+
+                data: latestSessionKills,
               },
             ],
           },
