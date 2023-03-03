@@ -1,19 +1,13 @@
-# Meteor + Vue3 + Vite
+# Warzone challenge
 
-This is a simple example of how to use Vue3 with Meteor.
+This is MDR
 
 ## How to use
 
 1. Clone this repo
-2. Run `meteor npm install`
-3. Run `meteor`
-4. Open `http://localhost:3000` in your browser
-
-## Libraries used
-
-- [Vue3](https://v3.vuejs.org/)
-- [Vite](https://vitejs.dev/)
-- [Vue Router](https://next.router.vuejs.org/)
-- [Meteor](https://www.meteor.com/)
-- [Vue Meteor Tracker](https://github.com/meteor-vue/vue-meteor-tracker)
-- [Tailwind CSS](https://tailwindcss.com/)
+2. Install meteor globally: `curl https://install.meteor.com/ | sh`
+3. In the project, Run `meteor npm install`
+4. Then Run `meteor` to start the app
+5. Remove the `server` property in vite.config.js
+6. Open `http://localhost:2345` in your browser
+7. Enjoy
