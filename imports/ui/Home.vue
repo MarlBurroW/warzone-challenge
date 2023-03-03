@@ -19,7 +19,7 @@
         <div
           key="player._id"
           v-for="player in players"
-          class="bg-zinc-800 relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
+          class="bg-zinc-800 border-t-4 border-green-400 w-[450px] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
           <div class="w-[100px] absolute -top-12 right-5">
             <img class="" :src="getLevelLogo(player.level)" />
@@ -38,13 +38,20 @@
             </div>
           </div>
           <div class="flex gap-2 mb-5 w-full">
-            <div class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1">
-              <span class="mb-3">Required kills per game</span>
+            <div
+              class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-blue-400"
+            >
+              <span class="mb-3"
+                >Required kills<br />
+                per game</span
+              >
 
               <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
             </div>
 
-            <div class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1">
+            <div
+              class="flex flex-col bg-zinc-700 p-2 flex-1 rounded-md border-l-4 border-green-400"
+            >
               <span class="mb-3">Required balance to level up</span>
 
               <div class="flex justify-center items-center">
@@ -58,7 +65,9 @@
           </div>
 
           <div class="flex gap-2 mb-5 w-full">
-            <div class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1">
+            <div
+              class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-purple-400"
+            >
               <span class="mb-3"
                 >Kill(s) needed to level up in the next game</span
               >
@@ -77,7 +86,7 @@
           </div> -->
 
           <div
-            class="lex flex-col bg-zinc-700 p-2 rounded-lg flex-col flex mb-5"
+            class="lex flex-col bg-zinc-600 p-2 rounded-lg flex-col flex mb-5"
           >
             <span class="mb-3 font-bold">Latest/Current session stats</span>
             <span
@@ -103,7 +112,7 @@
             >
           </div>
           <div
-            class="lex flex-col bg-zinc-700 p-2 rounded-lg flex-col flex mb-5"
+            class="lex flex-col bg-zinc-600 p-2 rounded-lg flex-col flex mb-5"
           >
             <span class="mb-3 font-bold">Global stats</span>
             <span
@@ -138,14 +147,14 @@
       </div>
       <form @submit.prevent="addPlayer" class="flex w-full">
         <input
-          class="px-5 py-2 text-white bg-zinc-500 rounded-md mr-5 ring-blue-600 focus:ring-1 grow"
+          class="px-5 py-2 text-white bg-zinc-500 rounded-md mr-5 ring-gray-600 focus:ring-1 grow"
           type="text"
           v-model="nickname"
           placeholder="Nickname"
         />
 
         <button
-          class="bg-blue-400 px-5 py-2 rounded-md text-white hover:bg-blue-200 transition-all"
+          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:bg-gray-200 transition-all"
           type="submit"
         >
           Add player
@@ -164,7 +173,7 @@
           <div class="w-full" key="player._id" v-for="player in players">
             <div class="font-bold mb-2 text-white">{{ player.nickname }}</div>
             <input
-              class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-blue-600 focus:ring-1"
+              class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
               type="number"
               placeholder="Kills (Leave empty if not played)"
               v-model="gameScore[player._id]"
@@ -173,7 +182,7 @@
         </div>
         <div class="w-full flex justify-center">
           <button
-            class="bg-blue-400 px-5 py-2 rounded-md text-white hover:bg-blue-200 transition-all"
+            class="bg-gray-400 px-5 py-2 rounded-md text-white hover:bg-gray-200 transition-all"
             type="submit"
           >
             Add game
@@ -185,28 +194,28 @@
         <thead>
           <th class="w-96">
             <div
-              class="bg-purple-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+              class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
             >
               Date
             </div>
           </th>
           <th class="text-left" v-for="player in players" :key="player._id">
             <div
-              class="bg-purple-400 uppercase text-center text-white p-2 rounded-lg font-bold"
+              class="bg-green-400 uppercase text-center text-white p-2 rounded-lg font-bold"
             >
               {{ player.nickname }}
             </div>
           </th>
           <th>
             <div
-              class="bg-purple-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+              class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
             >
               Total
             </div>
           </th>
           <th class="w-40">
             <div
-              class="bg-purple-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+              class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
             >
               Actions
             </div>
@@ -220,21 +229,24 @@
             <tr>
               <td>
                 <div
-                  class="bg-teal-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+                  class="bg-zinc-500 uppercase text-center text-white p-2 rounded-lg font-bold"
                 >
                   -
                 </div>
               </td>
               <td class="text-center" :colspan="players.length">
                 <div
-                  class="bg-teal-400 uppercase text-center text-white p-2 rounded-lg font-bold"
+                  class="bg-zinc-400 uppercase text-center text-white p-2 rounded-lg font-bold"
                 >
-                  Session {{ groupedComputedGames.length - sessionIndex }}
+                  Session {{ groupedComputedGames.length - sessionIndex }} ({{
+                    session.length
+                  }}
+                  games)
                 </div>
               </td>
               <td colspan="2">
                 <div
-                  class="bg-teal-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+                  class="bg-zinc-500 uppercase text-center text-white p-2 rounded-lg font-bold"
                 >
                   -
                 </div>
@@ -244,28 +256,28 @@
             <tr>
               <td>
                 <div
-                  class="bg-teal-500 text-center text-white p-2 rounded-lg font-bold"
+                  class="bg-zinc-500 text-center text-white p-2 rounded-lg font-bold"
                 >
                   Session total
                 </div>
               </td>
               <td v-for="player in players" :key="player._id">
                 <div
-                  class="bg-teal-400 text-center text-white p-2 rounded-lg font-bold"
+                  class="bg-zinc-400 text-center text-white p-2 rounded-lg font-bold"
                 >
                   {{ getSessionTotalKills(session, player) }}
                 </div>
               </td>
               <td>
                 <div
-                  class="bg-teal-500 text-center text-xl text-white p-2 rounded-lg font-bold"
+                  class="bg-zinc-500 text-center text-xl text-white p-2 rounded-lg font-bold"
                 >
                   {{ getSessionTotalKills(session) }}
                 </div>
               </td>
               <td>
                 <div
-                  class="bg-teal-500 text-center text-white p-2 rounded-lg font-bold"
+                  class="bg-zinc-500 text-center text-white p-2 rounded-lg font-bold"
                 >
                   -
                 </div>
@@ -275,7 +287,7 @@
             <tr v-for="(game, index) in session" :key="game._id">
               <td class="text-center">
                 <div
-                  class="bg-blue-400 text-center text-white p-2 flex rounded-lg items-center"
+                  class="bg-gray-700 text-center text-white p-2 flex rounded-lg items-center"
                 >
                   <ClockIcon
                     class="h-6 w-6 text-white-300 cursor-pointer mr-3"
@@ -289,7 +301,7 @@
                 class="p-1"
               >
                 <div
-                  class="bg-blue-300 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
+                  class="bg-gray-600 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
                 >
                   <div
                     v-if="
@@ -322,7 +334,7 @@
                         class="flex items-center"
                       >
                         <input
-                          class="bg-blue-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
+                          class="bg-gray-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
                           type="number"
                           :value="score.score"
                           :ref="game._id + '-' + score.playerId"
@@ -362,13 +374,13 @@
                           score.score;
                       }
                     "
-                    class="h-6 w-6 text-blue-500 cursor-pointer"
+                    class="h-6 w-6 text-white cursor-pointer"
                   />
                 </div>
               </td>
               <td>
                 <div
-                  class="bg-blue-400 text-center font-bold text-white p-2 rounded-lg text-2xl"
+                  class="bg-gray-700 text-center font-bold text-white p-2 rounded-lg text-2xl"
                 >
                   {{
                     game.scores.map((s) => s.score).reduce((a, b) => a + b, 0)
@@ -378,7 +390,7 @@
 
               <td>
                 <button
-                  class="bg-red-500 px-5 py-2 flex items-center rounded-md text-white hover:bg-blue-200 transition-all w-full"
+                  class="bg-red-500 px-5 py-2 flex items-center rounded-md text-white hover:bg-gray-200 transition-all w-full"
                   @click="deleteGame(game._id)"
                 >
                   <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
@@ -645,14 +657,14 @@ export default {
 
     getLevelLogo(level) {
       const map = {
-        0: "https://i.ibb.co/7jBTZ0B/image.png",
-        1: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d45ura4-0e4d9cc8-a76d-4300-8708-166143429f8a.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ1dXJhNC0wZTRkOWNjOC1hNzZkLTQzMDAtODcwOC0xNjYxNDM0MjlmOGEucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.S9y6fk1WxMUBX_SQWXtQ8SwjCmCtNa3rjzat8UfkqHQ",
-        2: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d45us0s-3b0c0b21-dc76-4f6a-a219-91fdd9c39320.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ1dXMwcy0zYjBjMGIyMS1kYzc2LTRmNmEtYTIxOS05MWZkZDljMzkzMjAucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.NmrL-u0gJQsXx65G7LgQpqLlRR2gquSa-3r8dwPionU",
-        3: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d45utzv-ba626858-bd36-4afb-a797-eb534bdbea05.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ1dXR6di1iYTYyNjg1OC1iZDM2LTRhZmItYTc5Ny1lYjUzNGJkYmVhMDUucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.13cEdl7joHu4UPxrRLuQcK5xlzsl0Wd8WFqDQ6Onn0Q",
-        4: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d45uqbc-1dc02a2c-781f-4924-a198-fde181d92580.png/v1/fill/w_900,h_1026,strp/platinum_league_icon_starcraft_by_corydbhs15_d45uqbc-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAyNiIsInBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ1dXFiYy0xZGMwMmEyYy03ODFmLTQ5MjQtYTE5OC1mZGUxODFkOTI1ODAucG5nIiwid2lkdGgiOiI8PTkwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.QysRMWLimjfROpT9HRXEQQ7xzTJ9xtOQ5ROaM35xQwU",
-        5: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d464sdf-004cdad7-135c-44c4-b4e2-256ec8fb099f.png/v1/fill/w_900,h_1019,strp/diamond_league_icon_by_corydbhs15_d464sdf-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAxOSIsInBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ2NHNkZi0wMDRjZGFkNy0xMzVjLTQ0YzQtYjRlMi0yNTZlYzhmYjA5OWYucG5nIiwid2lkdGgiOiI8PTkwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.pzhUvckoJxV33MD037stOYqRwBNQoje72dOxATTyFDU",
-        6: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d930a4ef-ff7f-46db-86ab-fdc00e874e22/d47nbzv-b59850d7-0589-40e1-8b6b-25f4dc6c2dc1.png/v1/fill/w_900,h_1026,strp/masters_league_icon_by_corydbhs15_d47nbzv-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAyNiIsInBhdGgiOiJcL2ZcL2Q5MzBhNGVmLWZmN2YtNDZkYi04NmFiLWZkYzAwZTg3NGUyMlwvZDQ3bmJ6di1iNTk4NTBkNy0wNTg5LTQwZTEtOGI2Yi0yNWY0ZGM2YzJkYzEucG5nIiwid2lkdGgiOiI8PTkwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.dAnURLWIxWeB5wNrFhDcbIVj4HE0tPy-aWh-_Geqxx8",
-        7: "https://www.zupimages.net/up/23/09/al8o.png",
+        0: "/images/vomit.png",
+        1: "/images/bronze.png",
+        2: "/images/silver.png",
+        3: "/images/gold.png",
+        4: "/images/platine.png",
+        5: "/images/diamond.png",
+        6: "/images/master.png",
+        7: "/images/gm.png",
       };
 
       return map[level];
