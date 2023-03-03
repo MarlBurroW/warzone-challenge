@@ -1,5 +1,42 @@
 <template>
-  <div>
+  <div class="p-5 py-10">
+    <h1 class="font-bold text-3xl mb-10 text-white text-center">Players</h1>
+
+    <div class="mx-auto">
+      <form
+        @submit.prevent="addPlayer"
+        class="flex w-full mb-10 mx-auto w-[400px]"
+      >
+        <input
+          class="px-5 py-2 text-white bg-zinc-500 rounded-md mr-5 ring-gray-600 focus:ring-1 grow"
+          type="text"
+          v-model="nickname"
+          placeholder="Nickname"
+        />
+
+        <button
+          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:bg-gray-200 transition-all"
+          type="submit"
+        >
+          Add player
+        </button>
+      </form>
+      <div class="w-full flex justify-center">
+        <div
+          class="text-white mx-2 bg-zinc-700 w-96 rounded-md p-5 mb-5 flex justify-between"
+          v-for="player in players"
+          :key="player._id"
+        >
+          <span>{{ player.nickname }}</span>
+
+          <XMarkIcon
+            @click="deletePlayer(player._id)"
+            class="h-8 w-8"
+          ></XMarkIcon>
+        </div>
+      </div>
+    </div>
+
     <h1 class="font-bold text-3xl mb-10 text-white text-center">
       Games backlog
     </h1>
@@ -28,36 +65,6 @@
       </div>
     </form>
     <table class="w-full table-fixed">
-      <thead>
-        <th class="w-96">
-          <div
-            class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
-          >
-            Date
-          </div>
-        </th>
-        <th class="text-left" v-for="player in players" :key="player._id">
-          <div
-            class="bg-green-400 uppercase text-center text-white p-2 rounded-lg font-bold"
-          >
-            {{ player.nickname }}
-          </div>
-        </th>
-        <th>
-          <div
-            class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
-          >
-            Total
-          </div>
-        </th>
-        <th class="w-40">
-          <div
-            class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
-          >
-            Actions
-          </div>
-        </th>
-      </thead>
       <tbody>
         <template
           v-for="(session, sessionIndex) in groupedComputedGames
@@ -91,7 +98,36 @@
               </div>
             </td>
           </tr>
-
+          <tr>
+            <th class="w-96">
+              <div
+                class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+              >
+                Date
+              </div>
+            </th>
+            <th class="text-left" v-for="player in players" :key="player._id">
+              <div
+                class="bg-green-400 uppercase text-center text-white p-2 rounded-lg font-bold"
+              >
+                {{ player.nickname }}
+              </div>
+            </th>
+            <th>
+              <div
+                class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+              >
+                Total
+              </div>
+            </th>
+            <th class="w-40">
+              <div
+                class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+              >
+                Actions
+              </div>
+            </th>
+          </tr>
           <tr>
             <td>
               <div
@@ -326,9 +362,23 @@ export default {
       Meteor.call("createGame", this.gameScore);
       this.gameScore = {};
     },
+    deletePlayer(playerId) {
+      if (!confirm("Êtes-vous sûr de vouloir supprimer ce joueur ?")) return;
+      this.gameScore = {};
+
+      Meteor.call("deletePlayer", playerId);
+    },
+
+    addPlayer(e) {
+      if (this.nickname.length < 1) return;
+      Meteor.call("createPlayer", this.nickname);
+
+      this.nickname = "";
+    },
   },
   data() {
     return {
+      nickname: "",
       gameScore: {},
       editedCells: {},
       editedValues: {},

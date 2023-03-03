@@ -42,7 +42,7 @@ export default {
           sessionId: game.sessionId,
           scores: [],
           date:
-            moment(game.createdAt).format("DD/MM/YYYY HH:mm") +
+            moment(game.createdAt).format("DD/MM HH:mm") +
             " (" +
             moment(game.createdAt).fromNow() +
             ")",

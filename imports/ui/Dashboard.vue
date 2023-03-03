@@ -141,30 +141,8 @@
             :data="playerChartData[player._id].latestSessionKills"
           />
         </div>
-        <button
-          class="bg-red-500 text-white flex items-center justify-center px-5 py-2 rounded-md hover:bg-red-300 transition-all"
-          @click="deletePlayer(player._id)"
-        >
-          <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
-          Supprimer
-        </button>
       </div>
     </div>
-    <form @submit.prevent="addPlayer" class="flex w-full">
-      <input
-        class="px-5 py-2 text-white bg-zinc-500 rounded-md mr-5 ring-gray-600 focus:ring-1 grow"
-        type="text"
-        v-model="nickname"
-        placeholder="Nickname"
-      />
-
-      <button
-        class="bg-gray-400 px-5 py-2 rounded-md text-white hover:bg-gray-200 transition-all"
-        type="submit"
-      >
-        Add player
-      </button>
-    </form>
   </div>
 </template>
 
@@ -207,8 +185,6 @@ export default {
   mixins: [dataMixin],
   data() {
     return {
-      nickname: "",
-
       chartOptions: {
         animation: true,
         scales: {
@@ -351,20 +327,6 @@ export default {
       };
 
       return map[level];
-    },
-
-    deletePlayer(playerId) {
-      if (!confirm("Êtes-vous sûr de vouloir supprimer ce joueur ?")) return;
-      this.gameScore = {};
-
-      Meteor.call("deletePlayer", playerId);
-    },
-
-    addPlayer(e) {
-      if (this.nickname.length < 1) return;
-      Meteor.call("createPlayer", this.nickname);
-
-      this.nickname = "";
     },
   },
 };
