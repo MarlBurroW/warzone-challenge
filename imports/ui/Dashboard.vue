@@ -119,13 +119,13 @@
           class="lex flex-col bg-zinc-600 p-2 border-l-4 border-pink-400 rounded-lg flex-col flex mb-5"
         >
           <Bar
-            class="mb-3"
+            class="mb-3 max-h-[200px]"
             :options="chartOptions"
             :data="playerChartData[player._id].avgKills"
           />
 
           <Bar
-            class="mb-3"
+            class="mb-3 max-h-[200px]"
             :options="chartOptions"
             :data="playerChartData[player._id].latestSessionKills"
           />
@@ -133,6 +133,35 @@
       </div>
     </div>
     <h1 class="font-bold text-3xl mb-[50px] text-center text-white">Graphs</h1>
+
+    <div class="flex w-1/2 mx-auto overflow-auto">
+      <Bar
+        class="mb-3 w-full h-[400px]"
+        :options="chartOptions"
+        :data="globalChartData.latestSessionKills"
+      />
+    </div>
+    <div class="flex w-1/2 mx-auto overflow-auto">
+      <Bar
+        class="mb-3 w-full h-[400px]"
+        :options="chartOptions"
+        :data="globalChartData.sessionsKills"
+      />
+    </div>
+    <div class="flex w-1/2 mx-auto overflow-auto">
+      <Bar
+        class="mb-3 w-full h-[400px]"
+        :options="chartOptions"
+        :data="globalChartData.playersSessionKills"
+      />
+    </div>
+    <div class="flex w-1/2 mx-auto overflow-auto">
+      <Bar
+        class="mb-3 w-full h-[400px]"
+        :options="chartOptions"
+        :data="globalChartData.playersCurrentSessionKills"
+      />
+    </div>
   </div>
 </template>
 
@@ -152,6 +181,7 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
+  Colors,
 } from "chart.js";
 
 ChartJS.register(
@@ -160,7 +190,8 @@ ChartJS.register(
   Legend,
   BarElement,
   CategoryScale,
-  LinearScale
+  LinearScale,
+  Colors
 );
 
 import moment from "moment";
@@ -171,11 +202,13 @@ import _ from "lodash";
 // switch between locales
 numeral.locale("fr");
 export default {
-  components: { Bar },
+  components: { Bar, Line },
   mixins: [dataMixin],
   data() {
     return {
       chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
         animation: true,
         scales: {
           y: {
@@ -203,6 +236,85 @@ export default {
   computed: {
     globalChartData() {
       const sessions = this.groupedComputedGames;
+
+      const latestSession =
+        sessions.length > 0 ? sessions[sessions.length - 1] : [];
+
+      const latestSessionKills = latestSession.map((g) => {
+        return g.scores.reduce((acc, s) => acc + s.score, 0);
+      });
+
+      const options = {
+        latestSessionKills: {
+          labels: [
+            ...latestSessionKills.map((s, index) => `Game ${index + 1}`),
+          ],
+          datasets: [
+            {
+              label: "Latest session team kills",
+              data: latestSessionKills,
+              backgroundColor: "rgba(25, 255, 25, 0.2)",
+              borderColor: "rgba(25, 255, 25, 1)",
+              borderWidth: 1,
+            },
+          ],
+        },
+        sessionsKills: {
+          labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
+          datasets: [
+            {
+              label: "Sessions team kills",
+              data: sessions.map((s) => {
+                return s
+                  .map((g) => {
+                    return g.scores.reduce((acc, s) => acc + s.score, 0);
+                  })
+                  .reduce((acc, s) => acc + s, 0);
+              }),
+              backgroundColor: "rgba(25, 255, 25, 0.2)",
+              borderColor: "rgba(25, 255, 25, 1)",
+              borderWidth: 1,
+            },
+          ],
+        },
+
+        playersSessionKills: {
+          labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
+          datasets: this.players.map((p) => {
+            return {
+              label: p.nickname,
+              data: sessions.map((s) => {
+                return s
+                  .map((g) => {
+                    const score = g.scores.find((s) => s.playerId == p._id);
+                    return score ? score.score : 0;
+                  })
+                  .reduce((acc, s) => acc + s, 0);
+              }),
+
+              borderWidth: 1,
+            };
+          }),
+        },
+        playersCurrentSessionKills: {
+          labels: [
+            ...latestSessionKills.map((s, index) => `Game ${index + 1}`),
+          ],
+          datasets: this.players.map((p) => {
+            return {
+              label: p.nickname,
+              data: latestSession.map((g) => {
+                const score = g.scores.find((s) => s.playerId == p._id);
+                return score ? score.score : 0;
+              }),
+
+              borderWidth: 1,
+            };
+          }),
+        },
+      };
+
+      return options;
     },
 
     playerChartData() {
@@ -244,8 +356,8 @@ export default {
             labels: [...latestSessionKills.map((s, index) => index + 1)],
             datasets: [
               {
-                label: "Latest/current session kills / games",
-                backgroundColor: "#60a5fa",
+                label: "Session kills / games",
+                backgroundColor: "#86efac",
 
                 data: latestSessionKills,
               },

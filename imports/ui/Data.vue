@@ -31,7 +31,7 @@
 
           <XMarkIcon
             @click="deletePlayer(player._id)"
-            class="h-8 w-8"
+            class="h-8 w-8 cursor-pointer"
           ></XMarkIcon>
         </div>
       </div>
@@ -87,7 +87,7 @@
                 games)
               </div>
             </td>
-            <td colspan="2">
+            <td colspan="3">
               <div
                 class="bg-zinc-500 uppercase text-center text-white p-2 rounded-lg font-bold"
               >
@@ -112,7 +112,7 @@
             </th>
             <th>
               <div
-                  class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+                class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
               >
                 Rank
               </div>
@@ -157,13 +157,9 @@
 
             <td>
               <div
-                  class="bg-zinc-500 text-center text-xl text-white p-2 rounded-lg font-bold"
+                class="bg-zinc-500 text-center text-xl text-white p-2 rounded-lg font-bold"
               >
-                {{
-                  numeral(
-                      getAverageSessionRank(session)
-                  ).format("0,0.00")
-                }}
+                {{ numeral(getAverageSessionRank(session)).format("0,0.00") }}
                 (avg)
               </div>
             </td>
@@ -279,71 +275,61 @@
             </td>
             <td>
               <div
-                  class="bg-gray-600 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
+                class="bg-gray-600 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
               >
                 <div
-                    v-if="
-                      (game && game.rank != null) ||
-                      editedCells[game._id + '-rank']
-                    "
+                  v-if="
+                    (game && game.rank != null) ||
+                    editedCells[game._id + '-rank']
+                  "
                 >
                   <div
-                      class="inline text-xl"
-                      v-if="!editedCells[game._id + '-rank']"
+                    class="inline text-xl"
+                    v-if="!editedCells[game._id + '-rank']"
                   >
                     {{ game.rank }}
                   </div>
                   <div v-else>
                     <form
-                        @submit.prevent="
-                          updateRank(
-                            game._id,
-                            editedValues[game._id + '-rank']
-                          )
-                        "
-                        class="flex items-center"
+                      @submit.prevent="
+                        updateRank(game._id, editedValues[game._id + '-rank'])
+                      "
+                      class="flex items-center"
                     >
                       <input
-                          class="bg-gray-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
-                          type="number"
-                          :value="game.rank"
-                          :ref="game._id + '-rank'"
-                          @input="
-                            editedValues[game._id + '-rank'] =
-                              $event.target.value
-                          "
+                        class="bg-gray-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
+                        type="number"
+                        :value="game.rank"
+                        :ref="game._id + '-rank'"
+                        @input="
+                          editedValues[game._id + '-rank'] = $event.target.value
+                        "
                       />
                       <XCircleIcon
-                          @click="
-                            editedCells[game._id + '-rank'] = false
-                          "
-                          class="h-8 w-8 text-red-300 cursor-pointer"
+                        @click="editedCells[game._id + '-rank'] = false"
+                        class="h-8 w-8 text-red-300 cursor-pointer"
                       />
                       <CheckCircleIcon
-                          @click="
-                            updateRank(
-                              game._id,
-                              editedValues[game._id + '-rank']
-                            )
-                          "
-                          class="h-8 w-8 text-green-300 cursor-pointer"
+                        @click="
+                          updateRank(game._id, editedValues[game._id + '-rank'])
+                        "
+                        class="h-8 w-8 text-green-300 cursor-pointer"
                       />
                     </form>
                   </div>
                 </div>
                 <div v-else>Not defined</div>
                 <PencilIcon
-                    v-if="!editedCells[game._id + '-rank']"
-                    @click="
-                      ($event) => {
-                        focusInput(game._id + '-rank');
+                  v-if="!editedCells[game._id + '-rank']"
+                  @click="
+                    ($event) => {
+                      focusInput(game._id + '-rank');
 
-                        editedCells[game._id + '-rank'] = true;
-                        editedValues[game._id + '-rank'] =
-                          game.rank;
-                      }
-                    "
-                    class="h-6 w-6 text-white cursor-pointer"
+                      editedCells[game._id + '-rank'] = true;
+                      editedValues[game._id + '-rank'] = game.rank;
+                    }
+                  "
+                  class="h-6 w-6 text-white cursor-pointer"
                 />
               </div>
             </td>
@@ -422,21 +408,20 @@ export default {
       return totalKills;
     },
     getAverageSessionRank(session) {
-      if(session && session.length > 0) {
+      if (session && session.length > 0) {
         let totalRank = 0;
         let notDefined = 0;
         for (let i = 0; i < session.length; i++) {
           const game = session[i];
-          if(game.rank){
+          if (game.rank) {
             console.log("game.rank", game.rank);
             totalRank += Number(game.rank);
-          }else{
+          } else {
             notDefined++;
           }
         }
         return totalRank / (session.length - notDefined);
       }
-
     },
     focusInput(ref) {
       setTimeout(() => {
