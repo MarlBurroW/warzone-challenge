@@ -50,7 +50,7 @@
           <div
             class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-blue-400"
           >
-            <span class="mb-3">Required kills per game</span>
+            <span class="mb-3">Required point(s) per game</span>
 
             <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
           </div>
@@ -58,7 +58,7 @@
             class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-purple-400"
           >
             <span class="mb-3"
-              >Kill(s) needed to level up in the next game</span
+              >Points(s) needed to level up in the next game</span
             >
 
             <span class="text-4xl font-bold">{{
