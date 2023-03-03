@@ -1,13 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "./Home.vue";
+import Data from "./Data.vue";
+import Dashboard from "./Dashboard.vue";
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Home,
+      name: "dasboard",
+      component: Dashboard,
+    },
+    {
+      path: "/data",
+      name: "data",
+      component: Data,
     },
   ],
 });
