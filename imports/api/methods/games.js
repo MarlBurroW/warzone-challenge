@@ -21,10 +21,11 @@ function updatePlayerScores() {
 }
 
 Meteor.methods({
-  createGame(scores) {
+  createGame(scores,rank) {
     const gameCreated = Games.insert({
       createdAt: new Date(),
       scores,
+      rank:null,
     });
 
     updatePlayerScores();
@@ -53,5 +54,17 @@ Meteor.methods({
     updatePlayerScores();
     computeGames();
   },
+
+  updateGameRank(gameId, rank) {
+    if(rank == 0){
+      rank = null;
+    }
+    Games.update(gameId, {
+      $set: {
+        rank: rank,
+      },
+    });
+    computeGames();
+  }
 });
 console.log("Game methods registered");
