@@ -70,51 +70,51 @@
         </div>
 
         <div
-          class="lex flex-col bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex-col flex mb-5"
+          class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
         >
-          <span class="mb-3 font-bold">Latest/Current session stats</span>
-          <span
-            >Game played:
-            <strong>{{
-              numeral(currentSessionStats[player._id].totalGames).format("0")
-            }}</strong></span
-          >
+          <div class="text-left">
+            <div class="mb-3 font-bold">Session stats</div>
+            <div>
+              Game played:
+              <strong>{{
+                numeral(currentSessionStats[player._id].totalGames).format("0")
+              }}</strong>
+            </div>
 
-          <span
-            >Total kill::
-            <strong>{{
-              numeral(currentSessionStats[player._id].totalKill).format("0")
-            }}</strong></span
-          >
-          <span class="mb-3"
-            >Avg kills/game:
-            <strong>{{
-              numeral(currentSessionStats[player._id].averageKill).format(
-                "0,0.00"
-              )
-            }}</strong></span
-          >
-        </div>
-        <div
-          class="lex flex-col bg-zinc-600 p-2 border-l-4 border-indigo-400 rounded-lg flex-col flex mb-5"
-        >
-          <span class="mb-3 font-bold">Global stats</span>
-          <span
-            >Game played:
-            <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong></span
-          >
+            <div>
+              Total kill::
+              <strong>{{
+                numeral(currentSessionStats[player._id].totalKill).format("0")
+              }}</strong>
+            </div>
+            <div class="mb-3">
+              Avg kills/game:
+              <strong>{{
+                numeral(currentSessionStats[player._id].averageKill).format(
+                  "0,0.00"
+                )
+              }}</strong>
+            </div>
+          </div>
 
-          <span
-            >Total kill:
-            <strong>{{ numeral(player.totalKills).format("0") }}</strong></span
-          >
-          <span class="mb-3"
-            >Avg kills/game:
-            <strong>{{
-              numeral(player.avgKills).format("0,0.00")
-            }}</strong></span
-          >
+          <div class="text-right">
+            <div class="mb-3 font-bold">Global stats</div>
+            <div>
+              Game played:
+              <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
+            </div>
+
+            <div>
+              Total kill:
+              <strong>{{ numeral(player.totalKills).format("0") }}</strong>
+            </div>
+            <div class="mb-3">
+              Avg kills/game:
+              <strong>{{ numeral(player.avgKills).format("0,0.00") }}</strong>
+            </div>
+          </div>
         </div>
+
         <div
           class="lex flex-col bg-zinc-600 p-2 border-l-4 border-pink-400 rounded-lg flex-col flex mb-5"
         >
@@ -201,6 +201,10 @@ export default {
   },
 
   computed: {
+    globalChartData() {
+      const sessions = this.groupedComputedGames;
+    },
+
     playerChartData() {
       const options = {};
 
