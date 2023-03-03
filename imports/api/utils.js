@@ -76,7 +76,16 @@ export function computePlayerScoreFromBacklog(player, games) {
       let playerKills = game.scores[player._id];
 
       // Retreiving player data from previous iteration to work on it
+      let bonus = 0;
+       if(game.rank == 1){
+         bonus = 3;
+       }else if(game.rank == 2){
+         bonus = 2;
+       }else if(game.rank == 3) {
+         bonus = 1
+       }
 
+      playerKills += bonus;
       let newBalance = player.balance + playerKills - player.requiredKills;
       let newLastGameKills = playerKills;
       let newRequiredKills = player.requiredKills;

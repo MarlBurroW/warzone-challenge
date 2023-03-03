@@ -64,6 +64,7 @@ Meteor.methods({
         rank: rank,
       },
     });
+    updatePlayerScores();
     computeGames();
   }
 });
