@@ -2,7 +2,7 @@
   <div class="p-5 py-10">
     <h1 class="font-bold text-3xl mb-10 text-white text-center">Players</h1>
 
-    <div class="mx-auto">
+    <div class="mx-auto mb-10">
       <form
         @submit.prevent="addPlayer"
         class="flex w-full mb-10 mx-auto w-[400px]"
@@ -15,7 +15,7 @@
         />
 
         <button
-          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:bg-gray-200 transition-all"
+          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:text-black hover:bg-gray-300 transition-all"
           type="submit"
         >
           Add player
@@ -40,10 +40,7 @@
     <h1 class="font-bold text-3xl mb-10 text-white text-center">
       Games backlog
     </h1>
-    <form
-      class="flex flex-col items-center bg-zinc-800 p-5 mb-5"
-      @submit.prevent="addGame"
-    >
+    <form class="flex flex-col items-center p-5 mb-5" @submit.prevent="addGame">
       <div class="flex mb-5 gap-2 text-center w-full">
         <div class="w-full" key="player._id" v-for="player in players">
           <div class="font-bold mb-2 text-white">{{ player.nickname }}</div>
@@ -57,7 +54,7 @@
       </div>
       <div class="w-full flex justify-center">
         <button
-          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:bg-gray-200 transition-all"
+          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:text-black hover:bg-gray-300 transition-all"
           type="submit"
         >
           Add game
