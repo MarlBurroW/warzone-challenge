@@ -136,6 +136,32 @@
             >
           </div>
 
+          <Bar
+            class="mb-3"
+            :options="{
+              animation: false,
+              scales: {
+                y: {
+                  ticks: { color: 'white', beginAtZero: true },
+                },
+                x: {
+                  ticks: { color: 'white', beginAtZero: true },
+                },
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    color: 'white',
+
+                    font: {
+                      size: 15,
+                    },
+                  },
+                },
+              },
+            }"
+            :data="playerChartData[player._id].avgKills"
+          />
           <button
             class="bg-red-500 text-white flex items-center justify-center px-5 py-2 rounded-md hover:bg-red-300 transition-all"
             @click="deletePlayer(player._id)"
@@ -223,7 +249,7 @@
         </thead>
         <tbody>
           <template
-            v-for="(session, sessionIndex) in groupedComputedGames"
+            v-for="(session, sessionIndex) in groupedComputedGames.reverse()"
             :key="sessionIndex"
           >
             <tr>
@@ -266,6 +292,12 @@
                   class="bg-zinc-400 text-center text-white p-2 rounded-lg font-bold"
                 >
                   {{ getSessionTotalKills(session, player) }}
+                  ({{
+                    numeral(
+                      getSessionTotalKills(session, player) / session.length
+                    ).format("0,0.00")
+                  }}
+                  avg)
                 </div>
               </td>
               <td>
@@ -273,6 +305,12 @@
                   class="bg-zinc-500 text-center text-xl text-white p-2 rounded-lg font-bold"
                 >
                   {{ getSessionTotalKills(session) }}
+                  ({{
+                    numeral(
+                      getSessionTotalKills(session) / session.length
+                    ).format("0,0.00")
+                  }}
+                  avg)
                 </div>
               </td>
               <td>
@@ -416,6 +454,26 @@ import {
 </script>
 
 <script>
+import { Bar } from "vue-chartjs";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+);
+
 import Games from "../api/collections/Games";
 import Players from "../api/collections/Players";
 import moment from "moment";
@@ -426,6 +484,7 @@ import _ from "lodash";
 // switch between locales
 numeral.locale("fr");
 export default {
+  components: { Bar },
   data() {
     return {
       nickname: "",
@@ -436,80 +495,46 @@ export default {
   },
 
   computed: {
-    stats() {
-      const playersStats = {};
+    playerChartData() {
+      const options = {};
+
+      const sessions = this.groupedComputedGames;
+
+      const sessionsStats = sessions.map((s) => this.getSessionStats(s));
 
       for (let i = 0; i < this.players.length; i++) {
         const player = this.players[i];
 
-        const playerStats = {
-          totalKill: 0,
+        const playerStats = sessionsStats.map((s) => s[player._id]);
+
+        options[player._id] = {
+          avgKills: {
+            labels: [...playerStats.map((s, index) => `Session ${index + 1}`)],
+            datasets: [
+              {
+                label: "Avg kills / game",
+                backgroundColor: "#60a5fa",
+                data: playerStats.map((s) => s.averageKill),
+              },
+            ],
+          },
         };
-
-        // Count total kill for each player by iterate over all games and sum all scores
-
-        let totalKill = 0;
-        let totalGames = 0;
-
-        for (let j = 0; j < this.games.length; j++) {
-          const game = this.games[j];
-
-          if (game.scores.hasOwnProperty(player._id)) {
-            totalKill += game.scores[player._id];
-            totalGames++;
-          }
-        }
-        playerStats.totalGames = numeral(totalGames).format("0,0");
-        playerStats.averageKill = numeral(totalKill / totalGames).format(
-          "0,0.00"
-        );
-
-        playerStats.totalKill = numeral(totalKill).format("0,0");
-
-        playersStats[player._id] = playerStats;
       }
-
-      return playersStats;
+      return options;
     },
 
     currentSessionStats() {
       const stats = {};
 
-      if (this.currentSession) {
-        for (let i = 0; i < this.players.length; i++) {
-          const player = this.players[i];
-
-          stats[player._id] = {
-            totalKill: 0,
-            totalGames: 0,
-            averageKill: 0,
-          };
-
-          const playedGames = this.currentSession
-            .filter((game) =>
-              game.scores.map((s) => s.playerId).includes(player._id)
-            )
-            .filter(
-              (game) =>
-                game.scores.find((s) => s.playerId == player._id).score !== null
-            );
-
-          stats[player._id].totalGames = playedGames.length;
-          stats[player._id].totalKill = playedGames
-            .map(
-              (game) => game.scores.find((s) => s.playerId === player._id).score
-            )
-            .reduce((a, b) => a + b, 0);
-          stats[player._id].averageKill =
-            stats[player._id].totalKill / stats[player._id].totalGames;
-        }
-      }
+      return this.getSessionStats(this.currentSession);
 
       return stats;
     },
 
     currentSession() {
-      return this.groupedComputedGames[0] ? this.groupedComputedGames[0] : null;
+      // return last session of this.groupedComputedGames
+
+      return this.groupedComputedGames[this.groupedComputedGames.length - 1];
     },
 
     groupedComputedGames() {
@@ -523,7 +548,7 @@ export default {
         groupedGamesArray.push(groupedGames[key]);
       }
 
-      return groupedGamesArray.reverse();
+      return groupedGamesArray;
     },
 
     computedGames() {
@@ -599,7 +624,40 @@ export default {
 
   methods: {
     numeral,
+    getSessionStats(session) {
+      const stats = {};
+      if (session) {
+        for (let i = 0; i < this.players.length; i++) {
+          const player = this.players[i];
 
+          stats[player._id] = {
+            totalKill: 0,
+            totalGames: 0,
+            averageKill: 0,
+          };
+
+          const playedGames = session
+            .filter((game) =>
+              game.scores.map((s) => s.playerId).includes(player._id)
+            )
+            .filter(
+              (game) =>
+                game.scores.find((s) => s.playerId == player._id).score !== null
+            );
+
+          stats[player._id].totalGames = playedGames.length;
+          stats[player._id].totalKill = playedGames
+            .map(
+              (game) => game.scores.find((s) => s.playerId === player._id).score
+            )
+            .reduce((a, b) => a + b, 0);
+          stats[player._id].averageKill =
+            stats[player._id].totalKill / stats[player._id].totalGames;
+        }
+      }
+
+      return stats;
+    },
     getSessionTotalKills(session, player) {
       let totalKills = 0;
 
