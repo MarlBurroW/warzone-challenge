@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-zinc-700 p-5 mb-5">
+  <div class="bg-zinc-700 p-10 mb-5">
     <h1 class="font-bold text-3xl mb-[50px] text-center text-white">Players</h1>
 
     <div class="flex w-full justify-center flex-wrap">
@@ -15,56 +15,45 @@
 
         <div class="flex flex-col mb-5">
           <span class="mb-4">Current balance</span>
-          <div class="flex justify-center items-center">
+          <div class="flex justify-center flex-col items-center">
             <span
-              :class="`text-9xl font-black mr-5 ${
+              :class="`text-9xl font-black mr-5 mb-6 ${
                 player.balance < 0 ? 'text-red-500' : 'text-green-300'
               }`"
               >{{ player.balance }}</span
             >
+
+            <div class="flex justify-center items-center mb-10">
+              <img
+                v-if="player.level != 0"
+                class="w-12 mr-6"
+                :src="getLevelLogo(player.level - 1)"
+              />
+
+              <span
+                v-if="player.level != 0"
+                class="text-3xl font-bold text-red-500"
+                >{{ -player.requiredBalanceToUpgrade }}</span
+              ><span class="text-3xl font-bold" v-if="player.level != 0"
+                >&nbsp;/&nbsp;</span
+              >
+
+              <span class="text-3xl font-bold mr-6 text-green-300">{{
+                player.requiredBalanceToUpgrade
+              }}</span>
+
+              <img class="w-12" :src="getLevelLogo(player.level + 1)" />
+            </div>
           </div>
         </div>
         <div class="flex gap-2 mb-5 w-full">
           <div
             class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-blue-400"
           >
-            <span class="mb-3"
-              >Required kills<br />
-              per game</span
-            >
+            <span class="mb-3">Required kills per game</span>
 
             <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
           </div>
-
-          <div
-            class="flex flex-col bg-zinc-700 p-2 flex-1 rounded-md border-l-4 border-green-400"
-          >
-            <span class="mb-3">Required balance to level down/up</span>
-
-            <div class="flex justify-center items-center">
-              <img
-                v-if="player.level != 0"
-                class="w-8 mr-2"
-                :src="getLevelLogo(player.level - 1)"
-              />
-
-              <span v-if="player.level != 0" class="text-2xl font-bold">{{
-                -player.requiredBalanceToUpgrade
-              }}</span
-              ><span class="text-2xl font-bold" v-if="player.level != 0"
-                >&nbsp;/&nbsp;</span
-              >
-
-              <span class="text-2xl font-bold mr-2">{{
-                player.requiredBalanceToUpgrade
-              }}</span>
-
-              <img class="w-8" :src="getLevelLogo(player.level + 1)" />
-            </div>
-          </div>
-        </div>
-
-        <div class="flex gap-2 mb-5 w-full">
           <div
             class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-purple-400"
           >
@@ -143,6 +132,7 @@
         </div>
       </div>
     </div>
+    <h1 class="font-bold text-3xl mb-[50px] text-center text-white">Graphs</h1>
   </div>
 </template>
 
@@ -153,7 +143,7 @@ import { XMarkIcon } from "@heroicons/vue/24/solid";
 <script>
 import dataMixin from "./data-mixin.js";
 
-import { Bar } from "vue-chartjs";
+import { Bar, Line } from "vue-chartjs";
 import {
   Chart as ChartJS,
   Title,
