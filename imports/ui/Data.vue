@@ -331,7 +331,7 @@
                     </form>
                   </div>
                 </div>
-                <div v-else>Not define</div>
+                <div v-else>Not defined</div>
                 <PencilIcon
                     v-if="!editedCells[game._id + '-rank']"
                     @click="
