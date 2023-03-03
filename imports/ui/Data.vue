@@ -112,6 +112,13 @@
             </th>
             <th>
               <div
+                  class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+              >
+                Rank
+              </div>
+            </th>
+            <th>
+              <div
                 class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
               >
                 Total
@@ -133,6 +140,7 @@
                 Session total
               </div>
             </td>
+
             <td v-for="player in players" :key="player._id">
               <div
                 class="bg-zinc-400 text-center text-white p-2 rounded-lg font-bold"
@@ -144,6 +152,19 @@
                   ).format("0,0.00")
                 }}
                 avg)
+              </div>
+            </td>
+
+            <td>
+              <div
+                  class="bg-zinc-500 text-center text-xl text-white p-2 rounded-lg font-bold"
+              >
+                {{
+                  numeral(
+                      getAverageSessionRank(session)
+                  ).format("0,0.00")
+                }}
+                (avg)
               </div>
             </td>
             <td>
@@ -258,6 +279,76 @@
             </td>
             <td>
               <div
+                  class="bg-gray-600 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
+              >
+                <div
+                    v-if="
+                      (game && game.rank != null) ||
+                      editedCells[game._id + '-rank']
+                    "
+                >
+                  <div
+                      class="inline text-xl"
+                      v-if="!editedCells[game._id + '-rank']"
+                  >
+                    {{ game.rank }}
+                  </div>
+                  <div v-else>
+                    <form
+                        @submit.prevent="
+                          updateRank(
+                            game._id,
+                            editedValues[game._id + '-rank']
+                          )
+                        "
+                        class="flex items-center"
+                    >
+                      <input
+                          class="bg-gray-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
+                          type="number"
+                          :value="game.rank"
+                          :ref="game._id + '-rank'"
+                          @input="
+                            editedValues[game._id + '-rank'] =
+                              $event.target.value
+                          "
+                      />
+                      <XCircleIcon
+                          @click="
+                            editedCells[game._id + '-rank'] = false
+                          "
+                          class="h-8 w-8 text-red-300 cursor-pointer"
+                      />
+                      <CheckCircleIcon
+                          @click="
+                            updateRank(
+                              game._id,
+                              editedValues[game._id + '-rank']
+                            )
+                          "
+                          class="h-8 w-8 text-green-300 cursor-pointer"
+                      />
+                    </form>
+                  </div>
+                </div>
+                <div v-else>Not define</div>
+                <PencilIcon
+                    v-if="!editedCells[game._id + '-rank']"
+                    @click="
+                      ($event) => {
+                        focusInput(game._id + '-rank');
+
+                        editedCells[game._id + '-rank'] = true;
+                        editedValues[game._id + '-rank'] =
+                          game.rank;
+                      }
+                    "
+                    class="h-6 w-6 text-white cursor-pointer"
+                />
+              </div>
+            </td>
+            <td>
+              <div
                 class="bg-gray-700 text-center font-bold text-white p-2 rounded-lg text-2xl"
               >
                 {{ game.scores.map((s) => s.score).reduce((a, b) => a + b, 0) }}
@@ -330,6 +421,23 @@ export default {
 
       return totalKills;
     },
+    getAverageSessionRank(session) {
+      if(session && session.length > 0) {
+        let totalRank = 0;
+        let notDefined = 0;
+        for (let i = 0; i < session.length; i++) {
+          const game = session[i];
+          if(game.rank){
+            console.log("game.rank", game.rank);
+            totalRank += Number(game.rank);
+          }else{
+            notDefined++;
+          }
+        }
+        return totalRank / (session.length - notDefined);
+      }
+
+    },
     focusInput(ref) {
       setTimeout(() => {
         // Focus and select the input
@@ -342,6 +450,10 @@ export default {
       Meteor.call("updateGameScore", gameId, playerId, score);
 
       this.editedCells[gameId + "-" + playerId] = false;
+    },
+    updateRank(gameId, rank) {
+      Meteor.call("updateGameRank", gameId, rank);
+      this.editedCells[gameId + "-rank"] = false;
     },
     getHotIndicator(kills) {
       if (kills >= 12) return "🔥🔥🔥";

@@ -47,6 +47,7 @@ export default {
             moment(game.createdAt).fromNow() +
             ")",
           createdAt: game.createdAt,
+          rank: game.rank,
           bestPlayerId: null,
           worstPlayerId: null,
         };
