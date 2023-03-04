@@ -16,6 +16,7 @@
         <div class="flex flex-col mb-5">
           <span class="mb-4">Current balance</span>
           <div class="flex justify-center flex-col items-center">
+            mmr {{player.mmr}}
             <span
               :class="`text-9xl font-black mr-5 mb-6 ${
                 player.balance < 0 ? 'text-red-500' : 'text-green-300'
