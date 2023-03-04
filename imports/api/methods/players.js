@@ -15,6 +15,7 @@ Meteor.methods({
       totalKills: 0,
       avgKills: 0,
       gamesPlayed: 0,
+      mmr:0,
     });
   },
 
