@@ -183,11 +183,10 @@ export function computePlayerScoreFromBacklog(player, games) {
 
   let recentPlayerKillAverage = playerKillList.slice(-15).reduce((x,y) => {
     return Number(x) + Number(y);
-  }) / playerKillList.length;
+  }) / 15;
   let ponderatedAverageRank = (totalGameRankAverage + (recentGameRankAverage * 3)) / 4;
   let ponderatedPlayerKillAverage = (player.avgKills + (recentPlayerKillAverage * 3)) / 4;
-
-  player.mmr = ((((ponderatedPlayerKillAverage * 3) - ponderatedAverageRank) + 100))* 5;
+  player.mmr = ((((ponderatedPlayerKillAverage * 3) - ponderatedAverageRank) + 100))* 10;
 
   Players.update(player._id, {
     $set: {

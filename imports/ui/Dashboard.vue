@@ -25,6 +25,7 @@
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 my-5">
               <div class="bg-blue-600 h-2 rounded-full" :style="getProgressMmrStyle(player.mmr)"></div>
+              <span class="font-bold">{{Math.round(player.mmr)}}</span>
             </div>
             <div class="flex justify-center flex-col items-center">
               <span
@@ -541,7 +542,10 @@ export default {
     numeral,
 
     getProgressMmrStyle(mmr){
-      return "width:" + 20 * (Math.trunc(mmr) % 5) +"%;"
+      let rest = mmr % 20;
+      let pourcentage =  Math.trunc(rest*100)/20
+      ;
+      return "width:" + pourcentage +"%;"
     },
     getSessionStats(session) {
       const stats = {};
@@ -593,25 +597,25 @@ export default {
       return map[level];
     },
     getMmrLogo(mmr) {
-      if(mmr < 455) return "/images/vomit.png"
-      if(mmr < 460) return "/images/new/b3.png"
-      if(mmr < 465) return "/images/new/b2.png"
-      if(mmr < 470) return "/images/new/b1.png"
-      if(mmr < 475) return "/images/new/a3.png"
-      if(mmr < 480) return "/images/new/a2.png"
-      if(mmr < 485) return "/images/new/a1.png"
-      if(mmr < 490) return "/images/new/g3.png"
-      if(mmr < 495) return "/images/new/g2.png"
-      if(mmr < 500) return "/images/new/g1.png"
-      if(mmr < 505) return "/images/new/p3.png"
-      if(mmr < 510) return "/images/new/p2.png"
-      if(mmr < 515) return "/images/new/p1.png"
-      if(mmr < 520) return "/images/new/d3.png"
-      if(mmr < 525) return "/images/new/d2.png"
-      if(mmr < 530) return "/images/new/d1.png"
-      if(mmr < 535) return "/images/new/m3.png"
-      if(mmr < 540) return "/images/new/m2.png"
-      if(mmr < 545) return "/images/new/m1.png"
+      if(mmr < 990) return "/images/vomit.png"
+      if(mmr < 1010) return "/images/new/b3.png"
+      if(mmr < 1030) return "/images/new/b2.png"
+      if(mmr < 1050) return "/images/new/b1.png"
+      if(mmr < 1070) return "/images/new/a3.png"
+      if(mmr < 1090) return "/images/new/a2.png"
+      if(mmr < 1110) return "/images/new/a1.png"
+      if(mmr < 1130) return "/images/new/g3.png"
+      if(mmr < 1150) return "/images/new/g2.png"
+      if(mmr < 1170) return "/images/new/g1.png"
+      if(mmr < 1190) return "/images/new/p3.png"
+      if(mmr < 1210) return "/images/new/p2.png"
+      if(mmr < 1230) return "/images/new/p1.png"
+      if(mmr < 1250) return "/images/new/d3.png"
+      if(mmr < 1270) return "/images/new/d2.png"
+      if(mmr < 1290) return "/images/new/d1.png"
+      if(mmr < 1310) return "/images/new/m3.png"
+      if(mmr < 1330) return "/images/new/m2.png"
+      if(mmr < 1350) return "/images/new/m1.png"
       return "/images/gm.png"
 
     },
