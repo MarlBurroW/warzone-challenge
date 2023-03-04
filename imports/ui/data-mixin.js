@@ -48,8 +48,7 @@ export default {
             ")",
           createdAt: game.createdAt,
           rank: game.rank,
-          bestPlayerId: null,
-          worstPlayerId: null,
+          bestNumberKill: null,
         };
 
         for (let j = 0; j < this.players.length; j++) {
@@ -62,23 +61,15 @@ export default {
             playerId: player._id,
           });
 
-          // Find the best player of the game by comparing all scores and add this id to the game object
+          // Find the best number of kills
 
           if (
-            !computedGame.bestPlayerId ||
-            game.scores[computedGame.bestPlayerId] < game.scores[player._id]
+            !computedGame.bestNumberKill ||
+            computedGame.bestNumberKill < game.scores[player._id]
           ) {
-            computedGame.bestPlayerId = player._id;
+            computedGame.bestNumberKill = game.scores[player._id];
           }
 
-          // Find the worst player of the game by comparing all scores and add this id to the game object
-
-          if (
-            !computedGame.worstPlayerId ||
-            game.scores[computedGame.worstPlayerId] > game.scores[player._id]
-          ) {
-            computedGame.worstPlayerId = player._id;
-          }
         }
 
         games.push(computedGame);
