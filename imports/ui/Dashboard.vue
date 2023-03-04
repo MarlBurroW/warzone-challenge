@@ -23,9 +23,14 @@
             <div class="flex justify-center">
               <img class="w-[100px]" :src="getMmrLogo(player.mmr)" />
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 my-5">
-              <div class="bg-blue-600 h-2 rounded-full" :style="getProgressMmrStyle(player.mmr)"></div>
-              <span class="font-bold">{{Math.round(player.mmr)}}</span>
+            <div
+              class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 my-5"
+            >
+              <div
+                class="bg-blue-600 h-2 rounded-full"
+                :style="getProgressMmrStyle(player.mmr)"
+              ></div>
+              <span class="font-bold">{{ Math.round(player.mmr) }}</span>
             </div>
             <div class="flex justify-center flex-col items-center">
               <span
@@ -55,7 +60,6 @@
                 }}</span>
 
                 <img class="w-12" :src="getLevelLogo(player.level + 1)" />
-
               </div>
             </div>
           </div>
@@ -74,22 +78,22 @@
                 >Points(s) needed to level up in the next game</span
               >
 
-            <div>
-              Total kill:
-              <strong>{{
-                numeral(currentSessionStats[player._id].totalKill).format("0")
-              }}</strong>
-            </div>
-            <div class="mb-3">
-              Avg kills/game:
-              <strong>{{
-                numeral(currentSessionStats[player._id].averageKill).format(
-                  "0,0.00"
-                )
-              }}</strong>
+              <div>
+                Total kill:
+                <strong>{{
+                  numeral(currentSessionStats[player._id].totalKill).format("0")
+                }}</strong>
+              </div>
+              <div class="mb-3">
+                Avg kills/game:
+                <strong>{{
+                  numeral(currentSessionStats[player._id].averageKill).format(
+                    "0,0.00"
+                  )
+                }}</strong>
+              </div>
             </div>
           </div>
-
           <div
             class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
           >
@@ -137,14 +141,21 @@
               </div>
             </div>
           </div>
-
           <div
             class="lex flex-col bg-zinc-600 p-2 border-l-4 border-pink-400 rounded-lg flex-col flex mb-5"
           >
             <Bar
               class="mb-3 max-h-[200px]"
               :options="
-                Object.assign({}, chartOptions, { scales: { y: { max: 10 } } })
+                Object.assign({}, chartOptions, {
+                  scales: {
+                    y: {
+                      max: 8,
+                      ticks: { color: 'white', beginAtZero: true },
+                    },
+                    x: { ticks: { color: 'white', beginAtZero: true } },
+                  },
+                })
               "
               :data="playerChartData[player._id].avgKills"
             />
@@ -152,7 +163,15 @@
             <Bar
               class="mb-3 max-h-[200px]"
               :options="
-                Object.assign({}, chartOptions, { scales: { y: { max: 25 } } })
+                Object.assign({}, chartOptions, {
+                  scales: {
+                    y: {
+                      max: 25,
+                      ticks: { color: 'white', beginAtZero: true },
+                    },
+                    x: { ticks: { color: 'white', beginAtZero: true } },
+                  },
+                })
               "
               :data="playerChartData[player._id].latestSessionKills"
             />
@@ -549,11 +568,10 @@ export default {
   methods: {
     numeral,
 
-    getProgressMmrStyle(mmr){
+    getProgressMmrStyle(mmr) {
       let rest = mmr % 20;
-      let pourcentage =  Math.trunc(rest*100)/20
-      ;
-      return "width:" + pourcentage +"%;"
+      let pourcentage = Math.trunc(rest * 100) / 20;
+      return "width:" + pourcentage + "%;";
     },
     getSessionStats(session) {
       const stats = {};
@@ -605,27 +623,26 @@ export default {
       return map[level];
     },
     getMmrLogo(mmr) {
-      if(mmr < 990) return "/images/vomit.png"
-      if(mmr < 1010) return "/images/new/b3.png"
-      if(mmr < 1030) return "/images/new/b2.png"
-      if(mmr < 1050) return "/images/new/b1.png"
-      if(mmr < 1070) return "/images/new/a3.png"
-      if(mmr < 1090) return "/images/new/a2.png"
-      if(mmr < 1110) return "/images/new/a1.png"
-      if(mmr < 1130) return "/images/new/g3.png"
-      if(mmr < 1150) return "/images/new/g2.png"
-      if(mmr < 1170) return "/images/new/g1.png"
-      if(mmr < 1190) return "/images/new/p3.png"
-      if(mmr < 1210) return "/images/new/p2.png"
-      if(mmr < 1230) return "/images/new/p1.png"
-      if(mmr < 1250) return "/images/new/d3.png"
-      if(mmr < 1270) return "/images/new/d2.png"
-      if(mmr < 1290) return "/images/new/d1.png"
-      if(mmr < 1310) return "/images/new/m3.png"
-      if(mmr < 1330) return "/images/new/m2.png"
-      if(mmr < 1350) return "/images/new/m1.png"
-      return "/images/gm.png"
-
+      if (mmr < 990) return "/images/vomit.png";
+      if (mmr < 1010) return "/images/new/b3.png";
+      if (mmr < 1030) return "/images/new/b2.png";
+      if (mmr < 1050) return "/images/new/b1.png";
+      if (mmr < 1070) return "/images/new/a3.png";
+      if (mmr < 1090) return "/images/new/a2.png";
+      if (mmr < 1110) return "/images/new/a1.png";
+      if (mmr < 1130) return "/images/new/g3.png";
+      if (mmr < 1150) return "/images/new/g2.png";
+      if (mmr < 1170) return "/images/new/g1.png";
+      if (mmr < 1190) return "/images/new/p3.png";
+      if (mmr < 1210) return "/images/new/p2.png";
+      if (mmr < 1230) return "/images/new/p1.png";
+      if (mmr < 1250) return "/images/new/d3.png";
+      if (mmr < 1270) return "/images/new/d2.png";
+      if (mmr < 1290) return "/images/new/d1.png";
+      if (mmr < 1310) return "/images/new/m3.png";
+      if (mmr < 1330) return "/images/new/m2.png";
+      if (mmr < 1350) return "/images/new/m1.png";
+      return "/images/gm.png";
     },
   },
 };
