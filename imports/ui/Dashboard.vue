@@ -82,7 +82,7 @@
             </div>
 
             <div>
-              Total kill::
+              Total kill:
               <strong>{{
                 numeral(currentSessionStats[player._id].totalKill).format("0")
               }}</strong>
