@@ -70,15 +70,16 @@ export function computePlayerScoreFromBacklog(player, games) {
   for (let i = 0; i < games.length; i++) {
     const game = games[i];
     if(game.rank != null){
-      if(player._id in game.scores){
+      if (game.scores.hasOwnProperty(player._id) &&
+          game.scores[player._id] !== null){
         gameRankList.push(game.rank);
       }
     }
     // Check if player has played in this game, and only compute score if so
 
     if (
-      game.scores.hasOwnProperty(player._id) &&
-      game.scores[player._id] !== null
+        game.scores.hasOwnProperty(player._id) &&
+        game.scores[player._id] !== null
     ) {
       let playerKills = game.scores[player._id];
 

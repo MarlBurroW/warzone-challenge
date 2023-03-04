@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="add rank icon">
+      <change beforePath="$PROJECT_DIR$/imports/api/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1677966544" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="mmr" />
+                    <option name="lastUsedInstant" value="1677966197" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2MWnGF91wxCt6t6vbMwB0vgMveu" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;HbShouldOpenHtmlAsHb&quot;: &quot;enabled&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;js.meteor.library.was.enabled&quot;: &quot;true&quot;,
+    &quot;js.meteor.project&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/projets/warzone-challenge&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;js.meteor.library.cached&quot;: [
+      &quot;D:/projets/warzone-challenge/.meteor&quot;
+    ]
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="" />
+      <created>1677892108806</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1677892108806</updated>
+      <workItem from="1677892110203" duration="98000" />
+      <workItem from="1677892216466" duration="298000" />
+      <workItem from="1677892527351" duration="40000" />
+      <workItem from="1677892581781" duration="1143000" />
+      <workItem from="1677893760290" duration="2335000" />
+      <workItem from="1677897803893" duration="8069000" />
+      <workItem from="1677902797479" duration="1864000" />
+      <workItem from="1677904715976" duration="5236000" />
+      <workItem from="1677926631969" duration="9663000" />
+    </task>
+    <task id="LOCAL-00001" summary="add mmr">
+      <created>1677903031858</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1677903031858</updated>
+    </task>
+    <task id="LOCAL-00002" summary="improve mmr feature">
+      <created>1677909108341</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1677909108341</updated>
+    </task>
+    <task id="LOCAL-00003" summary="equilibrage mmr">
+      <created>1677913574457</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1677913574457</updated>
+    </task>
+    <task id="LOCAL-00004" summary="equilibrage mmr">
+      <created>1677931985448</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1677931985448</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add rank icon">
+      <created>1677933306999</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1677933306999</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add mmr" />
+    <MESSAGE value="improve mmr feature" />
+    <MESSAGE value="equilibrage mmr" />
+    <MESSAGE value="add rank icon" />
+    <option name="LAST_COMMIT_MESSAGE" value="add rank icon" />
+  </component>
+</project>
