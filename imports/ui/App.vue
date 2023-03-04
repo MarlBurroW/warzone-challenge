@@ -3,7 +3,7 @@ import { Squares2X2Icon, TableCellsIcon } from "@heroicons/vue/24/solid";
 </script>
 
 <template>
-  <div class="p-4">
+  <div class="pt-4">
     <div class="bg-zinc-900 py-5">
       <div class="flex justify-center p-5">
         <img

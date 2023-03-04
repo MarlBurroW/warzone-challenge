@@ -1,12 +1,12 @@
 <template>
   <div class="bg-zinc-700 p-10 mb-5">
-    <h1 class="font-bold text-3xl mb-[50px] text-center text-white">Players</h1>
+    <h1 class="font-bold text-8xl mb-[50px] text-center text-white">Players</h1>
 
     <div class="flex w-full justify-center flex-wrap">
       <div
         key="player._id"
         v-for="player in players"
-        class="bg-zinc-800 border-t-4 border-green-400 w-[400px] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
+        class="bg-zinc-800 shadow-xl border-t-8 border-[#7ec92e] w-[400px] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
       >
         <img
           class="absolute z-0 opacity-10 w-full left-0 right-0"
@@ -144,75 +144,98 @@
         </div>
       </div>
     </div>
-    <h1 class="text-white font-bold text-6xl text-center mb-5">
+    <h1 class="text-white font-bold text-6xl text-center mb-[100px] mt-[100px]">
       Current session stats
     </h1>
 
-    <h1 class="text-white font-bold text-2xl text-center mb-5">
-      Players kills during current session
-    </h1>
-    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
-      <Line
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.playersCurrentSessionKills"
-      />
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Players kills during current session
+      </h1>
+      <div class="flex mx-auto overflow-auto">
+        <Line
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.playersCurrentSessionKills"
+        />
+      </div>
+    </div>
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Current session kills repartition
+      </h1>
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Doughnut
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.currentSessionKillsRepartition"
+        ></Doughnut>
+      </div>
     </div>
 
-    <h1 class="text-white font-bold text-2xl text-center mb-5">
-      Current session kills repartition
+    <h1 class="text-white font-bold text-6xl text-center mb-[100px] mt-[100px]">
+      Global stats
     </h1>
-    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
-      <Doughnut
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.currentSessionKillsRepartition"
-      ></Doughnut>
-    </div>
-    <h1 class="text-white font-bold text-6xl text-center mb-5">Global stats</h1>
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Team K/G evolution
+      </h1>
 
-    <h1 class="text-white font-bold text-2xl text-center mb-5">
-      Team K/G evolution
-    </h1>
-
-    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
-      <Bar
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.teamAverageKillsPerSession"
-      />
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Bar
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.teamAverageKillsPerSession"
+        />
+      </div>
     </div>
-
-    <h1 class="text-white font-bold text-2xl text-center mb-5">
-      Players total kills during each sessions
-    </h1>
-    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
-      <Bar
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.playersSessionKills"
-      />
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Players total kills during each sessions
+      </h1>
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Bar
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.playersSessionKills"
+        />
+      </div>
     </div>
-    <h1 class="text-white font-bold text-2xl text-center mb-5">
-      Players K/G evolution
-    </h1>
-    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
-      <Line
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.sessionsPlayerAvgKillsPerSession"
-      />
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Players K/G evolution
+      </h1>
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Line
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.sessionsPlayerAvgKillsPerSession"
+        />
+      </div>
     </div>
-
-    <h1 class="text-white font-bold text-2xl text-center mb-5">
-      Total kill repartition
-    </h1>
-    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
-      <Doughnut
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.globalKillsRepartition"
-      ></Doughnut>
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Total kill repartition
+      </h1>
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Doughnut
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.globalKillsRepartition"
+        ></Doughnut>
+      </div>
     </div>
   </div>
 </template>
