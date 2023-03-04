@@ -8,131 +8,139 @@
         v-for="player in players"
         class="bg-zinc-800 border-t-4 border-green-400 w-[400px] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
       >
+        <img
+          class="absolute z-0 opacity-10 w-full left-0 right-0"
+          :src="getLevelLogo(player.level)"
+        />
         <div class="w-[100px] absolute -top-12 right-5">
           <img class="" :src="getLevelLogo(player.level)" />
         </div>
-        <span class="text-3xl mb-3 font-black">{{ player.nickname }}</span>
+        <div class="z-1 relative">
+          <span class="text-3xl mb-3 font-black">{{ player.nickname }}</span>
 
-        <div class="flex flex-col mb-5">
-          <span class="mb-4">Current balance</span>
-          <div class="flex justify-center flex-col items-center">
-            <span
-              :class="`text-9xl font-black mr-5 mb-6 ${
-                player.balance < 0 ? 'text-red-500' : 'text-green-300'
-              }`"
-              >{{ player.balance }}</span
-            >
-
-            <div class="flex justify-center items-center mb-10">
-              <img
-                v-if="player.level != 0"
-                class="w-12 mr-6"
-                :src="getLevelLogo(player.level - 1)"
-              />
-
+          <div class="flex flex-col mb-5 relative">
+            <span class="mb-4">Current balance</span>
+            <div class="flex justify-center flex-col items-center">
               <span
-                v-if="player.level != 0"
-                class="text-3xl font-bold text-red-500"
-                >{{ -player.requiredBalanceToUpgrade }}</span
-              ><span class="text-3xl font-bold" v-if="player.level != 0"
-                >&nbsp;/&nbsp;</span
+                :class="`text-9xl font-black mr-5 mb-6 ${
+                  player.balance < 0 ? 'text-red-500' : 'text-green-300'
+                }`"
+                >{{ player.balance }}</span
               >
 
-              <span class="text-3xl font-bold mr-6 text-green-300">{{
-                player.requiredBalanceToUpgrade
-              }}</span>
+              <div class="flex justify-center items-center mb-10">
+                <img
+                  v-if="player.level != 0"
+                  class="w-12 mr-6"
+                  :src="getLevelLogo(player.level - 1)"
+                />
 
-              <img class="w-12" :src="getLevelLogo(player.level + 1)" />
+                <span
+                  v-if="player.level != 0"
+                  class="text-3xl font-bold text-red-500"
+                  >{{ -player.requiredBalanceToUpgrade }}</span
+                ><span class="text-3xl font-bold" v-if="player.level != 0"
+                  >&nbsp;/&nbsp;</span
+                >
+
+                <span class="text-3xl font-bold mr-6 text-green-300">{{
+                  player.requiredBalanceToUpgrade
+                }}</span>
+
+                <img class="w-12" :src="getLevelLogo(player.level + 1)" />
+              </div>
             </div>
           </div>
-        </div>
-        <div class="flex gap-2 mb-5 w-full">
-          <div
-            class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-blue-400"
-          >
-            <span class="mb-3">Required point(s) per game</span>
-
-            <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
-          </div>
-          <div
-            class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-purple-400"
-          >
-            <span class="mb-3"
-              >Points(s) needed to level up in the next game</span
+          <div class="flex gap-2 mb-5 w-full">
+            <div
+              class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-blue-400"
             >
+              <span class="mb-3">Required point(s) per game</span>
 
-            <span class="text-4xl font-bold">{{
-              player.requiredBalanceToUpgrade -
-              player.balance +
-              player.requiredKills
-            }}</span>
-          </div>
-        </div>
-
-        <div
-          class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
-        >
-          <div class="text-left">
-            <div class="mb-3 font-bold">Session stats</div>
-            <div>
-              Game played:
-              <strong>{{
-                numeral(currentSessionStats[player._id].totalGames).format("0")
-              }}</strong>
+              <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
             </div>
+            <div
+              class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-purple-400"
+            >
+              <span class="mb-3"
+                >Points(s) needed to level up in the next game</span
+              >
 
-            <div>
-              Total kill::
-              <strong>{{
-                numeral(currentSessionStats[player._id].totalKill).format("0")
-              }}</strong>
-            </div>
-            <div class="mb-3">
-              Avg kills/game:
-              <strong>{{
-                numeral(currentSessionStats[player._id].averageKill).format(
-                  "0,0.00"
-                )
-              }}</strong>
+              <span class="text-4xl font-bold">{{
+                player.requiredBalanceToUpgrade -
+                player.balance +
+                player.requiredKills
+              }}</span>
             </div>
           </div>
 
-          <div class="text-right">
-            <div class="mb-3 font-bold">Global stats</div>
-            <div>
-              Game played:
-              <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
+          <div
+            class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
+          >
+            <div class="text-left">
+              <div class="mb-3 font-bold">Session stats</div>
+              <div>
+                Game played:
+                <strong>{{
+                  numeral(currentSessionStats[player._id].totalGames).format(
+                    "0"
+                  )
+                }}</strong>
+              </div>
+
+              <div>
+                Total kill::
+                <strong>{{
+                  numeral(currentSessionStats[player._id].totalKill).format("0")
+                }}</strong>
+              </div>
+              <div class="mb-3">
+                Avg kills/game:
+                <strong>{{
+                  numeral(currentSessionStats[player._id].averageKill).format(
+                    "0,0.00"
+                  )
+                }}</strong>
+              </div>
             </div>
 
-            <div>
-              Total kill:
-              <strong>{{ numeral(player.totalKills).format("0") }}</strong>
-            </div>
-            <div class="mb-3">
-              Avg kills/game:
-              <strong>{{ numeral(player.avgKills).format("0,0.00") }}</strong>
+            <div class="text-right">
+              <div class="mb-3 font-bold">Global stats</div>
+              <div>
+                Game played:
+                <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
+              </div>
+
+              <div>
+                Total kill:
+                <strong>{{ numeral(player.totalKills).format("0") }}</strong>
+              </div>
+              <div class="mb-3">
+                Avg kills/game:
+                <strong>{{ numeral(player.avgKills).format("0,0.00") }}</strong>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div
-          class="lex flex-col bg-zinc-600 p-2 border-l-4 border-pink-400 rounded-lg flex-col flex mb-5"
-        >
-          <Bar
-            class="mb-3 max-h-[200px]"
-            :options="
-              Object.assign({}, chartOptions, { scales: { y: { max: 10 } } })
-            "
-            :data="playerChartData[player._id].avgKills"
-          />
+          <div
+            class="lex flex-col bg-zinc-600 p-2 border-l-4 border-pink-400 rounded-lg flex-col flex mb-5"
+          >
+            <Bar
+              class="mb-3 max-h-[200px]"
+              :options="
+                Object.assign({}, chartOptions, { scales: { y: { max: 10 } } })
+              "
+              :data="playerChartData[player._id].avgKills"
+            />
 
-          <Bar
-            class="mb-3 max-h-[200px]"
-            :options="
-              Object.assign({}, chartOptions, { scales: { y: { max: 25 } } })
-            "
-            :data="playerChartData[player._id].latestSessionKills"
-          />
+            <Bar
+              class="mb-3 max-h-[200px]"
+              :options="
+                Object.assign({}, chartOptions, { scales: { y: { max: 25 } } })
+              "
+              :data="playerChartData[player._id].latestSessionKills"
+            />
+          </div>
         </div>
       </div>
     </div>
