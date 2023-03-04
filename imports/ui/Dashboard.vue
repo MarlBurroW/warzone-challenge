@@ -120,47 +120,91 @@
         >
           <Bar
             class="mb-3 max-h-[200px]"
-            :options="chartOptions"
+            :options="
+              Object.assign({}, chartOptions, { scales: { y: { max: 10 } } })
+            "
             :data="playerChartData[player._id].avgKills"
           />
 
           <Bar
             class="mb-3 max-h-[200px]"
-            :options="chartOptions"
+            :options="
+              Object.assign({}, chartOptions, { scales: { y: { max: 25 } } })
+            "
             :data="playerChartData[player._id].latestSessionKills"
           />
         </div>
       </div>
     </div>
-    <h1 class="font-bold text-3xl mb-[50px] text-center text-white">Graphs</h1>
+    <h1 class="text-white font-bold text-6xl text-center mb-5">
+      Current session stats
+    </h1>
 
-    <div class="flex w-1/2 mx-auto overflow-auto">
+    <h1 class="text-white font-bold text-2xl text-center mb-5">
+      Players kills during current session
+    </h1>
+    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
+      <Line
+        class="mb-3 w-full h-[400px]"
+        :options="chartOptions"
+        :data="globalChartData.playersCurrentSessionKills"
+      />
+    </div>
+
+    <h1 class="text-white font-bold text-2xl text-center mb-5">
+      Current session kills repartition
+    </h1>
+    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
+      <Doughnut
+        class="mb-3 w-full h-[400px]"
+        :options="chartOptions"
+        :data="globalChartData.currentSessionKillsRepartition"
+      ></Doughnut>
+    </div>
+    <h1 class="text-white font-bold text-6xl text-center mb-5">Global stats</h1>
+
+    <h1 class="text-white font-bold text-2xl text-center mb-5">
+      Team K/G evolution
+    </h1>
+
+    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
       <Bar
         class="mb-3 w-full h-[400px]"
         :options="chartOptions"
-        :data="globalChartData.latestSessionKills"
+        :data="globalChartData.teamAverageKillsPerSession"
       />
     </div>
-    <div class="flex w-1/2 mx-auto overflow-auto">
-      <Bar
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.sessionsKills"
-      />
-    </div>
-    <div class="flex w-1/2 mx-auto overflow-auto">
+
+    <h1 class="text-white font-bold text-2xl text-center mb-5">
+      Players total kills during each sessions
+    </h1>
+    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
       <Bar
         class="mb-3 w-full h-[400px]"
         :options="chartOptions"
         :data="globalChartData.playersSessionKills"
       />
     </div>
-    <div class="flex w-1/2 mx-auto overflow-auto">
-      <Bar
+    <h1 class="text-white font-bold text-2xl text-center mb-5">
+      Players K/G evolution
+    </h1>
+    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
+      <Line
         class="mb-3 w-full h-[400px]"
         :options="chartOptions"
-        :data="globalChartData.playersCurrentSessionKills"
+        :data="globalChartData.sessionsPlayerAvgKillsPerSession"
       />
+    </div>
+
+    <h1 class="text-white font-bold text-2xl text-center mb-5">
+      Total kill repartition
+    </h1>
+    <div class="flex w-1/2 mx-auto overflow-auto mb-10">
+      <Doughnut
+        class="mb-3 w-full h-[400px]"
+        :options="chartOptions"
+        :data="globalChartData.globalKillsRepartition"
+      ></Doughnut>
     </div>
   </div>
 </template>
@@ -172,27 +216,21 @@ import { XMarkIcon } from "@heroicons/vue/24/solid";
 <script>
 import dataMixin from "./data-mixin.js";
 
-import { Bar, Line } from "vue-chartjs";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Colors,
-} from "chart.js";
+import { Bar, Line, Doughnut } from "vue-chartjs";
+import "chart.js/auto";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Colors
-);
+// Generate an array of beautiful colors
+
+const playerColors = [
+  "#f87171",
+  "#fbbf24",
+  "#a3e635",
+  "#10b981",
+  "#0ea5e9",
+  "#6366f1",
+  "#d946ef",
+  "#f43f5e",
+];
 
 import moment from "moment";
 import numeral from "numeral";
@@ -202,7 +240,7 @@ import _ from "lodash";
 // switch between locales
 numeral.locale("fr");
 export default {
-  components: { Bar, Line },
+  components: { Bar, Line, Doughnut },
   mixins: [dataMixin],
   data() {
     return {
@@ -240,9 +278,12 @@ export default {
       const latestSession =
         sessions.length > 0 ? sessions[sessions.length - 1] : [];
 
-      const latestSessionKills = latestSession.map((g) => {
-        return g.scores.reduce((acc, s) => acc + s.score, 0);
-      });
+      const latestSessionKills = latestSession
+        .slice()
+        .reverse()
+        .map((g) => {
+          return g.scores.reduce((acc, s) => acc + s.score, 0);
+        });
 
       const options = {
         latestSessionKills: {
@@ -259,28 +300,98 @@ export default {
             },
           ],
         },
-        sessionsKills: {
-          labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
+
+        latestSessionKills: {
+          labels: [
+            ...latestSessionKills.map((s, index) => `Game ${index + 1}`),
+          ],
           datasets: [
             {
-              label: "Sessions team kills",
-              data: sessions.map((s) => {
-                return s
-                  .map((g) => {
-                    return g.scores.reduce((acc, s) => acc + s.score, 0);
-                  })
-                  .reduce((acc, s) => acc + s, 0);
-              }),
+              label: "Latest session team kills",
+              data: latestSessionKills,
               backgroundColor: "rgba(25, 255, 25, 0.2)",
               borderColor: "rgba(25, 255, 25, 1)",
               borderWidth: 1,
             },
           ],
         },
+        globalKillsRepartition: {
+          labels: this.players.map((p) => p.nickname),
+          datasets: [
+            {
+              data: this.players.map((p) => {
+                return this.computedGames.reduce((acc, g) => {
+                  const score = g.scores.find((s) => s.playerId === p._id);
+                  return acc + (score ? score.score : 0);
+                }, 0);
+              }),
+              backgroundColor: playerColors,
+            },
+          ],
+        },
+        currentSessionKillsRepartition: {
+          labels: this.players.map((p) => p.nickname),
+          datasets: [
+            {
+              data: this.players.map((p) => {
+                return latestSession.reduce((acc, g) => {
+                  const score = g.scores.find((s) => s.playerId === p._id);
+                  return acc + (score ? score.score : 0);
+                }, 0);
+              }),
+              backgroundColor: playerColors,
+            },
+          ],
+        },
+
+        teamAverageKillsPerSession: {
+          labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
+          datasets: [
+            {
+              label: "Team average kills per session",
+              data: sessions.map((s) => {
+                return (
+                  s
+                    .map((g) => {
+                      return g.scores.reduce((acc, s) => acc + s.score, 0);
+                    })
+                    .reduce((acc, s) => acc + s, 0) / s.length
+                );
+              }),
+              backgroundColor: "rgba(16, 185, 129, 0.50)",
+
+              borderWidth: 1,
+            },
+          ],
+        },
+
+        sessionsPlayerAvgKillsPerSession: {
+          labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
+          datasets: [
+            ...this.players.map((p, index) => {
+              return {
+                label: p.nickname,
+                data: sessions.map((s) => {
+                  return (
+                    s
+                      .map((g) => {
+                        return g.scores.find((s) => s.playerId === p._id)
+                          ?.score;
+                      })
+                      .reduce((acc, s) => acc + s, 0) / s.length
+                  );
+                }),
+                backgroundColor: playerColors[index],
+                borderColor: playerColors[index],
+                borderWidth: 4,
+              };
+            }),
+          ],
+        },
 
         playersSessionKills: {
           labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
-          datasets: this.players.map((p) => {
+          datasets: this.players.map((p, index) => {
             return {
               label: p.nickname,
               data: sessions.map((s) => {
@@ -291,7 +402,8 @@ export default {
                   })
                   .reduce((acc, s) => acc + s, 0);
               }),
-
+              backgroundColor: playerColors[index],
+              borderColor: playerColors[index],
               borderWidth: 1,
             };
           }),
@@ -300,15 +412,20 @@ export default {
           labels: [
             ...latestSessionKills.map((s, index) => `Game ${index + 1}`),
           ],
-          datasets: this.players.map((p) => {
+
+          datasets: this.players.map((p, index) => {
             return {
               label: p.nickname,
-              data: latestSession.map((g) => {
-                const score = g.scores.find((s) => s.playerId == p._id);
-                return score ? score.score : 0;
-              }),
-
-              borderWidth: 1,
+              data: latestSession
+                .slice()
+                .reverse()
+                .map((g) => {
+                  const score = g.scores.find((s) => s.playerId == p._id);
+                  return score ? score.score : 0;
+                }),
+              backgroundColor: playerColors[index],
+              borderColor: playerColors[index],
+              borderWidth: 4,
             };
           }),
         },
@@ -353,12 +470,11 @@ export default {
             ],
           },
           latestSessionKills: {
-            labels: [...latestSessionKills.map((s, index) => index + 1)],
+            labels: [...latestSessionKills.map((g, index) => index + 1)],
             datasets: [
               {
                 label: "Session kills / games",
                 backgroundColor: "#86efac",
-
                 data: latestSessionKills,
               },
             ],

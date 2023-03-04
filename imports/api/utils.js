@@ -75,15 +75,19 @@ export function computePlayerScoreFromBacklog(player, games) {
     ) {
       let playerKills = game.scores[player._id];
 
-      // Retreiving player data from previous iteration to work on it
+      // Bonus
       let bonus = 0;
-       if(game.rank == 1){
-         bonus = 3;
-       }else if(game.rank == 2){
-         bonus = 2;
-       }else if(game.rank == 3) {
-         bonus = 1
-       }
+      if (game.rank == 1) {
+        bonus = 3;
+      } else if (game.rank == 2) {
+        bonus = 2;
+      } else if (game.rank == 3) {
+        bonus = 1;
+      } else if (game.rank > 10) {
+        bonus = -3;
+      }
+
+      // Retreiving player data from previous iteration to work on it
 
       playerKills += bonus;
       let newBalance = player.balance + playerKills - player.requiredKills;
@@ -144,9 +148,9 @@ export function computePlayerScoreFromBacklog(player, games) {
         newLevel = 3;
       } else if (newRequiredKills <= 5) {
         newLevel = 4;
-      }else if (newRequiredKills <= 6) {
+      } else if (newRequiredKills <= 6) {
         newLevel = 5;
-      }else if (newRequiredKills <= 7) {
+      } else if (newRequiredKills <= 7) {
         newLevel = 6;
       } else {
         newLevel = 7;
