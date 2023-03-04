@@ -211,7 +211,7 @@
                     v-if="!editedCells[game._id + '-' + score.playerId]"
                   >
                     {{ score ? score.score : "-" }}
-                    <span v-if="score && score.playerId == game.bestPlayerId"
+                    <span v-if="score && score.score == game.bestNumberKill"
                       >👑</span
                     >
 

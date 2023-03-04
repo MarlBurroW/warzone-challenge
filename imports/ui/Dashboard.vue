@@ -74,11 +74,19 @@
                 >Points(s) needed to level up in the next game</span
               >
 
-              <span class="text-4xl font-bold">{{
-                player.requiredBalanceToUpgrade -
-                player.balance +
-                player.requiredKills
-              }}</span>
+            <div>
+              Total kill:
+              <strong>{{
+                numeral(currentSessionStats[player._id].totalKill).format("0")
+              }}</strong>
+            </div>
+            <div class="mb-3">
+              Avg kills/game:
+              <strong>{{
+                numeral(currentSessionStats[player._id].averageKill).format(
+                  "0,0.00"
+                )
+              }}</strong>
             </div>
           </div>
 
