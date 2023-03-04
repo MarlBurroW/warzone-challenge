@@ -288,6 +288,7 @@
                     v-if="!editedCells[game._id + '-rank']"
                   >
                     {{ game.rank }}
+                    <span>{{ getRankIndicator(game.rank)}}</span>
                   </div>
                   <div v-else>
                     <form
@@ -446,6 +447,11 @@ export default {
 
       if (kills <= 1) return "💩";
       if (kills <= 2) return "🤢";
+    },
+    getRankIndicator(rank) {
+      if (rank === "1") return "🥇";
+      if (rank === "2") return "🥈";
+      if (rank === "3") return "🥉";
     },
     deleteGame(gameId) {
       if (!confirm("Êtes-vous sûr de vouloir supprimer cette partie ?")) return;
