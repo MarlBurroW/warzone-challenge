@@ -75,23 +75,11 @@
               class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-purple-400"
             >
               <span class="mb-3"
-                >Points(s) needed to level up in the next game</span
+                >Point(s) needed to level up in the next game</span
               >
-
-              <div>
-                Total kill:
-                <strong>{{
-                  numeral(currentSessionStats[player._id].totalKill).format("0")
-                }}</strong>
-              </div>
-              <div class="mb-3">
-                Avg kills/game:
-                <strong>{{
-                  numeral(currentSessionStats[player._id].averageKill).format(
-                    "0,0.00"
-                  )
-                }}</strong>
-              </div>
+              <span class="text-4xl font-bold">{{
+                player.requiredBalanceToUpgrade
+              }}</span>
             </div>
           </div>
           <div
@@ -166,7 +154,7 @@
                 Object.assign({}, chartOptions, {
                   scales: {
                     y: {
-                      max: 25,
+                      max: currentSessionMaxPlayerKill,
                       ticks: { color: 'white', beginAtZero: true },
                     },
                     x: { ticks: { color: 'white', beginAtZero: true } },
@@ -288,11 +276,13 @@ import "chart.js/auto";
 // Generate an array of beautiful colors
 
 const playerColors = [
+  "#0ea5e9",
   "#f87171",
   "#fbbf24",
   "#a3e635",
+
   "#10b981",
-  "#0ea5e9",
+
   "#6366f1",
   "#d946ef",
   "#f43f5e",
@@ -338,6 +328,23 @@ export default {
   },
 
   computed: {
+    currentSessionMaxPlayerKill() {
+      const currentSession =
+        this.groupedComputedGames[this.groupedComputedGames.length - 1];
+
+      // Iterate over all score and find the max
+
+      const max = currentSession.reduce((acc, game) => {
+        const maxGameScore = game.scores.reduce((acc, score) => {
+          return Math.max(acc, score.score);
+        }, 0);
+
+        return Math.max(acc, maxGameScore);
+      }, 0);
+
+      return max;
+    },
+
     globalChartData() {
       const sessions = this.groupedComputedGames;
 
@@ -642,7 +649,8 @@ export default {
       if (mmr < 1310) return "/images/new/m3.png";
       if (mmr < 1330) return "/images/new/m2.png";
       if (mmr < 1350) return "/images/new/m1.png";
-      return "/images/gm.png";
+      if (mmr >= 1350) return "/images/gm.png";
+      return "/images/vomit.png";
     },
   },
 };
