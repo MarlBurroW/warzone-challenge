@@ -66,6 +66,7 @@ export function computePlayerScoreFromBacklog(player, games) {
   // Iterate over games
 
   let gameRankList = [];
+  let playerKillList = [];
   for (let i = 0; i < games.length; i++) {
     const game = games[i];
     if(game.rank != null){
@@ -96,6 +97,7 @@ export function computePlayerScoreFromBacklog(player, games) {
       // Retreiving player data from previous iteration to work on it
 
       playerKills += bonus;
+      playerKillList.push(playerKills);
       let newBalance = player.balance + playerKills - player.requiredKills;
       let newLastGameKills = playerKills;
       let newRequiredKills = player.requiredKills;
@@ -175,12 +177,17 @@ export function computePlayerScoreFromBacklog(player, games) {
   let totalGameRankAverage = gameRankList.reduce((x,y) => {
     return Number(x) + Number(y);
   }) / gameRankList.length;
-  let totalRecentGameRankAverage = gameRankList.slice(-15).reduce((x,y) => {
+  let recentGameRankAverage = gameRankList.slice(-15).reduce((x,y) => {
     return Number(x) + Number(y);
   } ) / 15;
-  let ponderatedAverageRank = (totalGameRankAverage + (totalRecentGameRankAverage * 3)) / 4;
 
-  player.mmr = ((((player.avgKills * 2) - ponderatedAverageRank) + 100))* 5;
+  let recentPlayerKillAverage = playerKillList.slice(-15).reduce((x,y) => {
+    return Number(x) + Number(y);
+  }) / playerKillList.length;
+  let ponderatedAverageRank = (totalGameRankAverage + (recentGameRankAverage * 2)) / 3;
+  let ponderatedPlayerKillAverage = (player.avgKills + (recentPlayerKillAverage * 2)) / 3;
+
+  player.mmr = ((((ponderatedPlayerKillAverage * 2) - ponderatedAverageRank) + 100))* 5;
 
   Players.update(player._id, {
     $set: {
