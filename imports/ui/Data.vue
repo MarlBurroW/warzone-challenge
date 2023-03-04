@@ -414,7 +414,6 @@ export default {
         for (let i = 0; i < session.length; i++) {
           const game = session[i];
           if (game.rank) {
-            console.log("game.rank", game.rank);
             totalRank += Number(game.rank);
           } else {
             notDefined++;

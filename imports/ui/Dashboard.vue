@@ -1,85 +1,78 @@
 <template>
   <div class="bg-zinc-700 p-10 mb-5">
-    <h1 class="font-bold text-3xl mb-[50px] text-center text-white">Players</h1>
+    <h1 class="font-bold text-8xl mb-[50px] text-center text-white">Players</h1>
 
     <div class="flex w-full justify-center flex-wrap">
       <div
         key="player._id"
         v-for="player in players"
-        class="bg-zinc-800 border-t-4 border-green-400 w-[400px] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
+        class="bg-zinc-800 shadow-xl border-t-8 border-[#7ec92e] w-[400px] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
       >
+        <img
+          class="absolute z-0 opacity-10 w-full left-0 right-0"
+          :src="getLevelLogo(player.level)"
+        />
         <div class="w-[100px] absolute -top-12 right-5">
           <img class="" :src="getLevelLogo(player.level)" />
         </div>
-        <span class="text-3xl mb-3 font-black">{{ player.nickname }}</span>
+        <div class="z-1 relative">
+          <span class="text-3xl mb-3 font-black">{{ player.nickname }}</span>
 
-        <div class="flex flex-col mb-5">
-          <span class="mb-4">Current balance</span>
-          <div class="flex justify-center flex-col items-center">
-            <span
-              :class="`text-9xl font-black mr-5 mb-6 ${
-                player.balance < 0 ? 'text-red-500' : 'text-green-300'
-              }`"
-              >{{ player.balance }}</span
-            >
-
-            <div class="flex justify-center items-center mb-10">
-              <img
-                v-if="player.level != 0"
-                class="w-12 mr-6"
-                :src="getLevelLogo(player.level - 1)"
-              />
-
+          <div class="flex flex-col mb-5 relative">
+            <span class="mb-4">Current balance</span>
+            <div class="flex justify-center">
+              <img class="w-[100px]" :src="getMmrLogo(player.mmr)" />
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 my-5">
+              <div class="bg-blue-600 h-2 rounded-full" :style="getProgressMmrStyle(player.mmr)"></div>
+              <span class="font-bold">{{Math.round(player.mmr)}}</span>
+            </div>
+            <div class="flex justify-center flex-col items-center">
               <span
-                v-if="player.level != 0"
-                class="text-3xl font-bold text-red-500"
-                >{{ -player.requiredBalanceToUpgrade }}</span
-              ><span class="text-3xl font-bold" v-if="player.level != 0"
-                >&nbsp;/&nbsp;</span
+                :class="`text-9xl font-black mr-5 mb-6 ${
+                  player.balance < 0 ? 'text-red-500' : 'text-green-300'
+                }`"
+                >{{ player.balance }}</span
               >
 
-              <span class="text-3xl font-bold mr-6 text-green-300">{{
-                player.requiredBalanceToUpgrade
-              }}</span>
+              <div class="flex justify-center items-center mb-10">
+                <img
+                  v-if="player.level != 0"
+                  class="w-12 mr-6"
+                  :src="getLevelLogo(player.level - 1)"
+                />
 
-              <img class="w-12" :src="getLevelLogo(player.level + 1)" />
+                <span
+                  v-if="player.level != 0"
+                  class="text-3xl font-bold text-red-500"
+                  >{{ -player.requiredBalanceToUpgrade }}</span
+                ><span class="text-3xl font-bold" v-if="player.level != 0"
+                  >&nbsp;/&nbsp;</span
+                >
+
+                <span class="text-3xl font-bold mr-6 text-green-300">{{
+                  player.requiredBalanceToUpgrade
+                }}</span>
+
+                <img class="w-12" :src="getLevelLogo(player.level + 1)" />
+
+              </div>
             </div>
           </div>
-        </div>
-        <div class="flex gap-2 mb-5 w-full">
-          <div
-            class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-blue-400"
-          >
-            <span class="mb-3">Required point(s) per game</span>
-
-            <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
-          </div>
-          <div
-            class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-purple-400"
-          >
-            <span class="mb-3"
-              >Points(s) needed to level up in the next game</span
+          <div class="flex gap-2 mb-5 w-full">
+            <div
+              class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-blue-400"
             >
+              <span class="mb-3">Required point(s) per game</span>
 
-            <span class="text-4xl font-bold">{{
-              player.requiredBalanceToUpgrade -
-              player.balance +
-              player.requiredKills
-            }}</span>
-          </div>
-        </div>
-
-        <div
-          class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
-        >
-          <div class="text-left">
-            <div class="mb-3 font-bold">Session stats</div>
-            <div>
-              Game played:
-              <strong>{{
-                numeral(currentSessionStats[player._id].totalGames).format("0")
-              }}</strong>
+              <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
             </div>
+            <div
+              class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-purple-400"
+            >
+              <span class="mb-3"
+                >Points(s) needed to level up in the next game</span
+              >
 
             <div>
               Total kill:
@@ -97,70 +90,168 @@
             </div>
           </div>
 
-          <div class="text-right">
-            <div class="mb-3 font-bold">Global stats</div>
-            <div>
-              Game played:
-              <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
+          <div
+            class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
+          >
+            <div class="text-left">
+              <div class="mb-3 font-bold">Session stats</div>
+              <div>
+                Game played:
+                <strong>{{
+                  numeral(currentSessionStats[player._id].totalGames).format(
+                    "0"
+                  )
+                }}</strong>
+              </div>
+
+              <div>
+                Total kill::
+                <strong>{{
+                  numeral(currentSessionStats[player._id].totalKill).format("0")
+                }}</strong>
+              </div>
+              <div class="mb-3">
+                Avg kills/game:
+                <strong>{{
+                  numeral(currentSessionStats[player._id].averageKill).format(
+                    "0,0.00"
+                  )
+                }}</strong>
+              </div>
             </div>
 
-            <div>
-              Total kill:
-              <strong>{{ numeral(player.totalKills).format("0") }}</strong>
-            </div>
-            <div class="mb-3">
-              Avg kills/game:
-              <strong>{{ numeral(player.avgKills).format("0,0.00") }}</strong>
+            <div class="text-right">
+              <div class="mb-3 font-bold">Global stats</div>
+              <div>
+                Game played:
+                <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
+              </div>
+
+              <div>
+                Total kill:
+                <strong>{{ numeral(player.totalKills).format("0") }}</strong>
+              </div>
+              <div class="mb-3">
+                Avg kills/game:
+                <strong>{{ numeral(player.avgKills).format("0,0.00") }}</strong>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div
-          class="lex flex-col bg-zinc-600 p-2 border-l-4 border-pink-400 rounded-lg flex-col flex mb-5"
-        >
-          <Bar
-            class="mb-3 max-h-[200px]"
-            :options="chartOptions"
-            :data="playerChartData[player._id].avgKills"
-          />
+          <div
+            class="lex flex-col bg-zinc-600 p-2 border-l-4 border-pink-400 rounded-lg flex-col flex mb-5"
+          >
+            <Bar
+              class="mb-3 max-h-[200px]"
+              :options="
+                Object.assign({}, chartOptions, { scales: { y: { max: 10 } } })
+              "
+              :data="playerChartData[player._id].avgKills"
+            />
 
-          <Bar
-            class="mb-3 max-h-[200px]"
-            :options="chartOptions"
-            :data="playerChartData[player._id].latestSessionKills"
-          />
+            <Bar
+              class="mb-3 max-h-[200px]"
+              :options="
+                Object.assign({}, chartOptions, { scales: { y: { max: 25 } } })
+              "
+              :data="playerChartData[player._id].latestSessionKills"
+            />
+          </div>
         </div>
       </div>
     </div>
-    <h1 class="font-bold text-3xl mb-[50px] text-center text-white">Graphs</h1>
+    <h1 class="text-white font-bold text-6xl text-center mb-[100px] mt-[100px]">
+      Current session stats
+    </h1>
 
-    <div class="flex w-1/2 mx-auto overflow-auto">
-      <Bar
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.latestSessionKills"
-      />
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Players kills during current session
+      </h1>
+      <div class="flex mx-auto overflow-auto">
+        <Line
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.playersCurrentSessionKills"
+        />
+      </div>
     </div>
-    <div class="flex w-1/2 mx-auto overflow-auto">
-      <Bar
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.sessionsKills"
-      />
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Current session kills repartition
+      </h1>
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Doughnut
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.currentSessionKillsRepartition"
+        ></Doughnut>
+      </div>
     </div>
-    <div class="flex w-1/2 mx-auto overflow-auto">
-      <Bar
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.playersSessionKills"
-      />
+
+    <h1 class="text-white font-bold text-6xl text-center mb-[100px] mt-[100px]">
+      Global stats
+    </h1>
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Team K/G evolution
+      </h1>
+
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Bar
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.teamAverageKillsPerSession"
+        />
+      </div>
     </div>
-    <div class="flex w-1/2 mx-auto overflow-auto">
-      <Bar
-        class="mb-3 w-full h-[400px]"
-        :options="chartOptions"
-        :data="globalChartData.playersCurrentSessionKills"
-      />
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Players total kills during each sessions
+      </h1>
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Bar
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.playersSessionKills"
+        />
+      </div>
+    </div>
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Players K/G evolution
+      </h1>
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Line
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.sessionsPlayerAvgKillsPerSession"
+        />
+      </div>
+    </div>
+    <div
+      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+    >
+      <h1 class="text-white font-bold text-2xl text-center mb-5">
+        Total kill repartition
+      </h1>
+      <div class="flex w-1/2 mx-auto overflow-auto">
+        <Doughnut
+          class="mb-3 w-full h-[400px]"
+          :options="chartOptions"
+          :data="globalChartData.globalKillsRepartition"
+        ></Doughnut>
+      </div>
     </div>
   </div>
 </template>
@@ -172,27 +263,21 @@ import { XMarkIcon } from "@heroicons/vue/24/solid";
 <script>
 import dataMixin from "./data-mixin.js";
 
-import { Bar, Line } from "vue-chartjs";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Colors,
-} from "chart.js";
+import { Bar, Line, Doughnut } from "vue-chartjs";
+import "chart.js/auto";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  Colors
-);
+// Generate an array of beautiful colors
+
+const playerColors = [
+  "#f87171",
+  "#fbbf24",
+  "#a3e635",
+  "#10b981",
+  "#0ea5e9",
+  "#6366f1",
+  "#d946ef",
+  "#f43f5e",
+];
 
 import moment from "moment";
 import numeral from "numeral";
@@ -202,7 +287,7 @@ import _ from "lodash";
 // switch between locales
 numeral.locale("fr");
 export default {
-  components: { Bar, Line },
+  components: { Bar, Line, Doughnut },
   mixins: [dataMixin],
   data() {
     return {
@@ -240,9 +325,12 @@ export default {
       const latestSession =
         sessions.length > 0 ? sessions[sessions.length - 1] : [];
 
-      const latestSessionKills = latestSession.map((g) => {
-        return g.scores.reduce((acc, s) => acc + s.score, 0);
-      });
+      const latestSessionKills = latestSession
+        .slice()
+        .reverse()
+        .map((g) => {
+          return g.scores.reduce((acc, s) => acc + s.score, 0);
+        });
 
       const options = {
         latestSessionKills: {
@@ -259,28 +347,98 @@ export default {
             },
           ],
         },
-        sessionsKills: {
-          labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
+
+        latestSessionKills: {
+          labels: [
+            ...latestSessionKills.map((s, index) => `Game ${index + 1}`),
+          ],
           datasets: [
             {
-              label: "Sessions team kills",
-              data: sessions.map((s) => {
-                return s
-                  .map((g) => {
-                    return g.scores.reduce((acc, s) => acc + s.score, 0);
-                  })
-                  .reduce((acc, s) => acc + s, 0);
-              }),
+              label: "Latest session team kills",
+              data: latestSessionKills,
               backgroundColor: "rgba(25, 255, 25, 0.2)",
               borderColor: "rgba(25, 255, 25, 1)",
               borderWidth: 1,
             },
           ],
         },
+        globalKillsRepartition: {
+          labels: this.players.map((p) => p.nickname),
+          datasets: [
+            {
+              data: this.players.map((p) => {
+                return this.computedGames.reduce((acc, g) => {
+                  const score = g.scores.find((s) => s.playerId === p._id);
+                  return acc + (score ? score.score : 0);
+                }, 0);
+              }),
+              backgroundColor: playerColors,
+            },
+          ],
+        },
+        currentSessionKillsRepartition: {
+          labels: this.players.map((p) => p.nickname),
+          datasets: [
+            {
+              data: this.players.map((p) => {
+                return latestSession.reduce((acc, g) => {
+                  const score = g.scores.find((s) => s.playerId === p._id);
+                  return acc + (score ? score.score : 0);
+                }, 0);
+              }),
+              backgroundColor: playerColors,
+            },
+          ],
+        },
+
+        teamAverageKillsPerSession: {
+          labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
+          datasets: [
+            {
+              label: "Team average kills per session",
+              data: sessions.map((s) => {
+                return (
+                  s
+                    .map((g) => {
+                      return g.scores.reduce((acc, s) => acc + s.score, 0);
+                    })
+                    .reduce((acc, s) => acc + s, 0) / s.length
+                );
+              }),
+              backgroundColor: "rgba(16, 185, 129, 0.50)",
+
+              borderWidth: 1,
+            },
+          ],
+        },
+
+        sessionsPlayerAvgKillsPerSession: {
+          labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
+          datasets: [
+            ...this.players.map((p, index) => {
+              return {
+                label: p.nickname,
+                data: sessions.map((s) => {
+                  return (
+                    s
+                      .map((g) => {
+                        return g.scores.find((s) => s.playerId === p._id)
+                          ?.score;
+                      })
+                      .reduce((acc, s) => acc + s, 0) / s.length
+                  );
+                }),
+                backgroundColor: playerColors[index],
+                borderColor: playerColors[index],
+                borderWidth: 4,
+              };
+            }),
+          ],
+        },
 
         playersSessionKills: {
           labels: [...sessions.map((s, index) => `Session ${index + 1}`)],
-          datasets: this.players.map((p) => {
+          datasets: this.players.map((p, index) => {
             return {
               label: p.nickname,
               data: sessions.map((s) => {
@@ -291,7 +449,8 @@ export default {
                   })
                   .reduce((acc, s) => acc + s, 0);
               }),
-
+              backgroundColor: playerColors[index],
+              borderColor: playerColors[index],
               borderWidth: 1,
             };
           }),
@@ -300,15 +459,20 @@ export default {
           labels: [
             ...latestSessionKills.map((s, index) => `Game ${index + 1}`),
           ],
-          datasets: this.players.map((p) => {
+
+          datasets: this.players.map((p, index) => {
             return {
               label: p.nickname,
-              data: latestSession.map((g) => {
-                const score = g.scores.find((s) => s.playerId == p._id);
-                return score ? score.score : 0;
-              }),
-
-              borderWidth: 1,
+              data: latestSession
+                .slice()
+                .reverse()
+                .map((g) => {
+                  const score = g.scores.find((s) => s.playerId == p._id);
+                  return score ? score.score : 0;
+                }),
+              backgroundColor: playerColors[index],
+              borderColor: playerColors[index],
+              borderWidth: 4,
             };
           }),
         },
@@ -353,12 +517,11 @@ export default {
             ],
           },
           latestSessionKills: {
-            labels: [...latestSessionKills.map((s, index) => index + 1)],
+            labels: [...latestSessionKills.map((g, index) => index + 1)],
             datasets: [
               {
                 label: "Session kills / games",
                 backgroundColor: "#86efac",
-
                 data: latestSessionKills,
               },
             ],
@@ -385,6 +548,13 @@ export default {
 
   methods: {
     numeral,
+
+    getProgressMmrStyle(mmr){
+      let rest = mmr % 20;
+      let pourcentage =  Math.trunc(rest*100)/20
+      ;
+      return "width:" + pourcentage +"%;"
+    },
     getSessionStats(session) {
       const stats = {};
       if (session) {
@@ -433,6 +603,29 @@ export default {
       };
 
       return map[level];
+    },
+    getMmrLogo(mmr) {
+      if(mmr < 990) return "/images/vomit.png"
+      if(mmr < 1010) return "/images/new/b3.png"
+      if(mmr < 1030) return "/images/new/b2.png"
+      if(mmr < 1050) return "/images/new/b1.png"
+      if(mmr < 1070) return "/images/new/a3.png"
+      if(mmr < 1090) return "/images/new/a2.png"
+      if(mmr < 1110) return "/images/new/a1.png"
+      if(mmr < 1130) return "/images/new/g3.png"
+      if(mmr < 1150) return "/images/new/g2.png"
+      if(mmr < 1170) return "/images/new/g1.png"
+      if(mmr < 1190) return "/images/new/p3.png"
+      if(mmr < 1210) return "/images/new/p2.png"
+      if(mmr < 1230) return "/images/new/p1.png"
+      if(mmr < 1250) return "/images/new/d3.png"
+      if(mmr < 1270) return "/images/new/d2.png"
+      if(mmr < 1290) return "/images/new/d1.png"
+      if(mmr < 1310) return "/images/new/m3.png"
+      if(mmr < 1330) return "/images/new/m2.png"
+      if(mmr < 1350) return "/images/new/m1.png"
+      return "/images/gm.png"
+
     },
   },
 };

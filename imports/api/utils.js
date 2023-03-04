@@ -55,6 +55,7 @@ export function computePlayerScoreFromBacklog(player, games) {
   player.totalKills = 0;
   player.avgKills = 0;
   player.gamesPlayed = 0;
+  player.mrr = 0;
 
   // Sort games by createdDate asc to compute in the right order
 
@@ -64,9 +65,15 @@ export function computePlayerScoreFromBacklog(player, games) {
 
   // Iterate over games
 
+  let gameRankList = [];
+  let playerKillList = [];
   for (let i = 0; i < games.length; i++) {
     const game = games[i];
-
+    if(game.rank != null){
+      if(player._id in game.scores){
+        gameRankList.push(game.rank);
+      }
+    }
     // Check if player has played in this game, and only compute score if so
 
     if (
@@ -75,17 +82,22 @@ export function computePlayerScoreFromBacklog(player, games) {
     ) {
       let playerKills = game.scores[player._id];
 
-      // Retreiving player data from previous iteration to work on it
+      // Bonus
       let bonus = 0;
-       if(game.rank == 1){
-         bonus = 3;
-       }else if(game.rank == 2){
-         bonus = 2;
-       }else if(game.rank == 3) {
-         bonus = 1
-       }
+      if (game.rank == 1) {
+        bonus = 3;
+      } else if (game.rank == 2) {
+        bonus = 2;
+      } else if (game.rank == 3) {
+        bonus = 1;
+      } else if (game.rank > 10) {
+        bonus = -3;
+      }
+
+      // Retreiving player data from previous iteration to work on it
 
       playerKills += bonus;
+      playerKillList.push(playerKills);
       let newBalance = player.balance + playerKills - player.requiredKills;
       let newLastGameKills = playerKills;
       let newRequiredKills = player.requiredKills;
@@ -102,6 +114,7 @@ export function computePlayerScoreFromBacklog(player, games) {
       } else {
         player.avgKills = 0;
       }
+
 
       // Check level up/down
 
@@ -144,9 +157,9 @@ export function computePlayerScoreFromBacklog(player, games) {
         newLevel = 3;
       } else if (newRequiredKills <= 5) {
         newLevel = 4;
-      }else if (newRequiredKills <= 6) {
+      } else if (newRequiredKills <= 6) {
         newLevel = 5;
-      }else if (newRequiredKills <= 7) {
+      } else if (newRequiredKills <= 7) {
         newLevel = 6;
       } else {
         newLevel = 7;
@@ -157,8 +170,23 @@ export function computePlayerScoreFromBacklog(player, games) {
       player.requiredKills = newRequiredKills;
       player.requiredBalanceToUpgrade = newRequiredBalanceToUpgrade;
       player.level = newLevel;
+
     }
   }
+
+  let totalGameRankAverage = gameRankList.reduce((x,y) => {
+    return Number(x) + Number(y);
+  }) / gameRankList.length;
+  let recentGameRankAverage = gameRankList.slice(-15).reduce((x,y) => {
+    return Number(x) + Number(y);
+  } ) / 15;
+
+  let recentPlayerKillAverage = playerKillList.slice(-15).reduce((x,y) => {
+    return Number(x) + Number(y);
+  }) / 15;
+  let ponderatedAverageRank = (totalGameRankAverage + (recentGameRankAverage * 3)) / 4;
+  let ponderatedPlayerKillAverage = (player.avgKills + (recentPlayerKillAverage * 3)) / 4;
+  player.mmr = ((((ponderatedPlayerKillAverage * 3) - ponderatedAverageRank) + 100))* 10;
 
   Players.update(player._id, {
     $set: {
@@ -170,6 +198,7 @@ export function computePlayerScoreFromBacklog(player, games) {
       gamesPlayed: player.gamesPlayed,
       totalKills: player.totalKills,
       avgKills: player.avgKills,
+      mmr: player.mmr,
     },
   });
 }
