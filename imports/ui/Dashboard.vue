@@ -10,21 +10,21 @@
       >
         <img
           class="absolute z-0 opacity-10 w-full left-0 right-0"
-          :src="getMmrLogo(player.mmr)"
+          :src="getMmrLogo(player.level)"
         />
 
         <div class="z-1 relative">
           <div class="text-3xl mb-5 font-black">{{ player.nickname }}</div>
 
           <div class="flex flex-col mb-5 relative">
-            <div class="flex justify-center">
+            <div class="flex justify-center mb-8">
               <img class="w-[100px]" :src="getMmrLogo(player.level)" />
             </div>
             <div
               class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-5"
             >
               <div
-                class="bg-blue-600 h-2 rounded-full transition-all duration-1000 ease-in-out"
+                class="bg-[#7ec92e] h-2 rounded-full transition-all duration-1000 ease-in-out"
                 :style="getProgressMmrStyle(player)"
               ></div>
             </div>
