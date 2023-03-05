@@ -49,6 +49,7 @@ export default {
           createdAt: game.createdAt,
           rank: game.rank,
           bestNumberKill: null,
+          active: game.active,
         };
 
         for (let j = 0; j < this.players.length; j++) {
@@ -69,7 +70,6 @@ export default {
           ) {
             computedGame.bestNumberKill = game.scores[player._id];
           }
-
         }
 
         games.push(computedGame);

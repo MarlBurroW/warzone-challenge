@@ -288,7 +288,7 @@
                     v-if="!editedCells[game._id + '-rank']"
                   >
                     {{ game.rank }}
-                    <span>{{ getRankIndicator(game.rank)}}</span>
+                    <span>{{ getRankIndicator(game.rank) }}</span>
                   </div>
                   <div v-else>
                     <form
@@ -342,13 +342,24 @@
               </div>
             </td>
 
-            <td>
+            <td class="flex items-center">
               <button
-                class="bg-red-500 px-5 py-2 flex items-center rounded-md text-white hover:bg-gray-200 transition-all w-full"
+                class="bg-red-500 px-5 py-2 flex items-center rounded-md text-white hover:bg-red-400 transition-all w-full"
                 @click="deleteGame(game._id)"
               >
                 <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
                 Supprimer
+              </button>
+
+              <button
+                @click="toggleActiveGame(game)"
+                :class="`${
+                  game.active
+                    ? 'bg-green-500 hover:bg-green-400'
+                    : 'bg-zinc-600 hover:zinc-500'
+                } px-5 py-2 rounded-md text-white transition-all w-full`"
+              >
+                {{ game.active ? "Active" : "Disabled" }}
               </button>
             </td>
           </tr>
@@ -473,6 +484,9 @@ export default {
       Meteor.call("createPlayer", this.nickname);
 
       this.nickname = "";
+    },
+    toggleActiveGame(game) {
+      Meteor.call("updateGameActiveStatus", game._id, !!!game.active);
     },
   },
   data() {

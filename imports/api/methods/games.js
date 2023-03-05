@@ -10,7 +10,7 @@ function updatePlayerScores() {
 
   // Fetch updated game backlog
 
-  const games = Games.find().fetch();
+  const games = Games.find({ active: true }).fetch();
 
   // Compute player scores from backlog
 
@@ -21,11 +21,12 @@ function updatePlayerScores() {
 }
 
 Meteor.methods({
-  createGame(scores,rank) {
+  createGame(scores, rank) {
     const gameCreated = Games.insert({
       createdAt: new Date(),
+      active: true,
       scores,
-      rank:null,
+      rank: null,
     });
 
     updatePlayerScores();
@@ -56,7 +57,7 @@ Meteor.methods({
   },
 
   updateGameRank(gameId, rank) {
-    if(rank == 0){
+    if (rank == 0) {
       rank = null;
     }
     Games.update(gameId, {
@@ -66,6 +67,17 @@ Meteor.methods({
     });
     updatePlayerScores();
     computeGames();
-  }
+  },
+
+  updateGameActiveStatus(gameId, active) {
+    Games.update(gameId, {
+      $set: {
+        active: active,
+      },
+    });
+
+    updatePlayerScores();
+    computeGames();
+  },
 });
 console.log("Game methods registered");

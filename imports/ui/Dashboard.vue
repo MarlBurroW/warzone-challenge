@@ -345,21 +345,25 @@ export default {
 
       // Iterate over all score and find the max
 
-      const max = currentSession.reduce((acc, game) => {
-        const maxGameScore = game.scores.reduce((acc, score) => {
-          return Math.max(acc, score.score);
-        }, 0);
+      const max = currentSession
+        .filter((g) => g.active === true)
+        .reduce((acc, game) => {
+          const maxGameScore = game.scores.reduce((acc, score) => {
+            return Math.max(acc, score.score);
+          }, 0);
 
-        return Math.max(acc, maxGameScore);
-      }, 0);
+          return Math.max(acc, maxGameScore);
+        }, 0);
 
       return max;
     },
 
     globalChartData() {
-      const sessions = this.groupedComputedGames;
+      const sessions = this.groupedComputedGames.map((s) => {
+        return s.filter((g) => g.active === true);
+      });
 
-      const latestSession =
+      let latestSession =
         sessions.length > 0 ? sessions[sessions.length - 1] : [];
 
       const latestSessionKills = latestSession
@@ -404,10 +408,12 @@ export default {
           datasets: [
             {
               data: this.players.map((p) => {
-                return this.computedGames.reduce((acc, g) => {
-                  const score = g.scores.find((s) => s.playerId === p._id);
-                  return acc + (score ? score.score : 0);
-                }, 0);
+                return this.computedGames
+                  .filter((g) => g.active === true)
+                  .reduce((acc, g) => {
+                    const score = g.scores.find((s) => s.playerId === p._id);
+                    return acc + (score ? score.score : 0);
+                  }, 0);
               }),
               backgroundColor: playerColors,
             },
@@ -530,6 +536,7 @@ export default {
 
         const playerSessionsKills = sessions.map((s) => {
           return s
+            .filter((g) => g.active === true)
             .map((g) => {
               const score = g.scores.find((s) => s.playerId == player._id);
               return score ? score.score : 0;
