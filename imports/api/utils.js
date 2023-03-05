@@ -52,6 +52,7 @@ export function computePlayerScoreFromBacklog(player, games) {
   player.gamesPlayed = 0;
   player.mrr = 0;
   player.pourcentNextLevel = 0;
+  player.topPlayer = 0;
 
   // Sort games by createdDate asc to compute in the right order
 
@@ -80,6 +81,7 @@ export function computePlayerScoreFromBacklog(player, games) {
         avgKg: 0,
         kgTrending: 0,
         pourcentNextLevel: 0,
+        topPlayer: 0,
       },
     });
 
@@ -94,7 +96,6 @@ export function computePlayerScoreFromBacklog(player, games) {
         game.scores[player._id] !== null
       ) {
         gameRankList.push(game.rank);
-
         // set bonus
         if (game.rank == 1) {
           bonus.push(4);
@@ -114,6 +115,16 @@ export function computePlayerScoreFromBacklog(player, games) {
       game.scores.hasOwnProperty(player._id) &&
       game.scores[player._id] !== null
     ) {
+
+      let arrScores = Object.values(game.scores);
+      let maxScore = Math.max(...arrScores);
+      if(game.scores[player._id] >= maxScore) {
+          if(player.topPlayer){
+            player.topPlayer++;
+          }else{
+            player.topPlayer = 1;
+          }
+      }
       let playerKills = game.scores[player._id];
 
       // Retreiving player data from previous iteration to work on it
@@ -186,6 +197,7 @@ export function computePlayerScoreFromBacklog(player, games) {
       kg15LastGamesTrending: player.kg15LastGamesTrending,
       avgKg: player.avgKg,
       kgTrending: player.kgTrending,
+      topPlayer: player.topPlayer,
     },
   });
 }
