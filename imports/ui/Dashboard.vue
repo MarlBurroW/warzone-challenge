@@ -28,7 +28,7 @@
               <div class="flex justify-center mb-8">
                 <img class="w-34 h-34" :src="getMmrLogo(player.level)" />
               </div>
-              <span v-if="!isNaN(player.mmr)" class="font-bold text-2xl mb-5">{{
+              <span v-if="!isNaN(player.mmr)" class="font-thin text-3xl mb-5">{{
                 Math.round(player.mmr)
               }}</span>
               <div class="flex items-center gap-4">
@@ -55,9 +55,9 @@
                 :style="`border-color: ${playerColors[index]};`"
                 class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
               >
-                <div class="mb-3 font-bold">Global K/G</div>
+                <div class="mb-3 font-thin">Global K/G</div>
                 <div class="flex justify-center items-end">
-                  <span class="text-4xl font-bold"
+                  <span class="text-4xl font-thin"
                     >{{ numeral(player.avgKg).format("0,0.00") }}
                   </span>
 
@@ -80,9 +80,9 @@
                 :style="`border-color: ${playerColors[index]};`"
                 class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
               >
-                <div class="mb-3 font-bold">15 last games K/G</div>
+                <div class="mb-3 font-thin">15 last games K/G</div>
                 <div class="flex justify-center items-end">
-                  <span class="text-4xl font-bold"
+                  <span class="text-4xl font-thin"
                     >{{ numeral(player.avgKg15LastGames).format("0,0.00") }}
                   </span>
 
@@ -110,7 +110,7 @@
               class="lex bg-zinc-600 p-2 border-l-4 rounded-lg flex justify-between mb-5"
             >
               <div class="text-left" v-if="currentSession">
-                <div class="mb-3 font-bold">Session stats</div>
+                <div class="mb-3 font-thin">Session stats</div>
 
                 <div>
                   Game played:
@@ -140,7 +140,7 @@
               </div>
 
               <div class="text-right">
-                <div class="mb-3 font-bold">Global stats</div>
+                <div class="mb-3 font-thin">Global stats</div>
                 <div>
                   Game played:
                   <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
@@ -201,14 +201,14 @@
       style="padding-top: 10rem; padding-bottom: 10rem"
       class="relative bg-gradient-to-b from-zinc-700 to-zinc-800"
     >
-      <h1 class="text-white font-bold text-6xl text-center mb-[10rem]">
+      <h1 class="text-white font-thin text-6xl text-center mb-[10rem]">
         Current session stats
       </h1>
 
       <div
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
-        <h1 class="text-white font-bold text-2xl text-center mb-5">
+        <h1 class="text-white font-thin text-2xl text-center mb-5">
           Players kills during current session
         </h1>
         <div class="flex mx-auto overflow-auto">
@@ -222,7 +222,7 @@
       <div
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
-        <h1 class="text-white font-bold text-2xl text-center mb-5">
+        <h1 class="text-white font-thin text-2xl text-center mb-5">
           Current session kills repartition
         </h1>
         <div class="flex w-1/2 mx-auto overflow-auto">
@@ -235,14 +235,14 @@
       </div>
 
       <h1
-        class="text-white font-bold text-6xl text-center mb-[100px] mt-[100px]"
+        class="text-white font-thin text-6xl text-center mb-[100px] mt-[100px]"
       >
         Global stats
       </h1>
       <div
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
-        <h1 class="text-white font-bold text-2xl text-center mb-5">
+        <h1 class="text-white font-thin text-2xl text-center mb-5">
           Team K/G evolution
         </h1>
 
@@ -257,7 +257,7 @@
       <div
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
-        <h1 class="text-white font-bold text-2xl text-center mb-5">
+        <h1 class="text-white font-thin text-2xl text-center mb-5">
           Players total kills during each sessions
         </h1>
         <div class="flex w-1/2 mx-auto overflow-auto">
@@ -272,7 +272,7 @@
       <div
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
-        <h1 class="text-white font-bold text-2xl text-center mb-5">
+        <h1 class="text-white font-thin text-2xl text-center mb-5">
           Players K/G evolution
         </h1>
         <div class="flex w-1/2 mx-auto overflow-auto">
@@ -286,7 +286,7 @@
       <div
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
-        <h1 class="text-white font-bold text-2xl text-center mb-5">
+        <h1 class="text-white font-thin text-2xl text-center mb-5">
           Total kill repartition
         </h1>
         <div class="flex w-1/2 mx-auto overflow-auto">
