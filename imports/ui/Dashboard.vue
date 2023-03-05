@@ -131,6 +131,15 @@
                   }}</strong>
                 </div>
               </div>
+              <div class="mb-3">
+                Avg kills/game:
+                <strong>{{
+                  numeral(currentSessionStats[player._id].averageKill).format(
+                    "0,0.00"
+                  )
+                }}</strong>
+              </div>
+            </div>
 
               <div class="text-right">
                 <div class="mb-3 font-bold">Global stats</div>
@@ -147,6 +156,13 @@
                   Avg kills/game:
                   <strong>{{ numeral(player.avgKg).format("0,0.00") }}</strong>
                 </div>
+              </div>
+              <div class="">
+                Avg kills/game:
+                <strong>{{ numeral(player.avgKg).format("0,0.00") }}</strong>
+              </div>
+              <div class="mb-3">
+                Top Player: <strong>{{player.topPlayer }}</strong>
               </div>
             </div>
             <div
@@ -618,6 +634,13 @@ export default {
 
   methods: {
     numeral,
+    getStars(player) {
+      if(player.topPlayer){
+        console.log(player.topPlayer / 10)
+        return Math.trunc(player.topPlayer / 10)
+      }
+      return 0
+    },
     getProgressMmrStyle(player) {
       return "width:" + player.pourcentNextLevel + "%;";
     },

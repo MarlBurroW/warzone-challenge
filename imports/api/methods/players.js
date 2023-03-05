@@ -17,6 +17,8 @@ Meteor.methods({
       avgKg: 0,
       kgTrending: 0,
       pourcentNextLevel: 0,
+      topPlayer: 0,
+      star:0,
     });
   },
 
