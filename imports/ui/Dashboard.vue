@@ -11,9 +11,10 @@
 
       <div class="flex w-full justify-center flex-wrap">
         <div
-          key="player._id"
-          v-for="player in players"
-          class="bg-zinc-800 shadow-xl border-t-8 border-[#7ec92e] w-[30rem] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
+          :key="player._id"
+          v-for="(player, index) in players"
+          :style="`border-color: ${playerColors[index]};`"
+          class="bg-zinc-800 shadow-xl border-t-8 w-[30rem] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
           <img
             class="absolute z-0 opacity-10 w-full left-0 right-0"
@@ -575,7 +576,9 @@ export default {
             datasets: [
               {
                 label: "Avg kills / game",
-                backgroundColor: "#10b981",
+                backgroundColor: playerColors[i],
+
+                borderRadius: 4,
                 data: playerStats.map((s) => s.averageKill),
               },
             ],
@@ -585,7 +588,8 @@ export default {
             datasets: [
               {
                 label: "Session kills / games",
-                backgroundColor: "#10b981",
+                backgroundColor: playerColors[i],
+                borderRadius: 4,
                 data: latestSessionKills,
               },
             ],
