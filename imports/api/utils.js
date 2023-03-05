@@ -97,7 +97,7 @@ export function computePlayerScoreFromBacklog(player, games) {
 
         // set bonus
         if (game.rank == 1) {
-          bonus.push(3);
+          bonus.push(4);
         } else if (game.rank == 2) {
           bonus.push(2);
         } else if (game.rank == 3) {
