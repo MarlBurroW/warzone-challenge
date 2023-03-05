@@ -1,275 +1,296 @@
 <template>
-  <div class="bg-zinc-700 p-10 mb-5">
-    <h1 class="font-bold text-8xl mb-[50px] text-center text-white">Players</h1>
+  <div class="bg-zinc-700 mb-5">
+    <div
+      class="relative overflow-hidden px-10"
+      style="padding-top: 100px; padding-bottom: 100px"
+    >
+      <img
+        src="/images/bg.jpg"
+        class="absolute z-0 opacity-30 w-full left-0 right-0 top-0 bottom-0"
+      />
 
-    <div class="flex w-full justify-center flex-wrap">
-      <div
-        key="player._id"
-        v-for="player in players"
-        class="bg-zinc-800 shadow-xl border-t-8 border-[#7ec92e] w-[400px] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
-      >
-        <img
-          class="absolute z-0 opacity-10 w-full left-0 right-0"
-          :src="getMmrLogo(player.level)"
-        />
+      <div class="flex w-full justify-center flex-wrap">
+        <div
+          key="player._id"
+          v-for="player in players"
+          class="bg-zinc-800 shadow-xl border-t-8 border-[#7ec92e] w-[400px] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
+        >
+          <img
+            class="absolute z-0 opacity-10 w-full left-0 right-0"
+            :src="getMmrLogo(player.level)"
+          />
 
-        <div class="z-1 relative">
-          <div class="text-3xl mb-5 font-black">{{ player.nickname }}</div>
+          <div class="z-1 relative">
+            <div class="text-3xl mb-5 font-black">{{ player.nickname }}</div>
 
-          <div class="flex flex-col mb-5 relative">
-            <div class="flex justify-center mb-8">
-              <img class="w-[100px]" :src="getMmrLogo(player.level)" />
-            </div>
-            <div class="flex">
-              <img class="w-12" :src="getMmrLogo(player.level - 1)" />
-              <div
-                  class="w-full flex bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-5 align-middle"
-              >
+            <div class="flex flex-col mb-5 relative">
+              <div class="flex justify-center mb-8">
+                <img class="w-34 h-34" :src="getMmrLogo(player.level)" />
+              </div>
+              <span v-if="!isNaN(player.mmr)" class="font-bold text-2xl mb-5">{{
+                Math.round(player.mmr)
+              }}</span>
+              <div class="flex items-center gap-4">
+                <img class="w-12" :src="getMmrLogo(player.level - 1)" />
+
                 <div
-                    class="bg-[#7ec92e] h-2 rounded-full transition-all duration-1000 ease-in-out align-middle"
+                  class="w-full flex bg-gradient-to-t from-gray-500 to-gray-600 rounded-full h-2 align-middle"
+                >
+                  <div
+                    class="bg-[#a0ff3a] h-2 rounded-full transition-all duration-1000 ease-in-out align-middle"
                     :style="getProgressMmrStyle(player)"
-                ></div>
+                  ></div>
+                </div>
+                <img class="w-12" :src="getMmrLogo(player.level + 1)" />
               </div>
-              <img class="w-12" :src="getMmrLogo(player.level + 1)" />
             </div>
-            <span v-if="!isNaN(player.mmr)" class="font-bold text-2xl mb-5">{{
-              Math.round(player.mmr)
-            }}</span>
-          </div>
 
-          <div class="flex gap-2">
+            <div class="flex gap-2">
+              <div
+                class="bg-zinc-600 p-2 border-l-4 border-sky-500 rounded-lg mb-5 w-full"
+              >
+                <div class="mb-3 font-bold">Global K/G</div>
+                <div class="flex justify-center items-end">
+                  <span class="text-4xl font-bold"
+                    >{{ numeral(player.avgKg).format("0,0.00") }}
+                  </span>
+
+                  <ArrowUpRightIcon
+                    class="h-8 w-8 text-green-500"
+                    v-if="player.kgTrending == 1"
+                  >
+                  </ArrowUpRightIcon>
+                  <ArrowRightIcon class="h-8 w-8" v-if="player.kgTrending == 0">
+                  </ArrowRightIcon>
+                  <ArrowDownRightIcon
+                    class="h-8 w-8 text-red-500"
+                    v-if="player.kgTrending == -1"
+                  >
+                  </ArrowDownRightIcon>
+                </div>
+              </div>
+
+              <div
+                class="bg-zinc-600 p-2 border-l-4 border-violet-500 rounded-lg mb-5 w-full"
+              >
+                <div class="mb-3 font-bold">15 last games K/G</div>
+                <div class="flex justify-center items-end">
+                  <span class="text-4xl font-bold"
+                    >{{ numeral(player.avgKg15LastGames).format("0,0.00") }}
+                  </span>
+
+                  <ArrowUpRightIcon
+                    class="h-8 w-8 text-green-500"
+                    v-if="player.kg15LastGamesTrending == 1"
+                  >
+                  </ArrowUpRightIcon>
+                  <ArrowRightIcon
+                    class="h-8 w-8"
+                    v-if="player.kg15LastGamesTrending == 0"
+                  >
+                  </ArrowRightIcon>
+                  <ArrowDownRightIcon
+                    class="h-8 w-8 text-red-500"
+                    v-if="player.kg15LastGamesTrending == -1"
+                  >
+                  </ArrowDownRightIcon>
+                </div>
+              </div>
+            </div>
+
             <div
-              class="bg-zinc-600 p-2 border-l-4 border-sky-500 rounded-lg mb-5 w-full"
+              class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
             >
-              <div class="mb-3 font-bold">Global K/G</div>
-              <div class="flex justify-center items-end">
-                <span class="text-4xl font-bold"
-                  >{{ numeral(player.avgKg).format("0,0.00") }}
-                </span>
+              <div class="text-left" v-if="currentSession">
+                <div class="mb-3 font-bold">Session stats</div>
 
-                <ArrowUpRightIcon
-                  class="h-8 w-8 text-green-500"
-                  v-if="player.kgTrending == 1"
-                >
-                </ArrowUpRightIcon>
-                <ArrowRightIcon class="h-8 w-8" v-if="player.kgTrending == 0">
-                </ArrowRightIcon>
-                <ArrowDownRightIcon
-                  class="h-8 w-8 text-red-500"
-                  v-if="player.kgTrending == -1"
-                >
-                </ArrowDownRightIcon>
+                <div>
+                  Game played:
+                  <strong>{{
+                    numeral(currentSessionStats[player._id].totalGames).format(
+                      "0"
+                    )
+                  }}</strong>
+                </div>
+
+                <div>
+                  Total kill::
+                  <strong>{{
+                    numeral(currentSessionStats[player._id].totalKill).format(
+                      "0"
+                    )
+                  }}</strong>
+                </div>
+                <div class="mb-3">
+                  Avg kills/game:
+                  <strong>{{
+                    numeral(currentSessionStats[player._id].averageKill).format(
+                      "0,0.00"
+                    )
+                  }}</strong>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <div class="mb-3 font-bold">Global stats</div>
+                <div>
+                  Game played:
+                  <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
+                </div>
+
+                <div>
+                  Total kill:
+                  <strong>{{ numeral(player.totalKills).format("0") }}</strong>
+                </div>
+                <div class="mb-3">
+                  Avg kills/game:
+                  <strong>{{ numeral(player.avgKg).format("0,0.00") }}</strong>
+                </div>
               </div>
             </div>
-
             <div
-              class="bg-zinc-600 p-2 border-l-4 border-violet-500 rounded-lg mb-5 w-full"
+              class="lex flex-col bg-zinc-600 p-2 border-l-4 border-emerald-400 rounded-lg flex-col flex mb-5"
+              v-if="currentSession"
             >
-              <div class="mb-3 font-bold">15 last games K/G</div>
-              <div class="flex justify-center items-end">
-                <span class="text-4xl font-bold"
-                  >{{ numeral(player.avgKg15LastGames).format("0,0.00") }}
-                </span>
-
-                <ArrowUpRightIcon
-                  class="h-8 w-8 text-green-500"
-                  v-if="player.kg15LastGamesTrending == 1"
-                >
-                </ArrowUpRightIcon>
-                <ArrowRightIcon
-                  class="h-8 w-8"
-                  v-if="player.kg15LastGamesTrending == 0"
-                >
-                </ArrowRightIcon>
-                <ArrowDownRightIcon
-                  class="h-8 w-8 text-red-500"
-                  v-if="player.kg15LastGamesTrending == -1"
-                >
-                </ArrowDownRightIcon>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
-          >
-            <div class="text-left" v-if="currentSession">
-              <div class="mb-3 font-bold">Session stats</div>
-
-              <div>
-                Game played:
-                <strong>{{
-                  numeral(currentSessionStats[player._id].totalGames).format(
-                    "0"
-                  )
-                }}</strong>
-              </div>
-
-              <div>
-                Total kill::
-                <strong>{{
-                  numeral(currentSessionStats[player._id].totalKill).format("0")
-                }}</strong>
-              </div>
-              <div class="mb-3">
-                Avg kills/game:
-                <strong>{{
-                  numeral(currentSessionStats[player._id].averageKill).format(
-                    "0,0.00"
-                  )
-                }}</strong>
-              </div>
-            </div>
-
-            <div class="text-right">
-              <div class="mb-3 font-bold">Global stats</div>
-              <div>
-                Game played:
-                <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
-              </div>
-
-              <div>
-                Total kill:
-                <strong>{{ numeral(player.totalKills).format("0") }}</strong>
-              </div>
-              <div class="mb-3">
-                Avg kills/game:
-                <strong>{{ numeral(player.avgKg).format("0,0.00") }}</strong>
-              </div>
-            </div>
-          </div>
-          <div
-            class="lex flex-col bg-zinc-600 p-2 border-l-4 border-emerald-400 rounded-lg flex-col flex mb-5"
-            v-if="currentSession"
-          >
-            <Bar
-              class="mb-3 max-h-[200px]"
-              :options="
-                Object.assign({}, chartOptions, {
-                  scales: {
-                    y: {
-                      max: 8,
-                      ticks: { color: 'white', beginAtZero: true },
+              <Bar
+                class="mb-3 max-h-[200px]"
+                :options="
+                  Object.assign({}, chartOptions, {
+                    scales: {
+                      y: {
+                        max: 8,
+                        ticks: { color: 'white', beginAtZero: true },
+                      },
+                      x: { ticks: { color: 'white', beginAtZero: true } },
                     },
-                    x: { ticks: { color: 'white', beginAtZero: true } },
-                  },
-                })
-              "
-              :data="playerChartData[player._id].avgKg"
-            />
+                  })
+                "
+                :data="playerChartData[player._id].avgKg"
+              />
 
-            <Bar
-              class="mb-3 max-h-[200px]"
-              :options="
-                Object.assign({}, chartOptions, {
-                  scales: {
-                    y: {
-                      max: currentSessionMaxPlayerKill,
-                      ticks: { color: 'white', beginAtZero: true },
+              <Bar
+                class="mb-3 max-h-[200px]"
+                :options="
+                  Object.assign({}, chartOptions, {
+                    scales: {
+                      y: {
+                        max: currentSessionMaxPlayerKill,
+                        ticks: { color: 'white', beginAtZero: true },
+                      },
+                      x: { ticks: { color: 'white', beginAtZero: true } },
                     },
-                    x: { ticks: { color: 'white', beginAtZero: true } },
-                  },
-                })
-              "
-              :data="playerChartData[player._id].latestSessionKills"
-            />
+                  })
+                "
+                :data="playerChartData[player._id].latestSessionKills"
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <h1 class="text-white font-bold text-6xl text-center mb-[100px] mt-[100px]">
-      Current session stats
-    </h1>
-
     <div
-      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      style="padding-top: 100px; padding-bottom: 100px"
+      class="relative bg-gradient-to-b from-zinc-700 to-zinc-800"
     >
-      <h1 class="text-white font-bold text-2xl text-center mb-5">
-        Players kills during current session
-      </h1>
-      <div class="flex mx-auto overflow-auto">
-        <Line
-          class="mb-3 w-full h-[400px]"
-          :options="chartOptions"
-          :data="globalChartData.playersCurrentSessionKills"
-        />
-      </div>
-    </div>
-    <div
-      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
-    >
-      <h1 class="text-white font-bold text-2xl text-center mb-5">
-        Current session kills repartition
-      </h1>
-      <div class="flex w-1/2 mx-auto overflow-auto">
-        <Doughnut
-          class="mb-3 w-full h-[400px]"
-          :options="chartOptions"
-          :data="globalChartData.currentSessionKillsRepartition"
-        ></Doughnut>
-      </div>
-    </div>
-
-    <h1 class="text-white font-bold text-6xl text-center mb-[100px] mt-[100px]">
-      Global stats
-    </h1>
-    <div
-      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
-    >
-      <h1 class="text-white font-bold text-2xl text-center mb-5">
-        Team K/G evolution
+      <h1 class="text-white font-bold text-6xl text-center mb-[100px]">
+        Current session stats
       </h1>
 
-      <div class="flex w-1/2 mx-auto overflow-auto">
-        <Bar
-          class="mb-3 w-full h-[400px]"
-          :options="chartOptions"
-          :data="globalChartData.teamAverageKillsPerSession"
-        />
+      <div
+        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      >
+        <h1 class="text-white font-bold text-2xl text-center mb-5">
+          Players kills during current session
+        </h1>
+        <div class="flex mx-auto overflow-auto">
+          <Line
+            class="mb-3 w-full h-[400px]"
+            :options="chartOptions"
+            :data="globalChartData.playersCurrentSessionKills"
+          />
+        </div>
       </div>
-    </div>
-    <div
-      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
-    >
-      <h1 class="text-white font-bold text-2xl text-center mb-5">
-        Players total kills during each sessions
-      </h1>
-      <div class="flex w-1/2 mx-auto overflow-auto">
-        <Bar
-          class="mb-3 w-full h-[400px]"
-          :options="chartOptions"
-          :data="globalChartData.playersSessionKills"
-        />
+      <div
+        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      >
+        <h1 class="text-white font-bold text-2xl text-center mb-5">
+          Current session kills repartition
+        </h1>
+        <div class="flex w-1/2 mx-auto overflow-auto">
+          <Doughnut
+            class="mb-3 w-full h-[400px]"
+            :options="chartOptions"
+            :data="globalChartData.currentSessionKillsRepartition"
+          ></Doughnut>
+        </div>
       </div>
-    </div>
 
-    <div
-      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
-    >
-      <h1 class="text-white font-bold text-2xl text-center mb-5">
-        Players K/G evolution
+      <h1
+        class="text-white font-bold text-6xl text-center mb-[100px] mt-[100px]"
+      >
+        Global stats
       </h1>
-      <div class="flex w-1/2 mx-auto overflow-auto">
-        <Line
-          class="mb-3 w-full h-[400px]"
-          :options="chartOptions"
-          :data="globalChartData.sessionsPlayerAvgKillsPerSession"
-        />
+      <div
+        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      >
+        <h1 class="text-white font-bold text-2xl text-center mb-5">
+          Team K/G evolution
+        </h1>
+
+        <div class="flex w-1/2 mx-auto overflow-auto">
+          <Bar
+            class="mb-3 w-full h-[400px]"
+            :options="chartOptions"
+            :data="globalChartData.teamAverageKillsPerSession"
+          />
+        </div>
+      </div>
+      <div
+        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      >
+        <h1 class="text-white font-bold text-2xl text-center mb-5">
+          Players total kills during each sessions
+        </h1>
+        <div class="flex w-1/2 mx-auto overflow-auto">
+          <Bar
+            class="mb-3 w-full h-[400px]"
+            :options="chartOptions"
+            :data="globalChartData.playersSessionKills"
+          />
+        </div>
+      </div>
+
+      <div
+        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      >
+        <h1 class="text-white font-bold text-2xl text-center mb-5">
+          Players K/G evolution
+        </h1>
+        <div class="flex w-1/2 mx-auto overflow-auto">
+          <Line
+            class="mb-3 w-full h-[400px]"
+            :options="chartOptions"
+            :data="globalChartData.sessionsPlayerAvgKillsPerSession"
+          />
+        </div>
+      </div>
+      <div
+        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      >
+        <h1 class="text-white font-bold text-2xl text-center mb-5">
+          Total kill repartition
+        </h1>
+        <div class="flex w-1/2 mx-auto overflow-auto">
+          <Doughnut
+            class="mb-3 w-full h-[400px]"
+            :options="chartOptions"
+            :data="globalChartData.globalKillsRepartition"
+          ></Doughnut>
+        </div>
       </div>
     </div>
-    <div
-      class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
-    >
-      <h1 class="text-white font-bold text-2xl text-center mb-5">
-        Total kill repartition
-      </h1>
-      <div class="flex w-1/2 mx-auto overflow-auto">
-        <Doughnut
-          class="mb-3 w-full h-[400px]"
-          :options="chartOptions"
-          :data="globalChartData.globalKillsRepartition"
-        ></Doughnut>
-      </div>
+    <div class="p-10 bg-zinc-900 text-center text-white text-xl">
+      Released 100% by MarlburroW
     </div>
   </div>
 </template>
