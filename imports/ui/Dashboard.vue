@@ -10,6 +10,7 @@
       />
 
       <div class="flex w-full justify-center flex-wrap">
+
         <div
           :key="player._id"
           v-for="(player, index) in players"
@@ -20,9 +21,21 @@
             class="absolute z-0 opacity-10 w-full left-0 right-0"
             :src="getMmrLogo(player.level)"
           />
+          <div>
 
+
+
+          </div>
           <div class="z-1 relative">
-            <div class="text-3xl mb-5 font-black">{{ player.nickname }}</div>
+            <div class="flex flex-col items-center">
+              <div class="flex">
+                      <span v-for="i in getStarsNumber(player)">
+                        <StarIcon :style="`color: ${playerColors[index]};`" class="h-6 w-6 text-yellow-500"></StarIcon>
+                      </span>
+              </div>
+              <div class="text-3xl mb-5 font-black">{{ player.nickname }}</div>
+            </div>
+
 
             <div class="flex flex-col mb-5 relative">
               <div class="flex justify-center mb-8">
@@ -150,9 +163,13 @@
                   Total kill:
                   <strong>{{ numeral(player.totalKills).format("0") }}</strong>
                 </div>
-                <div class="mb-3">
+                <div>
                   Avg kills/game:
                   <strong>{{ numeral(player.avgKg).format("0,0.00") }}</strong>
+                </div>
+                <div class="mb-3">
+                  Top player:
+                  <strong>{{player.topPlayer }}</strong>
                 </div>
               </div>
             </div>
@@ -311,6 +328,7 @@ import {
   ArrowUpRightIcon,
   ArrowDownRightIcon,
   ArrowRightIcon,
+  StarIcon
 } from "@heroicons/vue/24/solid";
 </script>
 
@@ -626,6 +644,9 @@ export default {
   },
 
   methods: {
+    getStarsNumber(player) {
+      return Math.trunc(player.topPlayer/10);
+    },
     numeral,
     getProgressMmrStyle(player) {
       return "width:" + player.pourcentNextLevel + "%;";
