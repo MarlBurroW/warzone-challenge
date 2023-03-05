@@ -115,15 +115,14 @@ export function computePlayerScoreFromBacklog(player, games) {
       game.scores.hasOwnProperty(player._id) &&
       game.scores[player._id] !== null
     ) {
-
       let arrScores = Object.values(game.scores);
       let maxScore = Math.max(...arrScores);
-      if(game.scores[player._id] >= maxScore) {
-          if(player.topPlayer){
-            player.topPlayer++;
-          }else{
-            player.topPlayer = 1;
-          }
+      if (game.scores[player._id] >= maxScore) {
+        if (player.topPlayer) {
+          player.topPlayer++;
+        } else {
+          player.topPlayer = 1;
+        }
       }
       let playerKills = game.scores[player._id];
 
@@ -230,7 +229,7 @@ function getLeagueNumber(mmr) {
 }
 
 function getPourcentNextLevel(mmr, level) {
-  if(level >= 19) return 100;
+  if (level >= 19) return 100;
   let l = level;
   let test = false;
   let increment = 0;
@@ -242,9 +241,9 @@ function getPourcentNextLevel(mmr, level) {
         increment++;
       }
     }
-    if(level == 18){
+    if (level == 18) {
       return Math.trunc((30 - increment) * 100) / 30;
-    }else{
+    } else {
       return Math.trunc((15 - increment) * 100) / 15;
     }
   }
@@ -271,7 +270,6 @@ function getPlayerKGTrending(playerKillList) {
       }
     }
   }
-
   return kgTrending;
 }
 
