@@ -32,8 +32,7 @@
               </div>
               <img class="w-12" :src="getMmrLogo(player.level + 1)" />
             </div>
-
-            <span class="font-bold text-2xl mb-5">{{
+            <span v-if="!isNaN(player.mmr)" class="font-bold text-2xl mb-5">{{
               Math.round(player.mmr)
             }}</span>
           </div>
@@ -94,7 +93,7 @@
           <div
             class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
           >
-            <div class="text-left">
+            <div class="text-left" v-if="currentSession">
               <div class="mb-3 font-bold">Session stats</div>
 
               <div>
@@ -141,6 +140,7 @@
           </div>
           <div
             class="lex flex-col bg-zinc-600 p-2 border-l-4 border-emerald-400 rounded-lg flex-col flex mb-5"
+            v-if="currentSession"
           >
             <Bar
               class="mb-3 max-h-[200px]"
@@ -316,6 +316,7 @@ export default {
   mixins: [dataMixin],
   data() {
     return {
+      activeOnly: true,
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -350,26 +351,21 @@ export default {
 
       // Iterate over all score and find the max
 
-      const max = currentSession
-        .filter((g) => g.active === true)
-        .reduce((acc, game) => {
-          const maxGameScore = game.scores.reduce((acc, score) => {
-            return Math.max(acc, score.score);
-          }, 0);
-
-          return Math.max(acc, maxGameScore);
+      const max = currentSession.reduce((acc, game) => {
+        const maxGameScore = game.scores.reduce((acc, score) => {
+          return Math.max(acc, score.score);
         }, 0);
+
+        return Math.max(acc, maxGameScore);
+      }, 0);
 
       return max;
     },
 
     globalChartData() {
-      const sessions = this.groupedComputedGames.map((s) => {
-        return s.filter((g) => g.active === true);
-      });
+      const sessions = this.groupedComputedGames;
 
-      let latestSession =
-        sessions.length > 0 ? sessions[sessions.length - 1] : [];
+      let latestSession = this.currentSession ? this.currentSession : [];
 
       const latestSessionKills = latestSession
         .slice()
@@ -413,12 +409,10 @@ export default {
           datasets: [
             {
               data: this.players.map((p) => {
-                return this.computedGames
-                  .filter((g) => g.active === true)
-                  .reduce((acc, g) => {
-                    const score = g.scores.find((s) => s.playerId === p._id);
-                    return acc + (score ? score.score : 0);
-                  }, 0);
+                return this.computedGames.reduce((acc, g) => {
+                  const score = g.scores.find((s) => s.playerId === p._id);
+                  return acc + (score ? score.score : 0);
+                }, 0);
               }),
               backgroundColor: playerColors,
             },
@@ -541,7 +535,7 @@ export default {
 
         const playerSessionsKills = sessions.map((s) => {
           return s
-            .filter((g) => g.active === true)
+
             .map((g) => {
               const score = g.scores.find((s) => s.playerId == player._id);
               return score ? score.score : 0;
@@ -583,9 +577,11 @@ export default {
     currentSessionStats() {
       const stats = {};
 
-      return this.getSessionStats(this.currentSession);
+      if (this.currentSession) {
+        return this.getSessionStats(this.currentSession);
+      }
 
-      return stats;
+      return null;
     },
 
     currentSession() {

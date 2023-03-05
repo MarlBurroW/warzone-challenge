@@ -4,10 +4,18 @@ import _ from "lodash";
 import moment from "moment";
 
 export default {
+  data() {
+    return {
+      activeOnly: false,
+    };
+  },
   meteor: {
     $subscribe: {
       games: [],
       players: [],
+    },
+    activeGames() {
+      return Games.find({ active: true });
     },
     games() {
       return Games.find({});
@@ -33,8 +41,10 @@ export default {
     computedGames() {
       const games = [];
 
-      for (let i = 0; i < this.games.length; i++) {
-        const game = this.games[i];
+      const allGames = this.activeOnly ? this.activeGames : this.games;
+
+      for (let i = 0; i < allGames.length; i++) {
+        const game = allGames[i];
 
         const computedGame = {
           _id: game._id,

@@ -7,13 +7,9 @@ Meteor.methods({
 
     return Players.insert({
       nickname,
-      requiredKills: 1,
-      requiredBalanceToUpgrade: 2,
-      balance: 0,
       lastGameKills: 0,
       level: 0,
       totalKills: 0,
-      avgKills: 0,
       gamesPlayed: 0,
       mmr: 0,
       avgKg15LastGames: 0,
