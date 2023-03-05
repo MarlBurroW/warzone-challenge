@@ -84,11 +84,66 @@
               }}</span>
             </div>
           </div>
+
+          <div class="flex gap-2">
+            <div
+              class="bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg mb-5 w-full"
+            >
+              <div class="mb-3 font-bold">Global K/G</div>
+              <div class="flex justify-center items-end">
+                <span class="text-4xl font-bold"
+                  >{{ numeral(player.avgKg).format("0,0.00") }}
+                </span>
+
+                <ArrowUpRightIcon
+                  class="h-8 w-8 text-green-500"
+                  v-if="player.kgTrending == 1"
+                >
+                </ArrowUpRightIcon>
+                <ArrowRightIcon class="h-8 w-8" v-if="player.kgTrending == 0">
+                </ArrowRightIcon>
+                <ArrowDownRightIcon
+                  class="h-8 w-8 text-red-500"
+                  v-if="player.kgTrending == -1"
+                >
+                </ArrowDownRightIcon>
+              </div>
+            </div>
+
+            <div
+              class="bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg mb-5 w-full"
+            >
+              <div class="mb-3 font-bold">15 last games K/G</div>
+              <div class="flex justify-center items-end">
+                <span class="text-4xl font-bold"
+                  >{{ numeral(player.avgKg15LastGames).format("0,0.00") }}
+                </span>
+
+                <ArrowUpRightIcon
+                  class="h-8 w-8 text-green-500"
+                  v-if="player.kg15LastGamesTrending == 1"
+                >
+                </ArrowUpRightIcon>
+                <ArrowRightIcon
+                  class="h-8 w-8"
+                  v-if="player.kg15LastGamesTrending == 0"
+                >
+                </ArrowRightIcon>
+                <ArrowDownRightIcon
+                  class="h-8 w-8 text-red-500"
+                  v-if="player.kg15LastGamesTrending == -1"
+                >
+                </ArrowDownRightIcon>
+              </div>
+            </div>
+          </div>
+
           <div
             class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
           >
             <div class="text-left">
               <div class="mb-3 font-bold">Session stats</div>
+
               <div>
                 Game played:
                 <strong>{{
@@ -127,7 +182,7 @@
               </div>
               <div class="mb-3">
                 Avg kills/game:
-                <strong>{{ numeral(player.avgKills).format("0,0.00") }}</strong>
+                <strong>{{ numeral(player.avgKg).format("0,0.00") }}</strong>
               </div>
             </div>
           </div>
@@ -147,7 +202,7 @@
                   },
                 })
               "
-              :data="playerChartData[player._id].avgKills"
+              :data="playerChartData[player._id].avgKg"
             />
 
             <Bar
@@ -234,6 +289,7 @@
         />
       </div>
     </div>
+
     <div
       class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
     >
@@ -266,7 +322,12 @@
 </template>
 
 <script setup>
-import { XMarkIcon } from "@heroicons/vue/24/solid";
+import {
+  XMarkIcon,
+  ArrowUpRightIcon,
+  ArrowDownRightIcon,
+  ArrowRightIcon,
+} from "@heroicons/vue/24/solid";
 </script>
 
 <script>
@@ -534,7 +595,7 @@ export default {
         const playerStats = sessionsStats.map((s) => s[player._id]);
 
         options[player._id] = {
-          avgKills: {
+          avgKg: {
             labels: [...playerStats.map((s, index) => `Session ${index + 1}`)],
             datasets: [
               {

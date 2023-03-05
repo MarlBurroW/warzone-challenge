@@ -15,7 +15,11 @@ Meteor.methods({
       totalKills: 0,
       avgKills: 0,
       gamesPlayed: 0,
-      mmr:0,
+      mmr: 0,
+      avgKg15LastGames: 0,
+      kg15LastGamesTrending: 0,
+      avgKg: 0,
+      kgTrending: 0,
     });
   },
 

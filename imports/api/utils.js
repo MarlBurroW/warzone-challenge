@@ -53,7 +53,7 @@ export function computePlayerScoreFromBacklog(player, games) {
   player.requiredBalanceToUpgrade = 2;
   player.level = 0;
   player.totalKills = 0;
-  player.avgKills = 0;
+
   player.gamesPlayed = 0;
   player.mrr = 0;
 
@@ -69,17 +69,19 @@ export function computePlayerScoreFromBacklog(player, games) {
   let playerKillList = [];
   for (let i = 0; i < games.length; i++) {
     const game = games[i];
-    if(game.rank != null){
-      if (game.scores.hasOwnProperty(player._id) &&
-          game.scores[player._id] !== null){
+    if (game.rank != null) {
+      if (
+        game.scores.hasOwnProperty(player._id) &&
+        game.scores[player._id] !== null
+      ) {
         gameRankList.push(game.rank);
       }
     }
     // Check if player has played in this game, and only compute score if so
 
     if (
-        game.scores.hasOwnProperty(player._id) &&
-        game.scores[player._id] !== null
+      game.scores.hasOwnProperty(player._id) &&
+      game.scores[player._id] !== null
     ) {
       let playerKills = game.scores[player._id];
 
@@ -110,12 +112,16 @@ export function computePlayerScoreFromBacklog(player, games) {
 
       player.gamesPlayed = player.gamesPlayed + 1;
       player.totalKills = player.totalKills + playerKills;
-      if (player.gamesPlayed > 0) {
-        player.avgKills = player.totalKills / player.gamesPlayed;
-      } else {
-        player.avgKills = 0;
-      }
 
+      // Calculate the trend (up/stable/down) of kills/games from the beginning*
+
+      player.avgKg15LastGames = getAvgKg(playerKillList.slice(-15));
+      player.kg15LastGamesTrending = getPlayerKGTrending(
+        playerKillList.slice(-15)
+      );
+
+      player.avgKg = getAvgKg(playerKillList);
+      player.kgTrending = getPlayerKGTrending(playerKillList);
 
       // Check level up/down
 
@@ -171,23 +177,28 @@ export function computePlayerScoreFromBacklog(player, games) {
       player.requiredKills = newRequiredKills;
       player.requiredBalanceToUpgrade = newRequiredBalanceToUpgrade;
       player.level = newLevel;
-
     }
   }
 
-  let totalGameRankAverage = gameRankList.reduce((x,y) => {
-    return Number(x) + Number(y);
-  }) / gameRankList.length;
-  let recentGameRankAverage = gameRankList.slice(-15).reduce((x,y) => {
-    return Number(x) + Number(y);
-  } ) / 15;
+  let totalGameRankAverage =
+    gameRankList.reduce((x, y) => {
+      return Number(x) + Number(y);
+    }) / gameRankList.length;
+  let recentGameRankAverage =
+    gameRankList.slice(-15).reduce((x, y) => {
+      return Number(x) + Number(y);
+    }) / 15;
 
-  let recentPlayerKillAverage = playerKillList.slice(-15).reduce((x,y) => {
-    return Number(x) + Number(y);
-  }) / 15;
-  let ponderatedAverageRank = (totalGameRankAverage + (recentGameRankAverage * 3)) / 4;
-  let ponderatedPlayerKillAverage = (player.avgKills + (recentPlayerKillAverage * 3)) / 4;
-  player.mmr = ((((ponderatedPlayerKillAverage * 3) - ponderatedAverageRank) + 100))* 10;
+  let recentPlayerKillAverage =
+    playerKillList.slice(-15).reduce((x, y) => {
+      return Number(x) + Number(y);
+    }) / 15;
+  let ponderatedAverageRank =
+    (totalGameRankAverage + recentGameRankAverage * 3) / 4;
+  let ponderatedPlayerKillAverage =
+    (player.avgKg + recentPlayerKillAverage * 3) / 4;
+  player.mmr =
+    (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10;
 
   Players.update(player._id, {
     $set: {
@@ -198,8 +209,11 @@ export function computePlayerScoreFromBacklog(player, games) {
       level: player.level,
       gamesPlayed: player.gamesPlayed,
       totalKills: player.totalKills,
-      avgKills: player.avgKills,
       mmr: player.mmr,
+      avgKg15LastGames: player.avgKg15LastGames,
+      kg15LastGamesTrending: player.kg15LastGamesTrending,
+      avgKg: player.avgKg,
+      kgTrending: player.kgTrending,
     },
   });
 }
@@ -207,3 +221,40 @@ export function computePlayerScoreFromBacklog(player, games) {
 export default {
   computePlayerScoreFromBacklog,
 };
+
+function getPlayerKGTrending(playerKillList) {
+  let kgTrending = 0;
+
+  if (playerKillList.length > 1) {
+    // Compute the trend of kills/games
+
+    let kgTrend = 0;
+
+    for (let i = 0; i < playerKillList.length - 1; i++) {
+      kgTrend = kgTrend + playerKillList[i + 1] - playerKillList[i];
+
+      if (kgTrend > 0) {
+        kgTrending = 1;
+      } else if (kgTrend < 0) {
+        kgTrending = -1;
+      } else {
+        kgTrending = 0;
+      }
+    }
+  }
+
+  return kgTrending;
+}
+
+function getAvgKg(playerKillList) {
+  let avgKg = 0;
+
+  if (playerKillList.length > 0) {
+    avgKg =
+      playerKillList.reduce((x, y) => {
+        return Number(x) + Number(y);
+      }) / playerKillList.length;
+  }
+
+  return avgKg;
+}
