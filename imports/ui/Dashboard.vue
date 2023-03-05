@@ -10,16 +10,13 @@
       >
         <img
           class="absolute z-0 opacity-10 w-full left-0 right-0"
-          :src="getLevelLogo(player.level)"
+          :src="getMmrLogo(player.mmr)"
         />
-        <div class="w-[100px] absolute -top-12 right-5">
-          <img class="" :src="getLevelLogo(player.level)" />
-        </div>
+
         <div class="z-1 relative">
           <span class="text-3xl mb-3 font-black">{{ player.nickname }}</span>
 
           <div class="flex flex-col mb-5 relative">
-            <span class="mb-4">Current balance</span>
             <div class="flex justify-center">
               <img class="w-[100px]" :src="getMmrLogo(player.mmr)" />
             </div>
@@ -27,61 +24,10 @@
               class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 my-5"
             >
               <div
-                class="bg-blue-600 h-2 rounded-full"
+                class="bg-blue-600 h-2 rounded-full transition-all duration-1000 ease-in-out"
                 :style="getProgressMmrStyle(player.mmr)"
               ></div>
               <span class="font-bold">{{ Math.round(player.mmr) }}</span>
-            </div>
-            <div class="flex justify-center flex-col items-center">
-              <span
-                :class="`text-9xl font-black mr-5 mb-6 ${
-                  player.balance < 0 ? 'text-red-500' : 'text-green-300'
-                }`"
-                >{{ player.balance }}</span
-              >
-
-              <div class="flex justify-center items-center mb-10">
-                <img
-                  v-if="player.level != 0"
-                  class="w-12 mr-6"
-                  :src="getLevelLogo(player.level - 1)"
-                />
-
-                <span
-                  v-if="player.level != 0"
-                  class="text-3xl font-bold text-red-500"
-                  >{{ -player.requiredBalanceToUpgrade }}</span
-                ><span class="text-3xl font-bold" v-if="player.level != 0"
-                  >&nbsp;/&nbsp;</span
-                >
-
-                <span class="text-3xl font-bold mr-6 text-green-300">{{
-                  player.requiredBalanceToUpgrade
-                }}</span>
-
-                <img class="w-12" :src="getLevelLogo(player.level + 1)" />
-              </div>
-            </div>
-          </div>
-          <div class="flex gap-2 mb-5 w-full">
-            <div
-              class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-blue-400"
-            >
-              <span class="mb-3">Required point(s) per game</span>
-
-              <span class="text-4xl font-bold">{{ player.requiredKills }}</span>
-            </div>
-            <div
-              class="flex flex-col bg-zinc-700 p-2 rounded-lg flex-1 border-l-4 border-purple-400"
-            >
-              <span class="mb-3"
-                >Point(s) needed to level up in the next game</span
-              >
-              <span class="text-4xl font-bold">{{
-                player.requiredBalanceToUpgrade -
-                player.balance +
-                player.requiredKills
-              }}</span>
             </div>
           </div>
 
@@ -639,9 +585,9 @@ export default {
     numeral,
 
     getProgressMmrStyle(mmr) {
-      console.log("mmr MDR", mmr)
+      console.log("mmr MDR", mmr);
       let rest = mmr % 15;
-      console.log("REST MMR MDR",rest);
+      console.log("REST MMR MDR", rest);
       let pourcentage = Math.trunc(rest * 100) / 15;
       return "width:" + pourcentage + "%;";
     },
