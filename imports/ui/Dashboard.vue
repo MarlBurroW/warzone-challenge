@@ -576,8 +576,10 @@ export default {
     numeral,
 
     getProgressMmrStyle(mmr) {
-      let rest = mmr % 20;
-      let pourcentage = Math.trunc(rest * 100) / 20;
+      console.log("mmr MDR", mmr)
+      let rest = mmr % 15;
+      console.log("REST MMR MDR",rest);
+      let pourcentage = Math.trunc(rest * 100) / 15;
       return "width:" + pourcentage + "%;";
     },
     getSessionStats(session) {
@@ -630,26 +632,26 @@ export default {
       return map[level];
     },
     getMmrLogo(mmr) {
-      if (mmr < 990) return "/images/vomit.png";
-      if (mmr < 1010) return "/images/new/b3.png";
-      if (mmr < 1030) return "/images/new/b2.png";
-      if (mmr < 1050) return "/images/new/b1.png";
-      if (mmr < 1070) return "/images/new/a3.png";
-      if (mmr < 1090) return "/images/new/a2.png";
-      if (mmr < 1110) return "/images/new/a1.png";
-      if (mmr < 1130) return "/images/new/g3.png";
-      if (mmr < 1150) return "/images/new/g2.png";
-      if (mmr < 1170) return "/images/new/g1.png";
-      if (mmr < 1190) return "/images/new/p3.png";
-      if (mmr < 1210) return "/images/new/p2.png";
-      if (mmr < 1230) return "/images/new/p1.png";
-      if (mmr < 1250) return "/images/new/d3.png";
-      if (mmr < 1270) return "/images/new/d2.png";
-      if (mmr < 1290) return "/images/new/d1.png";
-      if (mmr < 1310) return "/images/new/m3.png";
-      if (mmr < 1330) return "/images/new/m2.png";
-      if (mmr < 1350) return "/images/new/m1.png";
-      if (mmr >= 1350) return "/images/gm.png";
+      if (mmr < 950) return "/images/vomit.png";
+      if (mmr < 965) return "/images/new/b3.png";
+      if (mmr < 980) return "/images/new/b2.png";
+      if (mmr < 995) return "/images/new/b1.png";
+      if (mmr < 1010) return "/images/new/a3.png";
+      if (mmr < 1025) return "/images/new/a2.png";
+      if (mmr < 1040) return "/images/new/a1.png";
+      if (mmr < 1055) return "/images/new/g3.png";
+      if (mmr < 1070) return "/images/new/g2.png";
+      if (mmr < 1085) return "/images/new/g1.png";
+      if (mmr < 1100) return "/images/new/p3.png";
+      if (mmr < 1115) return "/images/new/p2.png";
+      if (mmr < 1130) return "/images/new/p1.png";
+      if (mmr < 1145) return "/images/new/d3.png";
+      if (mmr < 1160) return "/images/new/d2.png";
+      if (mmr < 1175) return "/images/new/d1.png";
+      if (mmr < 1190) return "/images/new/m3.png";
+      if (mmr < 1205) return "/images/new/m2.png";
+      if (mmr < 1220) return "/images/new/m1.png";
+      if (mmr >= 1235) return "/images/gm.png";
       return "/images/vomit.png";
     },
   },

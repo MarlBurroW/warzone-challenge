@@ -43,6 +43,7 @@ export function computePlayerScoreFromBacklog(player, games) {
 
   const UPGRADE_FACTOR = 0.5;
 
+
   // Order games by createdDate asc
 
   // Reset player attributes
@@ -67,14 +68,31 @@ export function computePlayerScoreFromBacklog(player, games) {
 
   let gameRankList = [];
   let playerKillList = [];
+  let bonus = [];
   for (let i = 0; i < games.length; i++) {
     const game = games[i];
     if(game.rank != null){
       if (game.scores.hasOwnProperty(player._id) &&
           game.scores[player._id] !== null){
-        gameRankList.push(game.rank);
+          gameRankList.push(game.rank);
+
+          // set bonus
+        if (game.rank == 1) {
+          bonus.push(5);
+        } else if (game.rank == 2) {
+          bonus.push(3);
+        } else if (game.rank == 3) {
+          bonus.push(2);
+        } else if (game.rank > 10) {
+          bonus.push(-1);
+        }
       }
     }
+
+
+
+
+
     // Check if player has played in this game, and only compute score if so
 
     if (
@@ -83,21 +101,8 @@ export function computePlayerScoreFromBacklog(player, games) {
     ) {
       let playerKills = game.scores[player._id];
 
-      // Bonus
-      let bonus = 0;
-      if (game.rank == 1) {
-        bonus = 3;
-      } else if (game.rank == 2) {
-        bonus = 2;
-      } else if (game.rank == 3) {
-        bonus = 1;
-      } else if (game.rank > 10) {
-        bonus = -3;
-      }
-
       // Retreiving player data from previous iteration to work on it
 
-      playerKills += bonus;
       playerKillList.push(playerKills);
       let newBalance = player.balance + playerKills - player.requiredKills;
       let newLastGameKills = playerKills;
@@ -173,7 +178,16 @@ export function computePlayerScoreFromBacklog(player, games) {
       player.level = newLevel;
 
     }
+    // Bonus
+
+
   }
+
+
+
+  let averageBonus = bonus.reduce((x,y) => {
+    return Number(x) + Number(y);
+  }) / bonus.length;
 
   let totalGameRankAverage = gameRankList.reduce((x,y) => {
     return Number(x) + Number(y);
@@ -186,7 +200,7 @@ export function computePlayerScoreFromBacklog(player, games) {
     return Number(x) + Number(y);
   }) / 15;
   let ponderatedAverageRank = (totalGameRankAverage + (recentGameRankAverage * 3)) / 4;
-  let ponderatedPlayerKillAverage = (player.avgKills + (recentPlayerKillAverage * 3)) / 4;
+  let ponderatedPlayerKillAverage = ((player.avgKills + (recentPlayerKillAverage * 3)) / 4) + averageBonus;
   player.mmr = ((((ponderatedPlayerKillAverage * 3) - ponderatedAverageRank) + 100))* 10;
 
   Players.update(player._id, {
