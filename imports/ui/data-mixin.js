@@ -4,6 +4,7 @@ import _ from "lodash";
 import moment from "moment";
 
 export default {
+
   data() {
     return {
       activeOnly: false,
@@ -23,6 +24,24 @@ export default {
     players() {
       return Players.find({});
     },
+  },
+  methods: {
+    getPlayersColors(index = null){
+      const playerColors = [
+        "#0ea5e9",
+        "#f87171",
+        "#fbbf24",
+        "#a3e635",
+        "#10b981",
+        "#6366f1",
+        "#d946ef",
+        "#f43f5e",
+      ];
+      if(index === null){
+        return playerColors;
+      }
+      return playerColors[index];
+    }
   },
   computed: {
     groupedComputedGames() {

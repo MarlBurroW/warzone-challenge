@@ -14,7 +14,7 @@
         <div
           :key="player._id"
           v-for="(player, index) in players"
-          :style="`border-color: ${playerColors[index]};`"
+          :style="{borderColor: getPlayersColors(index)}"
           class="bg-zinc-800 shadow-xl border-t-8 w-[30rem] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
           <img
@@ -26,24 +26,26 @@
 
 
           </div>
-          <div class="z-1 relative">
+          <div class="z-1">
             <div class="flex flex-col flex-end items-center">
-              <div class="flex">
-                      <span v-for="i in currentSessionStats[player._id].topPlayer">
-                        <StarIcon :style="`color: ${playerColors[index]};`" class="h-6 w-6 text-yellow-500"></StarIcon>
+              <div class="flex flex-wrap">
+                      <span v-if="currentSessionStats && currentSessionStats[player._id].topPlayer" v-for="i in currentSessionStats[player._id].topPlayer">
+                        <StarIcon :style="{color: getPlayersColors(index)}" class="h-6 w-6 text-yellow-500"></StarIcon><div/>
                       </span>
               </div>
               <div class="text-3xl mb-5 font-black">{{ player.nickname }}</div>
             </div>
 
 
+
             <div class="flex flex-col mb-5 relative">
               <div class="flex justify-center mb-8">
                 <img class="w-34 h-34  brightness-130" :src="getMmrLogo(player.level)" />
               </div>
-              <span v-if="!isNaN(player.mmr)" class="font-thin text-3xl mb-5">{{
-                Math.round(player.mmr)
-              }}</span>
+              <span v-if="!isNaN(player.mmr)" class="font-thin text-3xl mb-5">
+                {{Math.round(player.mmr)}}</span>
+              <span v-else class="font-thin text-3xl mb-5">
+               0</span>
               <div class="flex items-center gap-4">
                 <img class="w-12" :src="getMmrLogo(player.level - 1)" />
 
@@ -55,7 +57,7 @@
                     :style="
                       getProgressMmrStyle(player) +
                       'background: ' +
-                      playerColors[index]
+                       getPlayersColors(index)
                     "
                   ></div>
                 </div>
@@ -64,8 +66,7 @@
             </div>
 
             <div class="flex gap-2">
-              <div
-                :style="`border-color: ${playerColors[index]};`"
+              <div :style="{borderColor: getPlayersColors(index)}"
                 class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
               >
                 <div class="mb-3 font-thin">Global K/G</div>
@@ -90,7 +91,7 @@
               </div>
 
               <div
-                :style="`border-color: ${playerColors[index]};`"
+                  :style="{borderColor: getPlayersColors(index)}"
                 class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
               >
                 <div class="mb-3 font-thin">15 last games K/G</div>
@@ -119,7 +120,7 @@
             </div>
 
             <div
-              :style="`border-color: ${playerColors[index]};`"
+               :style="{borderColor: getPlayersColors(index)}"
               class="lex bg-zinc-600 p-2 border-l-4 rounded-lg flex justify-between mb-5"
             >
               <div class="text-left" v-if="currentSession">
@@ -182,7 +183,7 @@
               </div>
             </div>
             <div
-              :style="`border-color: ${playerColors[index]};`"
+              :style="{borderColor: getPlayersColors(index)}"
               class="lex flex-col bg-zinc-600 p-2 border-l-4 rounded-lg flex-col flex mb-5"
               v-if="currentSession"
             >
@@ -325,7 +326,7 @@
     </div>
 
     <div class="p-10 bg-zinc-900 text-center text-white text-xl">
-      Released 100% by MarlburroW
+      Released 100% by MarlburroW -> C'est faux
     </div>
   </div>
 </template>
@@ -345,21 +346,6 @@ import dataMixin from "./data-mixin.js";
 
 import { Bar, Line, Doughnut } from "vue-chartjs";
 import "chart.js/auto";
-
-// Generate an array of beautiful colors
-
-const playerColors = [
-  "#0ea5e9",
-  "#f87171",
-  "#fbbf24",
-  "#a3e635",
-
-  "#10b981",
-
-  "#6366f1",
-  "#d946ef",
-  "#f43f5e",
-];
 
 import moment from "moment";
 import numeral from "numeral";
@@ -471,7 +457,7 @@ export default {
                   return acc + (score ? score.score : 0);
                 }, 0);
               }),
-              backgroundColor: playerColors,
+              backgroundColor: this.getPlayersColors(),
             },
           ],
         },
@@ -485,7 +471,7 @@ export default {
                   return acc + (score ? score.score : 0);
                 }, 0);
               }),
-              backgroundColor: playerColors,
+              backgroundColor: this.getPlayersColors(),
             },
           ],
         },
@@ -527,8 +513,8 @@ export default {
                       .reduce((acc, s) => acc + s, 0) / s.length
                   );
                 }),
-                backgroundColor: playerColors[index],
-                borderColor: playerColors[index],
+                backgroundColor: this.getPlayersColors(index),
+                borderColor: this.getPlayersColors(index),
                 borderWidth: 4,
               };
             }),
@@ -548,8 +534,8 @@ export default {
                   })
                   .reduce((acc, s) => acc + s, 0);
               }),
-              backgroundColor: playerColors[index],
-              borderColor: playerColors[index],
+              backgroundColor:this.getPlayersColors(index),
+              borderColor: this.getPlayersColors(index),
               borderWidth: 1,
             };
           }),
@@ -569,8 +555,8 @@ export default {
                   const score = g.scores.find((s) => s.playerId == p._id);
                   return score ? score.score : 0;
                 }),
-              backgroundColor: playerColors[index],
-              borderColor: playerColors[index],
+              backgroundColor: this.getPlayersColors(index),
+              borderColor:this.getPlayersColors(index),
               borderWidth: 4,
             };
           }),
@@ -611,7 +597,7 @@ export default {
             datasets: [
               {
                 label: "Avg kills / game",
-                backgroundColor: playerColors[i],
+                backgroundColor: this.getPlayersColors(i),
 
                 borderRadius: 4,
                 data: playerStats.map((s) => s.averageKill),
@@ -623,7 +609,7 @@ export default {
             datasets: [
               {
                 label: "Session kills / games",
-                backgroundColor: playerColors[i],
+                backgroundColor: this.getPlayersColors(i),
                 borderRadius: 4,
                 data: latestSessionKills,
               },

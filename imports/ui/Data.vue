@@ -52,6 +52,18 @@
           />
         </div>
       </div>
+
+      <div class="rounded-lg  flex mb-5 gap-2 text-center">
+        <div class="" >
+          <div class="font-bold mb-2 text-white">Ranking</div>
+          <input
+              class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
+              type="number"
+              placeholder="Ranking"
+              v-model="gameRank"
+          />
+        </div>
+      </div>
       <div class="w-full flex justify-center">
         <button
           class="bg-gray-400 px-5 py-2 rounded-md text-white hover:text-black hover:bg-gray-300 transition-all"
@@ -98,35 +110,36 @@
           <tr>
             <th class="w-96">
               <div
-                class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
               >
                 Date
               </div>
             </th>
-            <th class="text-left" v-for="player in players" :key="player._id">
+            <th class="text-left" v-for="(player, index) in players" :key="player._id">
               <div
-                class="bg-green-400 uppercase text-center text-white p-2 rounded-lg font-bold"
+                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
+                :style="{color: getPlayersColors(index)}"
               >
                 {{ player.nickname }}
               </div>
             </th>
             <th>
               <div
-                class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
               >
                 Rank
               </div>
             </th>
             <th>
               <div
-                class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
               >
                 Total
               </div>
             </th>
             <th class="w-40">
               <div
-                class="bg-green-500 uppercase text-center text-white p-2 rounded-lg font-bold"
+                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
               >
                 Actions
               </div>
@@ -180,7 +193,10 @@
               <div
                 class="bg-zinc-500 text-center text-white p-2 rounded-lg font-bold"
               >
-                -
+                <button
+                    @click="toggleActiveGames()"
+                >Tout activer / désactiver
+                </button>
               </div>
             </td>
           </tr>
@@ -467,8 +483,9 @@ export default {
       Meteor.call("deleteGame", gameId);
     },
     addGame() {
-      Meteor.call("createGame", this.gameScore);
+      Meteor.call("createGame", this.gameScore,this.gameRank);
       this.gameScore = {};
+      this.gameRank = null;
     },
     deletePlayer(playerId) {
       if (!confirm("Êtes-vous sûr de vouloir supprimer ce joueur ?")) return;
@@ -486,13 +503,19 @@ export default {
     toggleActiveGame(game) {
       Meteor.call("updateGameActiveStatus", game._id, !!!game.active);
     },
+    toggleActiveGames(){
+      Meteor.call("updateGamesActiveStatus",!this.activeGames);
+      this.activeGames = !this.activeGames;
+    }
   },
   data() {
     return {
       nickname: "",
       gameScore: {},
+      gameRank:null,
       editedCells: {},
       editedValues: {},
+      activeGames: true,
     };
   },
 };

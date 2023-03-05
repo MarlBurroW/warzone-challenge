@@ -7,8 +7,8 @@ function updatePlayerScores() {
   // Fetch players
   const players = Players.find().fetch();
   // Fetch updated game backlog
-
   const games = Games.find({ active: true }).fetch();
+
   // Compute player scores from backlog
 
   for (let i = 0; i < players.length; i++) {
@@ -23,7 +23,7 @@ Meteor.methods({
       createdAt: new Date(),
       active: true,
       scores,
-      rank: null,
+      rank: rank,
     });
 
     updatePlayerScores();
@@ -72,6 +72,22 @@ Meteor.methods({
       },
     });
 
+    updatePlayerScores();
+    computeGames();
+  },
+  updateGamesActiveStatus(active) {
+    Games.update(
+        {}, //match all
+        {
+          $set: {
+            "active": active
+          }
+        },
+        {
+          multi: true,
+        }
+
+    )
     updatePlayerScores();
     computeGames();
   },
