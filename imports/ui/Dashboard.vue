@@ -78,7 +78,9 @@
                 >Point(s) needed to level up in the next game</span
               >
               <span class="text-4xl font-bold">{{
-                player.requiredBalanceToUpgrade
+                player.requiredBalanceToUpgrade -
+                player.balance +
+                player.requiredKills
               }}</span>
             </div>
           </div>
