@@ -14,26 +14,28 @@
         />
 
         <div class="z-1 relative">
-          <span class="text-3xl mb-3 font-black">{{ player.nickname }}</span>
+          <div class="text-3xl mb-5 font-black">{{ player.nickname }}</div>
 
           <div class="flex flex-col mb-5 relative">
-            <div class="flex justify-center">
+            <div class="flex justify-center mb-5">
               <img class="w-[100px]" :src="getMmrLogo(player.mmr)" />
             </div>
             <div
-              class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 my-5"
+              class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-5"
             >
               <div
-                class="bg-blue-600 h-2 rounded-full transition-all duration-1000 ease-in-out"
+                class="bg-[#7ec92e] h-2 rounded-full transition-all duration-1000 ease-in-out mb-5"
                 :style="getProgressMmrStyle(player.mmr)"
               ></div>
-              <span class="font-bold">{{ Math.round(player.mmr) }}</span>
             </div>
+            <span class="font-bold text-2xl mb-5">{{
+              Math.round(player.mmr)
+            }}</span>
           </div>
 
           <div class="flex gap-2">
             <div
-              class="bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg mb-5 w-full"
+              class="bg-zinc-600 p-2 border-l-4 border-sky-500 rounded-lg mb-5 w-full"
             >
               <div class="mb-3 font-bold">Global K/G</div>
               <div class="flex justify-center items-end">
@@ -57,7 +59,7 @@
             </div>
 
             <div
-              class="bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg mb-5 w-full"
+              class="bg-zinc-600 p-2 border-l-4 border-violet-500 rounded-lg mb-5 w-full"
             >
               <div class="mb-3 font-bold">15 last games K/G</div>
               <div class="flex justify-center items-end">
@@ -133,7 +135,7 @@
             </div>
           </div>
           <div
-            class="lex flex-col bg-zinc-600 p-2 border-l-4 border-pink-400 rounded-lg flex-col flex mb-5"
+            class="lex flex-col bg-zinc-600 p-2 border-l-4 border-emerald-400 rounded-lg flex-col flex mb-5"
           >
             <Bar
               class="mb-3 max-h-[200px]"
@@ -546,7 +548,7 @@ export default {
             datasets: [
               {
                 label: "Avg kills / game",
-                backgroundColor: "#60a5fa",
+                backgroundColor: "#10b981",
                 data: playerStats.map((s) => s.averageKill),
               },
             ],
@@ -556,7 +558,7 @@ export default {
             datasets: [
               {
                 label: "Session kills / games",
-                backgroundColor: "#86efac",
+                backgroundColor: "#10b981",
                 data: latestSessionKills,
               },
             ],
