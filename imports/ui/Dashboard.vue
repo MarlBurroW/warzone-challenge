@@ -17,15 +17,15 @@
           <div class="text-3xl mb-5 font-black">{{ player.nickname }}</div>
 
           <div class="flex flex-col mb-5 relative">
-            <div class="flex justify-center mb-5">
-              <img class="w-[100px]" :src="getMmrLogo(player.mmr)" />
+            <div class="flex justify-center">
+              <img class="w-[100px]" :src="getMmrLogo(player.level)" />
             </div>
             <div
               class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-5"
             >
               <div
-                class="bg-[#7ec92e] h-2 rounded-full transition-all duration-1000 ease-in-out mb-5"
-                :style="getProgressMmrStyle(player.mmr)"
+                class="bg-blue-600 h-2 rounded-full transition-all duration-1000 ease-in-out"
+                :style="getProgressMmrStyle(player)"
               ></div>
             </div>
             <span class="font-bold text-2xl mb-5">{{
@@ -592,13 +592,8 @@ export default {
 
   methods: {
     numeral,
-
-    getProgressMmrStyle(mmr) {
-      console.log("mmr MDR", mmr);
-      let rest = mmr % 15;
-      console.log("REST MMR MDR", rest);
-      let pourcentage = Math.trunc(rest * 100) / 15;
-      return "width:" + pourcentage + "%;";
+    getProgressMmrStyle(player) {
+      return "width:" + player.pourcentNextLevel + "%;";
     },
     getSessionStats(session) {
       const stats = {};
@@ -634,43 +629,30 @@ export default {
 
       return stats;
     },
-
-    getLevelLogo(level) {
+    getMmrLogo(level) {
       const map = {
         0: "/images/vomit.png",
-        1: "/images/bronze.png",
-        2: "/images/silver.png",
-        3: "/images/gold.png",
-        4: "/images/platine.png",
-        5: "/images/diamond.png",
-        6: "/images/master.png",
-        7: "/images/gm.png",
+        1: "/images/new/b3.png",
+        2: "/images/new/b2.png",
+        3: "/images/new/b1.png",
+        4: "/images/new/a3.png",
+        5: "/images/new/a2.png",
+        6: "/images/new/a1.png",
+        7: "/images/new/g3.png",
+        8: "/images/new/g2.png",
+        9: "/images/new/g1.png",
+        10: "/images/new/p3.png",
+        11: "/images/new/p2.png",
+        12: "/images/new/p1.png",
+        13: "/images/new/d3.png",
+        14: "/images/new/d2.png",
+        15: "/images/new/d1.png",
+        16: "/images/new/m3.png",
+        17: "/images/new/m2.png",
+        18: "/images/new/m1.png",
+        19: "/images/new/gm.png",
       };
-
       return map[level];
-    },
-    getMmrLogo(mmr) {
-      if (mmr < 950) return "/images/vomit.png";
-      if (mmr < 965) return "/images/new/b3.png";
-      if (mmr < 980) return "/images/new/b2.png";
-      if (mmr < 995) return "/images/new/b1.png";
-      if (mmr < 1010) return "/images/new/a3.png";
-      if (mmr < 1025) return "/images/new/a2.png";
-      if (mmr < 1040) return "/images/new/a1.png";
-      if (mmr < 1055) return "/images/new/g3.png";
-      if (mmr < 1070) return "/images/new/g2.png";
-      if (mmr < 1085) return "/images/new/g1.png";
-      if (mmr < 1100) return "/images/new/p3.png";
-      if (mmr < 1115) return "/images/new/p2.png";
-      if (mmr < 1130) return "/images/new/p1.png";
-      if (mmr < 1145) return "/images/new/d3.png";
-      if (mmr < 1160) return "/images/new/d2.png";
-      if (mmr < 1175) return "/images/new/d1.png";
-      if (mmr < 1190) return "/images/new/m3.png";
-      if (mmr < 1205) return "/images/new/m2.png";
-      if (mmr < 1220) return "/images/new/m1.png";
-      if (mmr >= 1235) return "/images/gm.png";
-      return "/images/vomit.png";
     },
   },
 };

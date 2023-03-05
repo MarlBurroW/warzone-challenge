@@ -16,7 +16,6 @@ export default {
       return Players.find({});
     },
   },
-
   computed: {
     groupedComputedGames() {
       // return computedGames grouped by sessionId in an array

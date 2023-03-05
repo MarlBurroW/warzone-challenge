@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="add rank icon">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/methods/players.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/methods/players.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imports/api/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Dashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/data-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/data-mixin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -92,7 +96,7 @@
       <workItem from="1677897803893" duration="8069000" />
       <workItem from="1677902797479" duration="1864000" />
       <workItem from="1677904715976" duration="5236000" />
-      <workItem from="1677926631969" duration="9663000" />
+      <workItem from="1677926631969" duration="20492000" />
     </task>
     <task id="LOCAL-00001" summary="add mmr">
       <created>1677903031858</created>

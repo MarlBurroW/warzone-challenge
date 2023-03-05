@@ -20,6 +20,7 @@ Meteor.methods({
       kg15LastGamesTrending: 0,
       avgKg: 0,
       kgTrending: 0,
+      pourcentNextLevel: 0,
     });
   },
 
