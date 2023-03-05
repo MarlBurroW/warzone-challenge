@@ -199,15 +199,19 @@ function getPourcentNextLevel(mmr, level) {
   let l = level;
   let test = false;
   let increment = 0;
-  while (!test) {
-    if (getLeagueNumber(mmr + increment) != level) {
-      test = true;
-    } else {
-      increment++;
+  if(mmr && level){
+    while (!test) {
+      if (getLeagueNumber(mmr + increment) != level) {
+        test = true;
+      } else {
+        increment++;
+      }
     }
+    let result = 15 - increment;
+    return Math.trunc(result * 100) / 15;
   }
-  let result = 15 - increment;
-  return Math.trunc(result * 100) / 15;
+  return 0;
+
 }
 
 function getPlayerKGTrending(playerKillList) {
