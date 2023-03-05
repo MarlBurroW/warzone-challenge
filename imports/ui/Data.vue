@@ -53,14 +53,14 @@
         </div>
       </div>
 
-      <div class="rounded-lg  flex mb-5 gap-2 text-center">
-        <div class="" >
+      <div class="flex mb-5 gap-2 text-center">
+        <div class="">
           <div class="font-bold mb-2 text-white">Ranking</div>
           <input
-              class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
-              type="number"
-              placeholder="Ranking"
-              v-model="gameRank"
+            class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
+            type="number"
+            placeholder="Ranking"
+            v-model="gameRank"
           />
         </div>
       </div>
@@ -82,141 +82,111 @@
           :key="sessionIndex"
         >
           <tr>
-            <td>
-              <div
-                class="bg-zinc-500 uppercase text-center text-white p-2 rounded-lg font-bold"
-              >
-                -
-              </div>
-            </td>
-            <td class="text-center" :colspan="players.length">
-              <div
-                class="bg-zinc-400 uppercase text-center text-white p-2 rounded-lg font-bold"
-              >
-                Session {{ groupedComputedGames.length - sessionIndex }} ({{
-                  session.length
-                }}
-                games)
-              </div>
-            </td>
-            <td colspan="3">
-              <div
-                class="bg-zinc-500 uppercase text-center text-white p-2 rounded-lg font-bold"
-              >
-                -
-              </div>
+            <td
+              class="bg-zinc-800 uppercase text-center text-white p-8 text-2xl font-bold text-center"
+              :colspan="players.length + 4"
+            >
+              Session {{ groupedComputedGames.length - sessionIndex }} ({{
+                session.length
+              }}
+              games)
             </td>
           </tr>
           <tr>
-            <th class="w-96">
-              <div
-                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
-              >
-                Date
-              </div>
+            <th
+              class="w-96 bg-zinc-600 uppercase text-center text-white p-2 font-bold"
+            >
+              Date
             </th>
-            <th class="text-left" v-for="(player, index) in players" :key="player._id">
-              <div
-                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
-                :style="{color: getPlayersColors(index)}"
-              >
-                {{ player.nickname }}
-              </div>
+            <th
+              :style="{ backgroundColor: getPlayersColors(index) }"
+              class="text-left uppercase text-center text-white p-2 font-bold"
+              v-for="(player, index) in players"
+              :key="player._id"
+            >
+              {{ player.nickname }}
             </th>
-            <th>
-              <div
-                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
-              >
-                Rank
-              </div>
+            <th
+              class="bg-zinc-600 uppercase text-center text-white p-2 font-bold"
+            >
+              Rank
             </th>
-            <th>
-              <div
-                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
-              >
-                Total
-              </div>
+            <th
+              class="bg-zinc-600 uppercase text-center text-white p-2 font-bold"
+            >
+              Total
             </th>
-            <th class="w-40">
-              <div
-                class="bg-zinc-600 uppercase text-center text-white p-2 rounded-lg font-bold"
-              >
-                Actions
-              </div>
+            <th
+              class="w-40 bg-zinc-600 uppercase text-center text-white p-2 font-bold"
+            >
+              Actions
             </th>
           </tr>
           <tr>
-            <td>
-              <div
-                class="bg-zinc-500 text-center text-white p-2 rounded-lg font-bold"
-              >
-                Session total
-              </div>
+            <td class="bg-zinc-500 text-center text-white p-2 font-bold">
+              Session total
             </td>
 
-            <td v-for="player in players" :key="player._id">
-              <div
-                class="bg-zinc-400 text-center text-white p-2 rounded-lg font-bold"
-              >
-                {{ getSessionTotalKills(session, player) }}
-                ({{
-                  numeral(
-                    getSessionTotalKills(session, player) / session.length
-                  ).format("0,0.00")
-                }}
-                avg)
-              </div>
+            <td
+              class="bg-zinc-400 text-center text-white p-2 font-bold"
+              v-for="player in players"
+              :key="player._id"
+            >
+              {{ getSessionTotalKills(session, player) }}
+              ({{
+                numeral(
+                  getSessionTotalKills(session, player) / session.length
+                ).format("0,0.00")
+              }}
+              avg)
             </td>
 
-            <td>
-              <div
-                class="bg-zinc-500 text-center text-xl text-white p-2 rounded-lg font-bold"
-              >
-                {{ numeral(getAverageSessionRank(session)).format("0,0.00") }}
-                (avg)
-              </div>
+            <td
+              class="bg-zinc-500 text-center text-xl text-white p-2 font-bold"
+            >
+              {{ numeral(getAverageSessionRank(session)).format("0,0.00") }}
+              (avg)
             </td>
-            <td>
-              <div
-                class="bg-zinc-500 text-center text-xl text-white p-2 rounded-lg font-bold"
-              >
-                {{ getSessionTotalKills(session) }}
-                ({{
-                  numeral(
-                    getSessionTotalKills(session) / session.length
-                  ).format("0,0.00")
-                }}
-                avg)
-              </div>
+            <td
+              class="bg-zinc-500 text-center text-xl text-white p-2 font-bold"
+            >
+              {{ getSessionTotalKills(session) }}
+              ({{
+                numeral(getSessionTotalKills(session) / session.length).format(
+                  "0,0.00"
+                )
+              }}
+              avg)
             </td>
-            <td>
-              <div
-                class="bg-zinc-500 text-center text-white p-2 rounded-lg font-bold"
-              >
-                <button
-                    @click="toggleActiveGames()"
-                >Tout activer / désactiver
-                </button>
-              </div>
+            <td class="bg-zinc-500 text-center text-white p-2 font-bold">
+              <button @click="toggleActiveGames()">
+                Tout activer / désactiver
+              </button>
             </td>
           </tr>
 
-          <tr v-for="(game, index) in session" :key="game._id">
-            <td class="text-center">
-              <div
-                class="bg-gray-700 text-center text-white p-2 flex rounded-lg items-center"
-              >
+          <tr v-for="(game, index) in session" :key="game._id" class="group">
+            <td
+              class="text-center group-hover:bg-gray-600 bg-gray-700 text-center text-white p-2 items-center"
+            >
+              <div class="flex">
                 <ClockIcon
                   class="h-6 w-6 text-white-300 cursor-pointer mr-3"
                 ></ClockIcon>
                 {{ game.date }}
               </div>
             </td>
-            <td v-for="(score, index) in game.scores" :key="index" class="p-1">
-              <div
-                class="bg-gray-600 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
-              >
+            <td
+              v-for="(score, index) in game.scores"
+              :key="index"
+              :style="`background-color: ${tinycolor(
+                getPlayersColors(index)
+              ).setAlpha(0.6)};`"
+              :class="`bg-opacity-0 p-2 px-6 group-hover:bg-gray-500 text-white font-bold justify-between items-center`"
+            >
+              <div class="flex">
                 <div
+                  class="grow"
                   v-if="
                     (score && score.score != null) ||
                     editedCells[game._id + '-' + score.playerId]
@@ -227,9 +197,14 @@
                     v-if="!editedCells[game._id + '-' + score.playerId]"
                   >
                     {{ score ? score.score : "-" }}
-                    <span v-if="score && score.score == game.bestNumberKill"
-                      >👑</span
+                    <span
+                      class="h-6 w-6 text-yellow-500"
+                      v-if="score && score.score == game.bestNumberKill"
                     >
+                      <StarIcon
+                        class="h-6 w-6 text-yellow-400 inline"
+                      ></StarIcon>
+                    </span>
 
                     <span v-if="score">{{ getHotIndicator(score.score) }}</span>
                   </div>
@@ -273,7 +248,8 @@
                     </form>
                   </div>
                 </div>
-                <div v-else>Not played</div>
+                <div class="grow font-normal text-white" v-else>Not played</div>
+
                 <PencilIcon
                   v-if="!editedCells[game._id + '-' + score.playerId]"
                   @click="
@@ -289,11 +265,12 @@
                 />
               </div>
             </td>
-            <td>
-              <div
-                class="bg-gray-600 text-center text-white p-2 rounded-lg font-bold flex justify-between items-center"
-              >
+            <td
+              class="bg-gray-600 group-hover:bg-gray-500 text-left text-white p-2 px-6 font-bold items-center"
+            >
+              <div class="flex">
                 <div
+                  class="grow"
                   v-if="
                     (game && game.rank != null) ||
                     editedCells[game._id + '-rank']
@@ -335,7 +312,11 @@
                     </form>
                   </div>
                 </div>
-                <div v-else>Not defined</div>
+
+                <div class="grow font-normal text-red-400" v-else>
+                  Not defined
+                </div>
+
                 <PencilIcon
                   v-if="!editedCells[game._id + '-rank']"
                   @click="
@@ -350,33 +331,33 @@
                 />
               </div>
             </td>
-            <td>
-              <div
-                class="bg-gray-700 text-center font-bold text-white p-2 rounded-lg text-2xl"
-              >
-                {{ game.scores.map((s) => s.score).reduce((a, b) => a + b, 0) }}
-              </div>
+            <td
+              class="bg-gray-700 group-hover:bg-gray-600 text-center font-bold text-white p-2 text-2xl"
+            >
+              {{ game.scores.map((s) => s.score).reduce((a, b) => a + b, 0) }}
             </td>
 
-            <td class="flex items-center">
-              <button
-                class="bg-red-500 px-5 py-2 flex items-center rounded-md text-white hover:bg-red-400 transition-all w-full"
-                @click="deleteGame(game._id)"
-              >
-                <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
-                Supprimer
-              </button>
+            <td class="bg-gray-700 group-hover:bg-gray-600 px-2">
+              <div class="flex gap-2 justify-center">
+                <button
+                  class="flex-1 bg-red-500 px-5 py-2 flex items-center text-white hover:bg-red-400 transition-all"
+                  @click="deleteGame(game._id)"
+                >
+                  <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
+                  Supprimer
+                </button>
 
-              <button
-                @click="toggleActiveGame(game)"
-                :class="`${
-                  game.active
-                    ? 'bg-green-500 hover:bg-green-400'
-                    : 'bg-zinc-600 hover:zinc-500'
-                } px-5 py-2 rounded-md text-white transition-all w-full`"
-              >
-                {{ game.active ? "Active" : "Disabled" }}
-              </button>
+                <button
+                  @click="toggleActiveGame(game)"
+                  :class="`${
+                    game.active
+                      ? 'bg-green-500 hover:bg-green-400'
+                      : 'bg-zinc-600 hover:zinc-500'
+                  } flex-1 px-5 py-2  text-white transition-all`"
+                >
+                  {{ game.active ? "Active" : "Disabled" }}
+                </button>
+              </div>
             </td>
           </tr>
         </template>
@@ -394,7 +375,9 @@ import {
   XCircleIcon,
   ClockIcon,
   XMarkIcon,
+  StarIcon,
 } from "@heroicons/vue/24/solid";
+import tinycolor from "tinycolor2";
 </script>
 
 <script>
@@ -483,7 +466,7 @@ export default {
       Meteor.call("deleteGame", gameId);
     },
     addGame() {
-      Meteor.call("createGame", this.gameScore,this.gameRank);
+      Meteor.call("createGame", this.gameScore, this.gameRank);
       this.gameScore = {};
       this.gameRank = null;
     },
@@ -503,16 +486,16 @@ export default {
     toggleActiveGame(game) {
       Meteor.call("updateGameActiveStatus", game._id, !!!game.active);
     },
-    toggleActiveGames(){
-      Meteor.call("updateGamesActiveStatus",!this.activeGames);
+    toggleActiveGames() {
+      Meteor.call("updateGamesActiveStatus", !this.activeGames);
       this.activeGames = !this.activeGames;
-    }
+    },
   },
   data() {
     return {
       nickname: "",
       gameScore: {},
-      gameRank:null,
+      gameRank: null,
       editedCells: {},
       editedValues: {},
       activeGames: true,
