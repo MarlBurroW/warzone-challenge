@@ -2,18 +2,18 @@
   <div class="bg-zinc-700 mb-5">
     <div
       class="relative overflow-hidden px-10"
-      style="padding-top: 100px; padding-bottom: 100px"
+      style="padding-top: 10rem; padding-bottom: 10rem"
     >
       <img
         src="/images/bg.jpg"
-        class="absolute z-0 opacity-30 w-full left-0 right-0 top-0 bottom-0"
+        class="absolute z-0 block opacity-30 w-full h-full left-0 right-0 top-0 bottom-0 object-cover"
       />
 
       <div class="flex w-full justify-center flex-wrap">
         <div
           key="player._id"
           v-for="player in players"
-          class="bg-zinc-800 shadow-xl border-t-8 border-[#7ec92e] w-[400px] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
+          class="bg-zinc-800 shadow-xl border-t-8 border-[#7ec92e] w-[30rem] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
           <img
             class="absolute z-0 opacity-10 w-full left-0 right-0"
@@ -153,7 +153,7 @@
               v-if="currentSession"
             >
               <Bar
-                class="mb-3 max-h-[200px]"
+                class="mb-3 max-h-[20rem]"
                 :options="
                   Object.assign({}, chartOptions, {
                     scales: {
@@ -169,7 +169,7 @@
               />
 
               <Bar
-                class="mb-3 max-h-[200px]"
+                class="mb-3 max-h-[20rem]"
                 :options="
                   Object.assign({}, chartOptions, {
                     scales: {
@@ -189,15 +189,15 @@
       </div>
     </div>
     <div
-      style="padding-top: 100px; padding-bottom: 100px"
+      style="padding-top: 10rem; padding-bottom: 10rem"
       class="relative bg-gradient-to-b from-zinc-700 to-zinc-800"
     >
-      <h1 class="text-white font-bold text-6xl text-center mb-[100px]">
+      <h1 class="text-white font-bold text-6xl text-center mb-[10rem]">
         Current session stats
       </h1>
 
       <div
-        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-bold text-2xl text-center mb-5">
           Players kills during current session
@@ -211,7 +211,7 @@
         </div>
       </div>
       <div
-        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-bold text-2xl text-center mb-5">
           Current session kills repartition
@@ -231,7 +231,7 @@
         Global stats
       </h1>
       <div
-        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-bold text-2xl text-center mb-5">
           Team K/G evolution
@@ -246,7 +246,7 @@
         </div>
       </div>
       <div
-        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-bold text-2xl text-center mb-5">
           Players total kills during each sessions
@@ -261,7 +261,7 @@
       </div>
 
       <div
-        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-bold text-2xl text-center mb-5">
           Players K/G evolution
@@ -275,7 +275,7 @@
         </div>
       </div>
       <div
-        class="bg-zinc-800 p-10 max-w-[1200px] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-bold text-2xl text-center mb-5">
           Total kill repartition

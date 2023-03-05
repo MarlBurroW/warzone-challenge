@@ -2,8 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-#root,
-html,
-body {
+html {
   font-size: 14px;
+}
+
+/* Pour les écrans 1080p */
+@media screen and (max-width: 1920px) {
+  html {
+    font-size: 70%;
+  }
+}
+/* Pour les écrans 1440p */
+@media screen and (min-width: 1921px) {
+  html {
+    font-size: 100%;
+  }
 }
