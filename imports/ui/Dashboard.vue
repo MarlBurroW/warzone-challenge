@@ -20,14 +20,19 @@
             <div class="flex justify-center mb-8">
               <img class="w-[100px]" :src="getMmrLogo(player.level)" />
             </div>
-            <div
-              class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-5"
-            >
+            <div class="flex">
+              <img class="w-12" :src="getMmrLogo(player.level - 1)" />
               <div
-                class="bg-[#7ec92e] h-2 rounded-full transition-all duration-1000 ease-in-out"
-                :style="getProgressMmrStyle(player)"
-              ></div>
+                  class="w-full flex bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-5 align-middle"
+              >
+                <div
+                    class="bg-[#7ec92e] h-2 rounded-full transition-all duration-1000 ease-in-out align-middle"
+                    :style="getProgressMmrStyle(player)"
+                ></div>
+              </div>
+              <img class="w-12" :src="getMmrLogo(player.level + 1)" />
             </div>
+
             <span class="font-bold text-2xl mb-5">{{
               Math.round(player.mmr)
             }}</span>
