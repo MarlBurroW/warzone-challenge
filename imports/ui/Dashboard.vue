@@ -27,9 +27,9 @@
 
           </div>
           <div class="z-1 relative">
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col flex-end items-center">
               <div class="flex">
-                      <span v-for="i in getStarsNumber(player)">
+                      <span v-for="i in currentSessionStats[player._id].topPlayer">
                         <StarIcon :style="`color: ${playerColors[index]};`" class="h-6 w-6 text-yellow-500"></StarIcon>
                       </span>
               </div>
@@ -39,7 +39,7 @@
 
             <div class="flex flex-col mb-5 relative">
               <div class="flex justify-center mb-8">
-                <img class="w-34 h-34" :src="getMmrLogo(player.level)" />
+                <img class="w-34 h-34  brightness-130" :src="getMmrLogo(player.level)" />
               </div>
               <span v-if="!isNaN(player.mmr)" class="font-thin text-3xl mb-5">{{
                 Math.round(player.mmr)
@@ -142,13 +142,21 @@
                     )
                   }}</strong>
                 </div>
-                <div class="mb-3">
+                <div>
                   Avg kills/game:
                   <strong>{{
                     numeral(currentSessionStats[player._id].averageKill).format(
                       "0,0.00"
                     )
                   }}</strong>
+                </div>
+                <div class="mb-3">
+                  Top player:
+                  <strong>{{
+                      numeral(currentSessionStats[player._id].topPlayer).format(
+                          "0"
+                      )
+                    }}</strong>
                 </div>
               </div>
 
@@ -644,9 +652,6 @@ export default {
   },
 
   methods: {
-    getStarsNumber(player) {
-      return Math.trunc(player.topPlayer/10);
-    },
     numeral,
     getProgressMmrStyle(player) {
       return "width:" + player.pourcentNextLevel + "%;";
@@ -661,6 +666,7 @@ export default {
             totalKill: 0,
             totalGames: 0,
             averageKill: 0,
+            topPlayer: 0,
           };
 
           const playedGames = session
@@ -672,6 +678,15 @@ export default {
                 game.scores.find((s) => s.playerId == player._id).score !== null
             );
 
+          // get top player number by session
+          for (let i = 0; i < playedGames.length; i++) {
+            const game = playedGames[i];
+            let maxScore = Math.max(... game.scores.map((s) => s.score));
+            let playerScore = game.scores.find((s) => s.playerId == player._id).score;
+            if(playerScore >= maxScore) {
+              stats[player._id].topPlayer += 1;
+            }
+          }
           stats[player._id].totalGames = playedGames.length;
           stats[player._id].totalKill = playedGames
             .map(
@@ -687,7 +702,7 @@ export default {
     },
     getMmrLogo(level) {
       const map = {
-        0: "/images/vomit.png",
+        0: "/images/new/vomit.png",
         1: "/images/new/b3.png",
         2: "/images/new/b2.png",
         3: "/images/new/b1.png",

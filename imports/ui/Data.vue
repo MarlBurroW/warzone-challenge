@@ -442,9 +442,7 @@ export default {
       }, 1);
     },
     updateScore(gameId, playerId, score) {
-      console.log(gameId, playerId, score);
       Meteor.call("updateGameScore", gameId, playerId, score);
-
       this.editedCells[gameId + "-" + playerId] = false;
     },
     updateRank(gameId, rank) {

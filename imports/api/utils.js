@@ -225,11 +225,12 @@ function getLeagueNumber(mmr) {
   if (mmr < 1175) return 15;
   if (mmr < 1190) return 16;
   if (mmr < 1205) return 17;
-  if (mmr < 1220) return 18;
+  if (mmr < 1235) return 18;
   if (mmr >= 1235) return 19;
 }
 
 function getPourcentNextLevel(mmr, level) {
+  if(level >= 19) return 100;
   let l = level;
   let test = false;
   let increment = 0;
@@ -241,8 +242,11 @@ function getPourcentNextLevel(mmr, level) {
         increment++;
       }
     }
-    let result = 15 - increment;
-    return Math.trunc(result * 100) / 15;
+    if(level == 18){
+      return Math.trunc((30 - increment) * 100) / 30;
+    }else{
+      return Math.trunc((15 - increment) * 100) / 15;
+    }
   }
   return 0;
 }

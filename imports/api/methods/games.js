@@ -5,13 +5,10 @@ import { computePlayerScoreFromBacklog, computeGames } from "../utils.js";
 
 function updatePlayerScores() {
   // Fetch players
-
   const players = Players.find().fetch();
-
   // Fetch updated game backlog
 
   const games = Games.find({ active: true }).fetch();
-
   // Compute player scores from backlog
 
   for (let i = 0; i < players.length; i++) {
@@ -46,7 +43,6 @@ Meteor.methods({
     if (isNaN(newScore)) {
       newScore = null;
     }
-
     Games.update(gameId, {
       $set: {
         [`scores.${playerId}`]: newScore,
