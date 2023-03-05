@@ -64,6 +64,28 @@ export function computePlayerScoreFromBacklog(player, games) {
   let gameRankList = [];
   let playerKillList = [];
   let bonus = [];
+
+  // Reset player attributes if no games
+
+  if (games.length == 0) {
+    Players.update(player._id, {
+      $set: {
+        lastGameKills: 0,
+        level: 0,
+        totalKills: 0,
+        gamesPlayed: 0,
+        mmr: 0,
+        avgKg15LastGames: 0,
+        kg15LastGamesTrending: 0,
+        avgKg: 0,
+        kgTrending: 0,
+        pourcentNextLevel: 0,
+      },
+    });
+
+    return;
+  }
+
   for (let i = 0; i < games.length; i++) {
     const game = games[i];
     if (game.rank != null) {
@@ -199,7 +221,7 @@ function getPourcentNextLevel(mmr, level) {
   let l = level;
   let test = false;
   let increment = 0;
-  if(mmr && level){
+  if (mmr && level) {
     while (!test) {
       if (getLeagueNumber(mmr + increment) != level) {
         test = true;
@@ -211,7 +233,6 @@ function getPourcentNextLevel(mmr, level) {
     return Math.trunc(result * 100) / 15;
   }
   return 0;
-
 }
 
 function getPlayerKGTrending(playerKillList) {
@@ -246,6 +267,8 @@ function getAvgKg(playerKillList) {
       playerKillList.reduce((x, y) => {
         return Number(x) + Number(y);
       }, 0) / playerKillList.length;
+  } else {
+    avgKg = 0;
   }
 
   return avgKg;
