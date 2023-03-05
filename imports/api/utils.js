@@ -39,10 +39,6 @@ export function computeGames() {
 }
 
 export function computePlayerScoreFromBacklog(player, games) {
-  // Constants
-
-  const UPGRADE_FACTOR = 0.5;
-
   // Order games by createdDate asc
 
   // Reset player attributes
@@ -116,7 +112,6 @@ export function computePlayerScoreFromBacklog(player, games) {
 
       player.avgKg = getAvgKg(playerKillList);
       player.kgTrending = getPlayerKGTrending(playerKillList);
-
     }
     // Bonus
   }
@@ -124,33 +119,34 @@ export function computePlayerScoreFromBacklog(player, games) {
   let averageBonus =
     bonus.reduce((x, y) => {
       return Number(x) + Number(y);
-    }) /bonus.length;
+    }, 0) / bonus.length;
 
   let recentAverageBonus =
     bonus.slice(-15).reduce((x, y) => {
-        return Number(x) + Number(y);
-    }) / 15;
+      return Number(x) + Number(y);
+    }, 0) / 15;
 
   let ponderatedAverageBonus = (averageBonus + recentAverageBonus * 3) / 4;
 
   let totalGameRankAverage =
     gameRankList.reduce((x, y) => {
       return Number(x) + Number(y);
-    }) / gameRankList.length;
+    }, 0) / gameRankList.length;
   let recentGameRankAverage =
     gameRankList.slice(-15).reduce((x, y) => {
       return Number(x) + Number(y);
-    }) / 15;
+    }, 0) / 15;
 
   let recentPlayerKillAverage =
     playerKillList.slice(-15).reduce((x, y) => {
       return Number(x) + Number(y);
-    }) / 15;
+    }, 0) / 15;
   let ponderatedAverageRank =
     (totalGameRankAverage + recentGameRankAverage * 3) / 4;
   let ponderatedPlayerKillAverage =
     (player.avgKg + recentPlayerKillAverage * 3) / 4 + ponderatedAverageBonus;
-  player.mmr = (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10;
+  player.mmr =
+    (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10;
   player.level = getLeagueNumber(player.mmr);
   player.pourcentNextLevel = getPourcentNextLevel(player.mmr, player.level);
   Players.update(player._id, {
@@ -176,7 +172,7 @@ export default {
   computePlayerScoreFromBacklog,
 };
 
-function getLeagueNumber(mmr){
+function getLeagueNumber(mmr) {
   if (mmr < 950) return 0;
   if (mmr < 965) return 1;
   if (mmr < 980) return 2;
@@ -199,7 +195,7 @@ function getLeagueNumber(mmr){
   if (mmr >= 1235) return 19;
 }
 
-function getPourcentNextLevel(mmr,level) {
+function getPourcentNextLevel(mmr, level) {
   let l = level;
   let test = false;
   let increment = 0;
@@ -210,12 +206,9 @@ function getPourcentNextLevel(mmr,level) {
       increment++;
     }
   }
-  let result = 15-increment;
+  let result = 15 - increment;
   return Math.trunc(result * 100) / 15;
 }
-
-
-
 
 function getPlayerKGTrending(playerKillList) {
   let kgTrending = 0;
@@ -248,7 +241,7 @@ function getAvgKg(playerKillList) {
     avgKg =
       playerKillList.reduce((x, y) => {
         return Number(x) + Number(y);
-      }) / playerKillList.length;
+      }, 0) / playerKillList.length;
   }
 
   return avgKg;
