@@ -38,8 +38,12 @@
                   class="w-full flex bg-gradient-to-t from-gray-500 to-gray-600 rounded-full h-2 align-middle"
                 >
                   <div
-                    class="bg-[#a0ff3a] h-2 rounded-full transition-all duration-1000 ease-in-out align-middle"
-                    :style="getProgressMmrStyle(player)"
+                    class="h-2 rounded-full transition-all duration-1000 ease-in-out align-middle"
+                    :style="
+                      getProgressMmrStyle(player) +
+                      'background: ' +
+                      playerColors[index]
+                    "
                   ></div>
                 </div>
                 <img class="w-12" :src="getMmrLogo(player.level + 1)" />
@@ -48,7 +52,8 @@
 
             <div class="flex gap-2">
               <div
-                class="bg-zinc-600 p-2 border-l-4 border-sky-500 rounded-lg mb-5 w-full"
+                :style="`border-color: ${playerColors[index]};`"
+                class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
               >
                 <div class="mb-3 font-bold">Global K/G</div>
                 <div class="flex justify-center items-end">
@@ -72,7 +77,8 @@
               </div>
 
               <div
-                class="bg-zinc-600 p-2 border-l-4 border-violet-500 rounded-lg mb-5 w-full"
+                :style="`border-color: ${playerColors[index]};`"
+                class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
               >
                 <div class="mb-3 font-bold">15 last games K/G</div>
                 <div class="flex justify-center items-end">
@@ -100,7 +106,8 @@
             </div>
 
             <div
-              class="lex bg-zinc-600 p-2 border-l-4 border-amber-500 rounded-lg flex justify-between mb-5"
+              :style="`border-color: ${playerColors[index]};`"
+              class="lex bg-zinc-600 p-2 border-l-4 rounded-lg flex justify-between mb-5"
             >
               <div class="text-left" v-if="currentSession">
                 <div class="mb-3 font-bold">Session stats</div>
@@ -131,15 +138,6 @@
                   }}</strong>
                 </div>
               </div>
-              <div class="mb-3">
-                Avg kills/game:
-                <strong>{{
-                  numeral(currentSessionStats[player._id].averageKill).format(
-                    "0,0.00"
-                  )
-                }}</strong>
-              </div>
-            </div>
 
               <div class="text-right">
                 <div class="mb-3 font-bold">Global stats</div>
@@ -157,16 +155,10 @@
                   <strong>{{ numeral(player.avgKg).format("0,0.00") }}</strong>
                 </div>
               </div>
-              <div class="">
-                Avg kills/game:
-                <strong>{{ numeral(player.avgKg).format("0,0.00") }}</strong>
-              </div>
-              <div class="mb-3">
-                Top Player: <strong>{{player.topPlayer }}</strong>
-              </div>
             </div>
             <div
-              class="lex flex-col bg-zinc-600 p-2 border-l-4 border-emerald-400 rounded-lg flex-col flex mb-5"
+              :style="`border-color: ${playerColors[index]};`"
+              class="lex flex-col bg-zinc-600 p-2 border-l-4 rounded-lg flex-col flex mb-5"
               v-if="currentSession"
             >
               <Bar
@@ -306,6 +298,7 @@
         </div>
       </div>
     </div>
+
     <div class="p-10 bg-zinc-900 text-center text-white text-xl">
       Released 100% by MarlburroW
     </div>
@@ -634,13 +627,6 @@ export default {
 
   methods: {
     numeral,
-    getStars(player) {
-      if(player.topPlayer){
-        console.log(player.topPlayer / 10)
-        return Math.trunc(player.topPlayer / 10)
-      }
-      return 0
-    },
     getProgressMmrStyle(player) {
       return "width:" + player.pourcentNextLevel + "%;";
     },
