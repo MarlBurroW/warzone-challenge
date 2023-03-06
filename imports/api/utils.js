@@ -175,6 +175,10 @@ export function computePlayerScoreFromBacklog(player, games) {
     }, 0) / 15;
   let ponderatedAverageRank =
     (totalGameRankAverage + recentGameRankAverage * 3) / 4;
+    if(isNaN(ponderatedAverageBonus )){
+      ponderatedAverageBonus = 0;
+    }
+
   let ponderatedPlayerKillAverage =
     (player.avgKg + recentPlayerKillAverage * 3) / 4 + ponderatedAverageBonus;
   player.mmr =
