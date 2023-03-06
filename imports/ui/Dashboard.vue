@@ -127,7 +127,7 @@
                 <div class="mb-3 font-thin">Session stats</div>
 
                 <div>
-                  Game played:
+                  Games played:
                   <strong>{{
                     numeral(currentSessionStats[player._id].totalGames).format(
                       "0"
@@ -136,7 +136,7 @@
                 </div>
 
                 <div>
-                  Total kill:
+                  Total kills:
                   <strong>{{
                     numeral(currentSessionStats[player._id].totalKill).format(
                       "0"
@@ -164,12 +164,12 @@
               <div class="text-right">
                 <div class="mb-3 font-thin">Global stats</div>
                 <div>
-                  Game played:
+                  Games played:
                   <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
                 </div>
 
                 <div>
-                  Total kill:
+                  Total kills:
                   <strong>{{ numeral(player.totalKills).format("0") }}</strong>
                 </div>
                 <div>
@@ -235,7 +235,7 @@
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-thin text-2xl text-center mb-5">
-          Players kills during current session
+          Player kills during current session
         </h1>
         <div class="flex mx-auto overflow-auto">
           <Line
@@ -284,7 +284,7 @@
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-thin text-2xl text-center mb-5">
-          Players total kills during each sessions
+          Player total kills during each sessions
         </h1>
         <div class="flex w-1/2 mx-auto overflow-auto">
           <Bar
@@ -313,7 +313,7 @@
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-thin text-2xl text-center mb-5">
-          Total kill repartition
+          Total kills repartition
         </h1>
         <div class="flex w-1/2 mx-auto overflow-auto">
           <Doughnut
