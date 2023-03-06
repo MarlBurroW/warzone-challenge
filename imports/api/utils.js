@@ -183,7 +183,12 @@ export function computePlayerScoreFromBacklog(player, games) {
     (player.avgKg + recentPlayerKillAverage * 3) / 4 + ponderatedAverageBonus;
   player.mmr =
     (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10;
-  player.level = getLeagueNumber(player.mmr);
+
+  if(isNaN(player.mmr)){
+    player.level = 0;
+  }else{
+    player.level = getLeagueNumber(player.mmr);
+  }
   player.pourcentNextLevel = getPourcentNextLevel(player.mmr, player.level);
   Players.update(player._id, {
     $set: {
