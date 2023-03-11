@@ -44,7 +44,7 @@
 
               <div class="h-20">
                 <div v-if="player.level != 0" class="flex w-full items-center">
-                  <div class="flex">
+                  <div class="flex mr-4">
                     <img class="w-12" alt="previous_league_logo" :src="getMmrLogo(player.level - 1)"/>
                   </div>
                   <div
@@ -59,7 +59,7 @@
                     "
                     ></div>
                   </div>
-                  <div class="flex">
+                  <div class="flex ml-4">
                     <img class="w-12" alt="next_league_logo" :src="getMmrLogo(player.level + 1)"/>
                   </div>
 
