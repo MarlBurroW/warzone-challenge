@@ -83,7 +83,6 @@ export function computePlayerScoreFromBacklog(player, games) {
         kgTrending: 0,
         pourcentNextLevel: 0,
         topPlayer: 0,
-
       },
     });
 
@@ -91,19 +90,23 @@ export function computePlayerScoreFromBacklog(player, games) {
   }
 
   for (const game of games) {
-    if (game.rank != null &&  game.scores.hasOwnProperty(player._id) && game.scores[player._id] !== null) {
-        gameRankList.push(game.rank);
-        // set bonus
-        if (game.rank == 1) {
-          bonus.push(4);
-        } else if (game.rank == 2) {
-          bonus.push(2);
-        } else if (game.rank == 3) {
-          bonus.push(1);
-        } else if (game.rank > 10) {
-          bonus.push(-1);
-        }
+    if (
+      game.rank != null &&
+      game.scores.hasOwnProperty(player._id) &&
+      game.scores[player._id] !== null
+    ) {
+      gameRankList.push(game.rank);
+      // set bonus
+      if (game.rank == 1) {
+        bonus.push(4);
+      } else if (game.rank == 2) {
+        bonus.push(2);
+      } else if (game.rank == 3) {
+        bonus.push(1);
+      } else if (game.rank > 10) {
+        bonus.push(-1);
       }
+    }
 
     // Check if player has played in this game, and only compute score if so
 
@@ -114,7 +117,7 @@ export function computePlayerScoreFromBacklog(player, games) {
       let arrScores = Object.values(game.scores);
       let maxScore = Math.max(...arrScores);
       if (game.scores[player._id] >= maxScore) {
-        player.topPlayer = game.scores[player._id] >= maxScore
+        player.topPlayer = game.scores[player._id] >= maxScore;
         if (player.topPlayer) {
           player.topPlayer++;
         } else {
@@ -130,7 +133,7 @@ export function computePlayerScoreFromBacklog(player, games) {
       // Update some player attributes directly
 
       player.gamesPlayed = player.gamesPlayed + 1;
-      player.totalKills = player.totalKills + playerKills;
+      player.totalKills = player.totalKills + +playerKills;
 
       // Calculate the trend (up/stable/down) of kills/games from the beginning*
 
@@ -144,46 +147,46 @@ export function computePlayerScoreFromBacklog(player, games) {
     }
     // Bonus
   }
-  
+
   // calculate mmr
-  if(player.gamesPlayed >= 5) {
+  if (player.gamesPlayed >= 5) {
     let averageBonus =
-        bonus.reduce((x, y) => {
-          return +x + +y;
-        }, 0) / bonus.length;
+      bonus.reduce((x, y) => {
+        return +x + +y;
+      }, 0) / bonus.length;
 
     let recentAverageBonus =
-        bonus.slice(-15).reduce((x, y) => {
-          return +x + +y
-        }, 0) / 15;
+      bonus.slice(-15).reduce((x, y) => {
+        return +x + +y;
+      }, 0) / 15;
 
     let ponderatedAverageBonus = (averageBonus + recentAverageBonus * 3) / 4;
 
     let totalGameRankAverage =
-        gameRankList.reduce((x, y) => {
-          return +x + +y
-        }, 0) / gameRankList.length;
+      gameRankList.reduce((x, y) => {
+        return +x + +y;
+      }, 0) / gameRankList.length;
     let recentGameRankAverage =
-        gameRankList.slice(-15).reduce((x, y) => {
-          return  +x + +y
-        }, 0) / 15;
+      gameRankList.slice(-15).reduce((x, y) => {
+        return +x + +y;
+      }, 0) / 15;
 
     let recentPlayerKillAverage =
-        playerKillList.slice(-15).reduce((x, y) => {
-          return +x + +y
-        }, 0) / 15;
+      playerKillList.slice(-15).reduce((x, y) => {
+        return +x + +y;
+      }, 0) / 15;
     let ponderatedAverageRank =
-        (totalGameRankAverage + recentGameRankAverage * 3) / 4;
+      (totalGameRankAverage + recentGameRankAverage * 3) / 4;
     if (isNaN(ponderatedAverageBonus)) {
       ponderatedAverageBonus = 0;
     }
 
     let ponderatedPlayerKillAverage =
-        (player.avgKg + recentPlayerKillAverage * 3) / 4 + ponderatedAverageBonus;
+      (player.avgKg + recentPlayerKillAverage * 3) / 4 + ponderatedAverageBonus;
 
     player.lastMmr = player.mmr;
     player.mmr =
-        (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10;
+      (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10;
     player.level = getLeagueNumber(player.mmr);
     player.pourcentNextLevel = getPourcentNextLevel(player.mmr, player.level);
   } else {
@@ -207,7 +210,7 @@ export function computePlayerScoreFromBacklog(player, games) {
       kgTrending: player.kgTrending,
       topPlayer: player.topPlayer,
     },
-  })
+  });
 }
 
 export default {
@@ -216,26 +219,46 @@ export default {
 
 function getLeagueNumber(mmr) {
   switch (true) {
-    case mmr < 950: return 1;
-    case mmr < 965: return 2;
-    case mmr < 980: return 3;
-    case mmr < 995: return 4;
-    case mmr < 1010: return 5;
-    case mmr < 1025: return 6;
-    case mmr < 1040: return 7;
-    case mmr < 1055: return 8;
-    case mmr < 1070: return 9;
-    case mmr < 1085: return 10;
-    case mmr < 1100: return 11;
-    case mmr < 1115: return 12;
-    case mmr < 1130: return 13;
-    case mmr < 1145: return 14;
-    case mmr < 1160: return 15;
-    case mmr < 1175: return 16;
-    case mmr < 1190: return 17;
-    case mmr < 1205: return 18;
-    case mmr < 1220: return 19;
-    case mmr >= 1235: return 20;
+    case mmr < 950:
+      return 1;
+    case mmr < 965:
+      return 2;
+    case mmr < 980:
+      return 3;
+    case mmr < 995:
+      return 4;
+    case mmr < 1010:
+      return 5;
+    case mmr < 1025:
+      return 6;
+    case mmr < 1040:
+      return 7;
+    case mmr < 1055:
+      return 8;
+    case mmr < 1070:
+      return 9;
+    case mmr < 1085:
+      return 10;
+    case mmr < 1100:
+      return 11;
+    case mmr < 1115:
+      return 12;
+    case mmr < 1130:
+      return 13;
+    case mmr < 1145:
+      return 14;
+    case mmr < 1160:
+      return 15;
+    case mmr < 1175:
+      return 16;
+    case mmr < 1190:
+      return 17;
+    case mmr < 1205:
+      return 18;
+    case mmr < 1220:
+      return 19;
+    case mmr >= 1235:
+      return 20;
   }
 }
 
@@ -251,7 +274,7 @@ function getPourcentNextLevel(mmr, level) {
         increment++;
       }
     }
-    if (level == 19){
+    if (level == 19) {
       return Math.trunc((30 - increment) * 100) / 30;
     } else {
       return Math.trunc((15 - increment) * 100) / 15;
