@@ -55,7 +55,10 @@
                     {{ Math.round(player.mmr) }}</span
                   >
                   <span v-else class="font-thin text-3xl">
-                    {{ 5 - player.gamesPlayed }} games left</span
+                    {{ 5 - player.gamesPlayed }} game{{
+                      5 - player.gamesPlayed > 1 ? "s" : ""
+                    }}
+                    left</span
                   >
                   <div class="evolution-mmr font-thin text-3xl">
                     <span
@@ -452,11 +455,11 @@ export default {
       const sessions = this.groupedComputedGames;
       const latestSession = this.currentSession ? this.currentSession : [];
       const latestSessionKills = latestSession
-          .slice()
-          .reverse()
-          .map((g) => {
-            return g.scores.reduce((acc, s) => Number(acc) + Number(s.score, 0));
-          });
+        .slice()
+        .reverse()
+        .map((g) => {
+          return g.scores.reduce((acc, s) => Number(acc) + Number(s.score, 0));
+        });
 
       return {
         latestSessionKills: {
@@ -480,7 +483,7 @@ export default {
               data: this.players.map((p) => {
                 return this.computedGames.reduce((acc, g) => {
                   const score = g.scores.find((s) => s.playerId === p._id);
-                  return Number(acc) + Number((score ? score.score : 0));
+                  return Number(acc) + Number(score ? score.score : 0);
                 }, 0);
               }),
               backgroundColor: this.getPlayersColors(),
@@ -494,7 +497,7 @@ export default {
               data: this.players.map((p) => {
                 return latestSession.reduce((acc, g) => {
                   const score = g.scores.find((s) => s.playerId === p._id);
-                  return Number(acc) + Number((score ? score.score : 0));
+                  return Number(acc) + Number(score ? score.score : 0);
                 }, 0);
               }),
               backgroundColor: this.getPlayersColors(),
@@ -509,10 +512,15 @@ export default {
               label: "Team average kills per session",
               data: sessions.map((session) => {
                 return (
-                    session.map((g) => {
-                      return g.scores.reduce((acc, s) => Number(acc) + Number(s.score), 0);
+                  session
+                    .map((g) => {
+                      return g.scores.reduce(
+                        (acc, s) => Number(acc) + Number(s.score),
+                        0
+                      );
                     })
-                        .reduce((acc, s) => Number(acc) + Number(s), 0) / session.length
+                    .reduce((acc, s) => Number(acc) + Number(s), 0) /
+                  session.length
                 );
               }),
               backgroundColor: "rgba(16, 185, 129, 0.50)",
@@ -535,7 +543,8 @@ export default {
                         return g.scores.find((s) => s.playerId === p._id)
                           ?.score;
                       })
-                          .reduce((acc, s) => Number(acc) + Number(s), 0) / session.length
+                      .reduce((acc, s) => Number(acc) + Number(s), 0) /
+                    session.length
                   );
                 }),
                 backgroundColor: this.getPlayersColors(index),
@@ -552,11 +561,12 @@ export default {
             return {
               label: p.nickname,
               data: sessions.map((session) => {
-                return session.map((g) => {
-                  const score = g.scores.find((s) => s.playerId === p._id);
-                  return score ? score.score : 0;
-                })
-                    .reduce((acc, s) => Number(acc) + Number(s), 0);
+                return session
+                  .map((g) => {
+                    const score = g.scores.find((s) => s.playerId === p._id);
+                    return score ? score.score : 0;
+                  })
+                  .reduce((acc, s) => Number(acc) + Number(s), 0);
               }),
               backgroundColor: this.getPlayersColors(index),
               borderColor: this.getPlayersColors(index),
