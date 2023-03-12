@@ -414,7 +414,7 @@ export default {
           .slice()
           .reverse()
           .map((g) => {
-            return g.scores.reduce((acc, s) => acc + s.score, 0);
+            return g.scores.reduce((acc, s) => Number(acc) + Number(s.score, 0));
           });
 
       return {
@@ -439,7 +439,7 @@ export default {
               data: this.players.map((p) => {
                 return this.computedGames.reduce((acc, g) => {
                   const score = g.scores.find((s) => s.playerId === p._id);
-                  return acc + (score ? score.score : 0);
+                  return Number(acc) + Number((score ? score.score : 0));
                 }, 0);
               }),
               backgroundColor: this.getPlayersColors(),
@@ -453,7 +453,7 @@ export default {
               data: this.players.map((p) => {
                 return latestSession.reduce((acc, g) => {
                   const score = g.scores.find((s) => s.playerId === p._id);
-                  return acc + (score ? score.score : 0);
+                  return Number(acc) + Number((score ? score.score : 0));
                 }, 0);
               }),
               backgroundColor: this.getPlayersColors(),
@@ -469,9 +469,9 @@ export default {
               data: sessions.map((session) => {
                 return (
                     session.map((g) => {
-                      return g.scores.reduce((acc, s) => acc + s.score, 0);
+                      return g.scores.reduce((acc, s) => Number(acc) + Number(s.score), 0);
                     })
-                        .reduce((acc, s) => acc + s, 0) / session.length
+                        .reduce((acc, s) => Number(acc) + Number(s), 0) / session.length
                 );
               }),
               backgroundColor: "rgba(16, 185, 129, 0.50)",
@@ -493,7 +493,7 @@ export default {
                         return g.scores.find((s) => s.playerId === p._id)
                             ?.score;
                       })
-                          .reduce((acc, s) => acc + s, 0) / session.length
+                          .reduce((acc, s) => Number(acc) + Number(s), 0) / session.length
                   );
                 }),
                 backgroundColor: this.getPlayersColors(index),
@@ -514,7 +514,7 @@ export default {
                   const score = g.scores.find((s) => s.playerId === p._id);
                   return score ? score.score : 0;
                 })
-                    .reduce((acc, s) => acc + s, 0);
+                    .reduce((acc, s) => Number(acc) + Number(s), 0);
               }),
               backgroundColor: this.getPlayersColors(index),
               borderColor: this.getPlayersColors(index),
