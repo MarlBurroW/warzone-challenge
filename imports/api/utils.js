@@ -2,7 +2,7 @@ import Players from "./collections/Players.js";
 import Games from "./collections/Games.js";
 import moment from "moment";
 
-export function computeGames() {
+export const computeGames = function () {
   let games = Games.find().fetch();
 
   let sessionCounter = 1;
@@ -36,9 +36,9 @@ export function computeGames() {
       },
     });
   }
-}
+};
 
-export function computePlayerScoreFromBacklog(player, games) {
+export const computePlayerScoreFromBacklog = function (player, games) {
   // Order games by createdDate asc
 
   // Reset player attributes
@@ -62,13 +62,13 @@ export function computePlayerScoreFromBacklog(player, games) {
 
   // Iterate over games
 
-  let gameRankList = [];
-  let playerKillList = [];
-  let bonus = [];
+  const gameRankList = [];
+  const playerKillList = [];
+  const bonus = [];
 
   // Reset player attributes if no games
 
-  if (games.length == 0) {
+  if (games.length === 0) {
     Players.update(player._id, {
       $set: {
         lastGameKills: 0,
@@ -95,36 +95,30 @@ export function computePlayerScoreFromBacklog(player, games) {
       game.scores.hasOwnProperty(player._id) &&
       game.scores[player._id] !== null
     ) {
-      gameRankList.push(game.rank);
-      // set bonus
-      if (game.rank == 1) {
+      const gameRank = Number(game.rank);
+      gameRankList.push(gameRank);
+      if (gameRank === 1) {
         bonus.push(4);
-      } else if (game.rank == 2) {
+      } else if (gameRank === 2) {
         bonus.push(2);
-      } else if (game.rank == 3) {
+      } else if (gameRank > 2 && gameRank <= 5) {
         bonus.push(1);
-      } else if (game.rank > 10) {
+      } else if (gameRank >= 12) {
         bonus.push(-1);
       }
     }
-
     // Check if player has played in this game, and only compute score if so
 
     if (
       game.scores.hasOwnProperty(player._id) &&
       game.scores[player._id] !== null
     ) {
-      let arrScores = Object.values(game.scores);
-      let maxScore = Math.max(...arrScores);
+      const arrScores = Object.values(game.scores);
+      const maxScore = Math.max(...arrScores);
       if (game.scores[player._id] >= maxScore) {
-        player.topPlayer = game.scores[player._id] >= maxScore;
-        if (player.topPlayer) {
-          player.topPlayer++;
-        } else {
-          player.topPlayer = 1;
-        }
+        player.topPlayer++;
       }
-      let playerKills = game.scores[player._id];
+      const playerKills = game.scores[player._id];
 
       // Retreiving player data from previous iteration to work on it
 
@@ -133,8 +127,7 @@ export function computePlayerScoreFromBacklog(player, games) {
       // Update some player attributes directly
 
       player.gamesPlayed = player.gamesPlayed + 1;
-      player.totalKills = player.totalKills + +playerKills;
-
+      player.totalKills = Number(player.totalKills) + Number(playerKills);
       // Calculate the trend (up/stable/down) of kills/games from the beginning*
 
       player.avgKg15LastGames = getAvgKg(playerKillList.slice(-15));
@@ -145,44 +138,41 @@ export function computePlayerScoreFromBacklog(player, games) {
       player.avgKg = getAvgKg(playerKillList);
       player.kgTrending = getPlayerKGTrending(playerKillList);
     }
-    // Bonus
   }
-
   // calculate mmr
   if (player.gamesPlayed >= 5) {
-    let averageBonus =
+    const averageBonus =
       bonus.reduce((x, y) => {
         return +x + +y;
       }, 0) / bonus.length;
 
-    let recentAverageBonus =
+    const recentAverageBonus =
       bonus.slice(-15).reduce((x, y) => {
         return +x + +y;
       }, 0) / 15;
 
     let ponderatedAverageBonus = (averageBonus + recentAverageBonus * 3) / 4;
 
-    let totalGameRankAverage =
+    const totalGameRankAverage =
       gameRankList.reduce((x, y) => {
         return +x + +y;
       }, 0) / gameRankList.length;
-    let recentGameRankAverage =
+    const recentGameRankAverage =
       gameRankList.slice(-15).reduce((x, y) => {
-        return +x + +y;
+        return Number(x) + Number(y);
       }, 0) / 15;
 
-    let recentPlayerKillAverage =
+    const recentPlayerKillAverage =
       playerKillList.slice(-15).reduce((x, y) => {
-        return +x + +y;
+        return Number(x) + Number(y);
       }, 0) / 15;
-    let ponderatedAverageRank =
-      (totalGameRankAverage + recentGameRankAverage * 3) / 4;
+    const ponderatedAverageRank =
+      (totalGameRankAverage + recentGameRankAverage * 2) / 3;
     if (isNaN(ponderatedAverageBonus)) {
       ponderatedAverageBonus = 0;
     }
-
-    let ponderatedPlayerKillAverage =
-      (player.avgKg + recentPlayerKillAverage * 3) / 4 + ponderatedAverageBonus;
+    const ponderatedPlayerKillAverage =
+      (player.avgKg + recentPlayerKillAverage * 2) / 3 + ponderatedAverageBonus;
 
     player.lastMmr = player.mmr;
     player.mmr =
@@ -211,13 +201,11 @@ export function computePlayerScoreFromBacklog(player, games) {
       topPlayer: player.topPlayer,
     },
   });
-}
-
-export default {
-  computePlayerScoreFromBacklog,
 };
 
-function getLeagueNumber(mmr) {
+export default {};
+
+const getLeagueNumber = function (mmr) {
   switch (true) {
     case mmr < 950:
       return 1;
@@ -259,31 +247,35 @@ function getLeagueNumber(mmr) {
       return 19;
     case mmr >= 1235:
       return 20;
+    default:
+      return 0;
   }
-}
+};
 
-function getPourcentNextLevel(mmr, level) {
-  if (level >= 19) return 100;
+const getPourcentNextLevel = function (mmr, level) {
+  if (level >= 19) {
+    return 100;
+  }
   let test = false;
   let increment = 0;
   if (mmr && level) {
     while (!test) {
-      if (getLeagueNumber(mmr + increment) != level) {
+      if (getLeagueNumber(mmr + increment) !== level) {
         test = true;
       } else {
         increment++;
       }
     }
-    if (level == 19) {
+    if (level === 19) {
       return Math.trunc((30 - increment) * 100) / 30;
     } else {
       return Math.trunc((15 - increment) * 100) / 15;
     }
   }
   return 0;
-}
+};
 
-function getPlayerKGTrending(playerKillList) {
+const getPlayerKGTrending = function (playerKillList) {
   let kgTrending = 0;
 
   if (playerKillList.length > 1) {
@@ -304,9 +296,9 @@ function getPlayerKGTrending(playerKillList) {
     }
   }
   return kgTrending;
-}
+};
 
-function getAvgKg(playerKillList) {
+const getAvgKg = function (playerKillList) {
   let avgKg = 0;
 
   if (playerKillList.length > 0) {
@@ -317,4 +309,4 @@ function getAvgKg(playerKillList) {
   }
 
   return avgKg;
-}
+};

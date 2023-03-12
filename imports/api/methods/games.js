@@ -77,17 +77,16 @@ Meteor.methods({
   },
   updateGamesActiveStatus(active) {
     Games.update(
-        {}, //match all
-        {
-          $set: {
-            "active": active
-          }
+      {}, //match all
+      {
+        $set: {
+          active: active,
         },
-        {
-          multi: true,
-        }
-
-    )
+      },
+      {
+        multi: true,
+      }
+    );
     updatePlayerScores();
     computeGames();
   },
