@@ -47,7 +47,6 @@
                 />
               </div>
               <div class="mb-5">
-                mmr evolution {{getMmrEvolution(player)}}
                 <div class="flex justify-center">
                   <span
                     v-if="!isNaN(player.mmr) && player.mmr !== 0"
