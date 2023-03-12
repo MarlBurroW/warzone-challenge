@@ -22,7 +22,7 @@
                class="absolute z-0 opacity-10 w-full left-0 right-0"
                :src="getMmrLogo(player.level)"
           />
-          <div class="z-1">
+          <div class="z-10">
             <div class="flex flex-col">
               <div class="flex flex-wrap h-7 justify-center align-center">
                       <span v-if="currentSessionStats && currentSessionStats[player._id].topPlayer"
@@ -36,10 +36,20 @@
                 <img class="w-34 h-34 brightness-130" alt="mmr_logo" :src="getMmrLogo(player.level)"/>
               </div>
               <div class="mb-5">
-                <span v-if="!isNaN(player.mmr) && player.mmr !== 0" class="font-thin text-3xl">
+                <div class="flex justify-center">
+                  <span v-if="!isNaN(player.mmr) && player.mmr !== 0" class="font-thin text-3xl mr-2">
                 {{ Math.round(player.mmr) }}</span>
-                <span v-else class="font-thin text-3xl">
-               {{ 5 - player.gamesPlayed }} games left</span>
+                  <span v-else class="font-thin text-3xl">
+                {{ 5 - player.gamesPlayed }} games left</span>
+                  <div class="evolution-mmr font-thin text-3xl">
+                        <span class="text-green-300 left-50 bottom-3 font-bold" v-if="getMmrEvolution(player) && getMmrEvolution(player) >= 0">
+                       +{{getMmrEvolution(player)}}
+                        </span>
+                    <span class="text-3xl text-red-300 font-bold" v-if="getMmrEvolution(player) && getMmrEvolution(player) < 0">
+                       {{getMmrEvolution(player)}}
+                        </span>
+                  </div>
+                </div>
               </div>
 
               <div class="h-20">
@@ -604,6 +614,14 @@ export default {
 
   methods: {
     numeral,
+
+    getMmrEvolution(player) {
+      if(!isNaN(player.mmr) && player.mmr != 0 && !isNaN(player.lastMmr) && player.lastMmr != 0) {
+        console.log("LAST EVOLUTION MMR",Math.round(player.mmr - player.lastMmr))
+        return Math.round(player.mmr - player.lastMmr);
+      }
+      return null
+    },
     getProgressMmrStyle(player) {
       return `width:${player.pourcentNextLevel}%;`;
     },

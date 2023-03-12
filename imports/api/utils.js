@@ -89,7 +89,7 @@ export const computePlayerScoreFromBacklog = function (player, games) {
     return;
   }
 
-  for (const game of games) {
+  games.forEach((game, i) => {
     if (
       game.rank != null &&
       game.scores.hasOwnProperty(player._id) &&
@@ -138,50 +138,29 @@ export const computePlayerScoreFromBacklog = function (player, games) {
       player.avgKg = getAvgKg(playerKillList);
       player.kgTrending = getPlayerKGTrending(playerKillList);
     }
-  }
-  // calculate mmr
-  if (player.gamesPlayed >= 5) {
-    const averageBonus =
-      bonus.reduce((x, y) => {
-        return +x + +y;
-      }, 0) / bonus.length;
-
-    const recentAverageBonus =
-      bonus.slice(-15).reduce((x, y) => {
-        return +x + +y;
-      }, 0) / 15;
-
-    let ponderatedAverageBonus = (averageBonus + recentAverageBonus * 3) / 4;
-
-    const totalGameRankAverage =
-      gameRankList.reduce((x, y) => {
-        return +x + +y;
-      }, 0) / gameRankList.length;
-    const recentGameRankAverage =
-      gameRankList.slice(-15).reduce((x, y) => {
-        return Number(x) + Number(y);
-      }, 0) / 15;
-
-    const recentPlayerKillAverage =
-      playerKillList.slice(-15).reduce((x, y) => {
-        return Number(x) + Number(y);
-      }, 0) / 15;
-    const ponderatedAverageRank =
-      (totalGameRankAverage + recentGameRankAverage * 2) / 3;
-    if (isNaN(ponderatedAverageBonus)) {
-      ponderatedAverageBonus = 0;
+    if (player.gamesPlayed >= 5) {
+      if (i === games.length - 2) {
+        player.lastMmr = calculateMmr(
+          player,
+          bonus,
+          gameRankList,
+          playerKillList
+        );
+      }
+      if (i === games.length - 1) {
+        player.mmr = calculateMmr(player, bonus, gameRankList, playerKillList);
+      }
+    } else {
+      player.mmr = 0;
+      player.lastMmr = 0;
     }
-    const ponderatedPlayerKillAverage =
-      (player.avgKg + recentPlayerKillAverage * 2) / 3 + ponderatedAverageBonus;
+  });
 
-    player.lastMmr = player.mmr;
-    player.mmr =
-      (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10;
-    player.level = getLeagueNumber(player.mmr);
-    player.pourcentNextLevel = getPourcentNextLevel(player.mmr, player.level);
-  } else {
-    player.level = 0;
-  }
+  // calculate mmr
+
+  player.level = getLeagueNumber(player.mmr);
+  player.pourcentNextLevel = getPourcentNextLevel(player.mmr, player.level);
+
   Players.update(player._id, {
     $set: {
       balance: player.balance,
@@ -205,7 +184,49 @@ export const computePlayerScoreFromBacklog = function (player, games) {
 
 export default {};
 
+const calculateMmr = function (player, bonus, gameRankList, playerKillList) {
+  const averageBonus =
+    bonus.reduce((x, y) => {
+      return +x + +y;
+    }, 0) / bonus.length;
+
+  const recentAverageBonus =
+    bonus.slice(-15).reduce((x, y) => {
+      return +x + +y;
+    }, 0) / 15;
+
+  let ponderatedAverageBonus = (averageBonus + recentAverageBonus * 3) / 4;
+
+  const totalGameRankAverage =
+    gameRankList.reduce((x, y) => {
+      return +x + +y;
+    }, 0) / gameRankList.length;
+  const recentGameRankAverage =
+    gameRankList.slice(-15).reduce((x, y) => {
+      return Number(x) + Number(y);
+    }, 0) / 15;
+
+  const recentPlayerKillAverage =
+    playerKillList.slice(-15).reduce((x, y) => {
+      return Number(x) + Number(y);
+    }, 0) / 15;
+  const ponderatedAverageRank =
+    (totalGameRankAverage + recentGameRankAverage * 2) / 3;
+  if (isNaN(ponderatedAverageBonus)) {
+    ponderatedAverageBonus = 0;
+  }
+  const ponderatedPlayerKillAverage =
+    (player.avgKg + recentPlayerKillAverage * 2) / 3 + ponderatedAverageBonus;
+
+  return Math.round(
+    (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10
+  );
+};
+
 const getLeagueNumber = function (mmr) {
+  if (mmr === 0) {
+    return 0;
+  }
   switch (true) {
     case mmr < 950:
       return 1;

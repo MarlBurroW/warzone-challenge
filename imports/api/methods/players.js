@@ -11,6 +11,7 @@ Meteor.methods({
       level: 0,
       totalKills: 0,
       gamesPlayed: 0,
+      lastMmr: 0,
       mmr: 0,
       avgKg15LastGames: 0,
       kg15LastGamesTrending: 0,
@@ -18,7 +19,7 @@ Meteor.methods({
       kgTrending: 0,
       pourcentNextLevel: 0,
       topPlayer: 0,
-      star:0,
+      star: 0,
     });
   },
 
