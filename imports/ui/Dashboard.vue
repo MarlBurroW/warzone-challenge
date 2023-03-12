@@ -682,7 +682,7 @@ export default {
           .map(
             (game) => game.scores.find((s) => s.playerId === player._id).score
           )
-          .reduce((a, b) => a + b, 0);
+          .reduce((a, b) => Number(a) + Number(b), 0);
         stats[player._id].averageKill =
           stats[player._id].totalKill / stats[player._id].totalGames;
       }

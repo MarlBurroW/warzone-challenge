@@ -47,6 +47,7 @@
         <div class="w-full" key="player._id" v-for="player in players">
           <div class="font-bold mb-2 text-white">{{ player.nickname }}</div>
           <input
+              type="number"
               class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold
             w-full text-center rounded-md ring-gray-600 focus:ring-1"
               aria-label="game_score"
@@ -343,7 +344,7 @@
           <td
               class="bg-gray-700 group-hover:bg-gray-600 text-center font-bold text-white p-2 text-2xl"
           >
-            {{ game.scores.map((s) => s.score).reduce((a, b) => a + b, 0) }}
+            {{ game.scores.map((s) => s.score).reduce((a, b) => Number(a) + Number(b), 0) }}
           </td>
 
           <td class="bg-gray-700 group-hover:bg-gray-600 px-2">
@@ -403,14 +404,14 @@ export default {
               s => s.playerId === player._id,
           );
           if (playerScore && playerScore.score) {
-            totalKills += playerScore.score;
+            totalKills += Number(playerScore.score);
           }
         }
       } else {
         session.forEach(game => {
           game.scores.forEach(score => {
             if (score.score) {
-              totalKills += score.score;
+              totalKills += Number(score.score);
             }
           });
         });
