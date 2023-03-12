@@ -47,17 +47,20 @@
                 />
               </div>
               <div class="mb-5">
+                mmr evolution {{getMmrEvolution(player)}}
                 <div class="flex justify-center">
                   <span
                     v-if="!isNaN(player.mmr) && player.mmr !== 0"
-                    class="font-thin text-3xl mr-2"
+                    class="font-thin text-3xl"
                   >
                     {{ Math.round(player.mmr) }}</span
                   >
                   <span v-else class="font-thin text-3xl">
                     {{ 5 - player.gamesPlayed }} games left</span
                   >
-                  <div class="evolution-mmr font-thin text-3xl">
+                  <div class="evolution-mmr font-thin text-3xl ml-2"  v-if="
+                        getMmrEvolution(player)
+                      ">
                     <span
                       class="text-green-300 left-50 bottom-3 font-bold"
                       v-if="
@@ -455,7 +458,7 @@ export default {
           .slice()
           .reverse()
           .map((g) => {
-            return g.scores.reduce((acc, s) => Number(acc) + Number(s.score, 0));
+            return g.scores.reduce((acc, s) => Number(acc) + Number(s.score, 0),0);
           });
 
       return {
@@ -666,10 +669,6 @@ export default {
         !isNaN(player.lastMmr) &&
         player.lastMmr != 0
       ) {
-        console.log(
-          "LAST EVOLUTION MMR",
-          Math.round(player.mmr - player.lastMmr)
-        );
         return Math.round(player.mmr - player.lastMmr);
       }
       return null;
