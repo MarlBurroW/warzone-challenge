@@ -98,9 +98,9 @@ export const computePlayerScoreFromBacklog = function (player, games) {
       const gameRank = Number(game.rank);
       gameRankList.push(gameRank);
       if (gameRank === 1) {
-        bonus.push(4);
+        bonus.push(5);
       } else if (gameRank === 2) {
-        bonus.push(2);
+        bonus.push(3);
       } else if (gameRank > 2 && gameRank <= 5) {
         bonus.push(1);
       } else if (gameRank >= 12) {
