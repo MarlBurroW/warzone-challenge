@@ -225,12 +225,12 @@ const calculateMmr = function (player, bonus, gameRankList, playerKillList) {
       return Number(x) + Number(y);
     }, 0) / 15;
   const ponderatedAverageRank =
-    (totalGameRankAverage + recentGameRankAverage * 2) / 3;
+    (totalGameRankAverage + recentGameRankAverage * 3) / 4;
   if (isNaN(ponderatedAverageBonus)) {
     ponderatedAverageBonus = 0;
   }
   const ponderatedPlayerKillAverage =
-    (player.avgKg + recentPlayerKillAverage * 2) / 3 + ponderatedAverageBonus;
+    (player.avgKg + recentPlayerKillAverage * 3) / 4 + ponderatedAverageBonus;
 
   return Math.round(
     (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10
