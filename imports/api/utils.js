@@ -2,6 +2,20 @@ import Players from "./collections/Players.js";
 import Games from "./collections/Games.js";
 import moment from "moment";
 
+export function updatePlayerScores() {
+  // Fetch players
+  const players = Players.find({ active: true }).fetch();
+  // Fetch updated game backlog
+  const games = Games.find({ active: true }).fetch();
+
+  // Compute player scores from backlog
+
+  for (let i = 0; i < players.length; i++) {
+    const player = players[i];
+    computePlayerScoreFromBacklog(player, games);
+  }
+}
+
 export const computeGames = function () {
   let games = Games.find().fetch();
 

@@ -1,21 +1,7 @@
 import { check } from "meteor/check";
 import Games from "../collections/Games.js";
 import Players from "../collections/Players.js";
-import { computePlayerScoreFromBacklog, computeGames } from "../utils.js";
-
-function updatePlayerScores() {
-  // Fetch players
-  const players = Players.find().fetch();
-  // Fetch updated game backlog
-  const games = Games.find({ active: true }).fetch();
-
-  // Compute player scores from backlog
-
-  for (let i = 0; i < players.length; i++) {
-    const player = players[i];
-    computePlayerScoreFromBacklog(player, games);
-  }
-}
+import { updatePlayerScores, computeGames } from "../utils.js";
 
 Meteor.methods({
   createGame(scores, rank) {

@@ -4,7 +4,6 @@ import _ from "lodash";
 import moment from "moment";
 
 export default {
-
   data() {
     return {
       activeOnly: false,
@@ -14,6 +13,10 @@ export default {
     $subscribe: {
       games: [],
       players: [],
+    },
+
+    activePlayers() {
+      return Players.find({ active: true });
     },
     activeGames() {
       return Games.find({ active: true });
@@ -26,7 +29,7 @@ export default {
     },
   },
   methods: {
-    getPlayersColors(index = null){
+    getPlayersColors(index = null) {
       const playerColors = [
         "#0ea5e9",
         "#f87171",
@@ -37,11 +40,11 @@ export default {
         "#d946ef",
         "#f43f5e",
       ];
-      if(index === null){
+      if (index === null) {
         return playerColors;
       }
       return playerColors[index];
-    }
+    },
   },
   computed: {
     groupedComputedGames() {

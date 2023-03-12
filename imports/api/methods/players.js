@@ -1,5 +1,6 @@
 import { check } from "meteor/check";
 import Players from "../collections/Players.js";
+import { updatePlayerScores, computeGames } from "../utils.js";
 
 Meteor.methods({
   createPlayer(nickname) {
@@ -25,6 +26,16 @@ Meteor.methods({
 
   deletePlayer(id) {
     Players.remove(id);
+  },
+  updatePlayerActiveStatus(playerId, active) {
+    Players.update(playerId, {
+      $set: {
+        active: active,
+      },
+    });
+
+    updatePlayerScores();
+    computeGames();
   },
 });
 console.log("Player methods registered");

@@ -13,7 +13,7 @@
       <div class="flex w-full justify-center flex-wrap">
         <div
           :key="player._id"
-          v-for="(player, index) in players"
+          v-for="(player, index) in activePlayers"
           :style="{ borderColor: getPlayersColors(index) }"
           class="bg-zinc-800 shadow-xl border-t-8 w-[29rem] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
@@ -483,10 +483,10 @@ export default {
           ],
         },
         globalKillsRepartition: {
-          labels: this.players.map((p) => p.nickname),
+          labels: this.activePlayers.map((p) => p.nickname),
           datasets: [
             {
-              data: this.players.map((p) => {
+              data: this.activePlayers.map((p) => {
                 return this.computedGames.reduce((acc, g) => {
                   const score = g.scores.find((s) => s.playerId === p._id);
                   return Number(acc) + Number(score ? score.score : 0);
@@ -497,10 +497,10 @@ export default {
           ],
         },
         currentSessionKillsRepartition: {
-          labels: this.players.map((p) => p.nickname),
+          labels: this.activePlayers.map((p) => p.nickname),
           datasets: [
             {
-              data: this.players.map((p) => {
+              data: this.activePlayers.map((p) => {
                 return latestSession.reduce((acc, g) => {
                   const score = g.scores.find((s) => s.playerId === p._id);
                   return Number(acc) + Number(score ? score.score : 0);
@@ -539,7 +539,7 @@ export default {
         sessionsPlayerAvgKillsPerSession: {
           labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
           datasets: [
-            ...this.players.map((p, index) => {
+            ...this.activePlayers.map((p, index) => {
               return {
                 label: p.nickname,
                 data: sessions.map((session) => {
@@ -563,7 +563,7 @@ export default {
 
         playersSessionKills: {
           labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
-          datasets: this.players.map((p, index) => {
+          datasets: this.activePlayers.map((p, index) => {
             return {
               label: p.nickname,
               data: sessions.map((session) => {
@@ -585,7 +585,7 @@ export default {
             ...latestSessionKills.map((_s, index) => `Game ${index + 1}`),
           ],
 
-          datasets: this.players.map((p, index) => {
+          datasets: this.activePlayers.map((p, index) => {
             return {
               label: p.nickname,
               data: latestSession
@@ -611,8 +611,8 @@ export default {
 
       const sessionsStats = sessions.map((s) => this.getSessionStats(s));
 
-      for (let i = 0; i < this.players.length; i++) {
-        const player = this.players[i];
+      for (let i = 0; i < this.activePlayers.length; i++) {
+        const player = this.activePlayers[i];
 
         const playerSessionsKills = sessions.map((session) => {
           return session
@@ -694,7 +694,7 @@ export default {
       if (!session) {
         return stats;
       }
-      for (const element of this.players) {
+      for (const element of this.activePlayers) {
         const player = element;
 
         stats[player._id] = {

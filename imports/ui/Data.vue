@@ -4,36 +4,46 @@
 
     <div class="mx-auto mb-10">
       <form
-          @submit.prevent="addPlayer"
-          class="flex w-full mb-10 mx-auto w-[400px]"
+        @submit.prevent="addPlayer"
+        class="flex w-full mb-10 mx-auto w-[400px]"
       >
         <input
-            class="px-5 py-2 text-white bg-zinc-500 rounded-md mr-5 ring-gray-600 focus:ring-1 grow"
-            aria-label="nickname"
-            id="nickname"
-            type="text"
-            v-model="nickname"
-            placeholder="Nickname"
+          class="px-5 py-2 text-white bg-zinc-500 rounded-md mr-5 ring-gray-600 focus:ring-1 grow"
+          aria-label="nickname"
+          id="nickname"
+          type="text"
+          v-model="nickname"
+          placeholder="Nickname"
         />
 
         <button
-            class="bg-gray-400 px-5 py-2 rounded-md text-white hover:text-black hover:bg-gray-300 transition-all"
-            type="submit"
+          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:text-black hover:bg-gray-300 transition-all"
+          type="submit"
         >
           Add player
         </button>
       </form>
       <div class="w-full flex justify-center">
         <div
-            class="text-white mx-2 bg-zinc-700 w-96 rounded-md p-5 mb-5 flex justify-between"
-            v-for="player in players"
-            :key="player._id"
+          class="text-white mx-2 bg-zinc-700 w-96 rounded-md p-5 mb-5 flex justify-between"
+          v-for="player in players"
+          :key="player._id"
         >
           <span>{{ player.nickname }}</span>
 
+          <button
+            @click="toggleActivePlayer(player)"
+            :class="`${
+              player.active
+                ? 'bg-green-500 hover:bg-green-400'
+                : 'bg-zinc-600 hover:zinc-500'
+            } flex-1 px-5 py-2  text-white transition-all`"
+          >
+            {{ player.active ? "Active" : "Disabled" }}
+          </button>
           <XMarkIcon
-              @click="deletePlayer(player._id)"
-              class="h-8 w-8 cursor-pointer"
+            @click="deletePlayer(player._id)"
+            class="h-8 w-8 cursor-pointer"
           ></XMarkIcon>
         </div>
       </div>
@@ -44,15 +54,14 @@
     </h1>
     <form class="flex flex-col items-center p-5 mb-5" @submit.prevent="addGame">
       <div class="flex mb-5 gap-2 text-center w-full">
-        <div class="w-full" key="player._id" v-for="player in players">
+        <div class="w-full" key="player._id" v-for="player in activePlayers">
           <div class="font-bold mb-2 text-white">{{ player.nickname }}</div>
           <input
-              type="number"
-              class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold
-            w-full text-center rounded-md ring-gray-600 focus:ring-1"
-              aria-label="game_score"
-              placeholder="Kills (Leave empty if not played)"
-              v-model="gameScore[player._id]"
+            type="number"
+            class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
+            aria-label="game_score"
+            placeholder="Kills (Leave empty if not played)"
+            v-model="gameScore[player._id]"
           />
         </div>
       </div>
@@ -61,19 +70,18 @@
         <div class="">
           <div class="font-bold mb-2 text-white">Ranking</div>
           <input
-              class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold
-            w-full text-center rounded-md ring-gray-600 focus:ring-1"
-              type="number"
-              aria-label="game_rank"
-              placeholder="Ranking"
-              v-model="gameRank"
+            class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
+            type="number"
+            aria-label="game_rank"
+            placeholder="Ranking"
+            v-model="gameRank"
           />
         </div>
       </div>
       <div class="w-full flex justify-center">
         <button
-            class="bg-gray-400 px-5 py-2 rounded-md text-white hover:text-black hover:bg-gray-300 transition-all"
-            type="submit"
+          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:text-black hover:bg-gray-300 transition-all"
+          type="submit"
         >
           Add game
         </button>
@@ -81,142 +89,150 @@
     </form>
     <table class="w-full table-fixed" aria-label="session_lists">
       <tbody>
-      <template
+        <template
           v-for="(session, sessionIndex) in groupedComputedGames
             .slice()
             .reverse()"
           :key="sessionIndex"
-      >
-        <tr>
-          <td
+        >
+          <tr>
+            <td
               class="bg-zinc-800 uppercase text-center text-white p-8 text-2xl font-bold text-center"
-              :colspan="players.length + 4"
-          >
-            Session {{ groupedComputedGames.length - sessionIndex }} ({{
-              session.length
-            }}
-            games)
-          </td>
-        </tr>
-        <tr>
-          <th scope="col"
+              :colspan="activePlayers.length + 4"
+            >
+              Session {{ groupedComputedGames.length - sessionIndex }} ({{
+                session.length
+              }}
+              games)
+            </td>
+          </tr>
+          <tr>
+            <th
+              scope="col"
               class="w-96 bg-zinc-600 uppercase text-center text-white p-2 font-bold"
-          >
-            Date
-          </th>
-          <th
+            >
+              Date
+            </th>
+            <th
               scope="col"
               :style="{ backgroundColor: getPlayersColors(index) }"
               class="text-left uppercase text-center text-white p-2 font-bold"
-              v-for="(player, index) in players"
+              v-for="(player, index) in activePlayers"
               :key="player._id"
-          >
-            {{ player.nickname }}
-          </th>
-          <th scope="col"
+            >
+              {{ player.nickname }}
+            </th>
+            <th
+              scope="col"
               class="bg-zinc-600 uppercase text-center text-white p-2 font-bold"
-          >
-            Rank
-          </th>
-          <th scope="col"
+            >
+              Rank
+            </th>
+            <th
+              scope="col"
               class="bg-zinc-600 uppercase text-center text-white p-2 font-bold"
-          >
-            Total
-          </th>
-          <th scope="col"
+            >
+              Total
+            </th>
+            <th
+              scope="col"
               class="w-40 bg-zinc-600 uppercase text-center text-white p-2 font-bold"
-          >
-            Actions
-          </th>
-        </tr>
-        <tr>
-          <td class="bg-zinc-500 text-center text-white p-2 font-bold">
-            Session total
-          </td>
+            >
+              Actions
+            </th>
+          </tr>
+          <tr>
+            <td class="bg-zinc-500 text-center text-white p-2 font-bold">
+              Session total
+            </td>
 
-          <td
+            <td
               class="bg-zinc-400 text-center text-white p-2 font-bold"
-              v-for="player in players"
+              v-for="player in activePlayers"
               :key="player._id"
-          >
-            {{ getSessionTotalKills(session, player) }}
-            ({{
-              numeral(
+            >
+              {{ getSessionTotalKills(session, player) }}
+              ({{
+                numeral(
                   getSessionTotalKills(session, player) / session.length
-              ).format("0,0.00")
-            }}
-            avg)
-          </td>
+                ).format("0,0.00")
+              }}
+              avg)
+            </td>
 
-          <td
+            <td
               class="bg-zinc-500 text-center text-xl text-white p-2 font-bold"
-          >
-            {{ numeral(getAverageSessionRank(session)).format("0,0.00") }}
-            (avg)
-          </td>
-          <td
+            >
+              {{ numeral(getAverageSessionRank(session)).format("0,0.00") }}
+              (avg)
+            </td>
+            <td
               class="bg-zinc-500 text-center text-xl text-white p-2 font-bold"
-          >
-            {{ getSessionTotalKills(session) }}
-            ({{
-              numeral(getSessionTotalKills(session) / session.length).format(
+            >
+              {{ getSessionTotalKills(session) }}
+              ({{
+                numeral(getSessionTotalKills(session) / session.length).format(
                   "0,0.00"
-              )
-            }}
-            avg)
-          </td>
-          <td class="bg-zinc-500 text-center text-white p-2 font-bold">
-            <button @click="toggleActiveGames()">
-              Tout activer / désactiver
-            </button>
-          </td>
-        </tr>
+                )
+              }}
+              avg)
+            </td>
+            <td class="bg-zinc-500 text-center text-white p-2 font-bold">
+              <button @click="toggleActiveGames()">
+                Tout activer / désactiver
+              </button>
+            </td>
+          </tr>
 
-        <tr v-for="(game, index) in session" :key="game._id" class="group">
-          <td
+          <tr v-for="(game, index) in session" :key="game._id" class="group">
+            <td
               class="text-center group-hover:bg-gray-600 bg-gray-700 text-center text-white p-2 items-center"
-          >
-            <div class="flex">
-              <ClockIcon
+            >
+              <div class="flex">
+                <ClockIcon
                   class="h-6 w-6 text-white-300 cursor-pointer mr-3"
-              ></ClockIcon>
-              {{ game.date }}
-            </div>
-          </td>
-          <td
-              v-for="(score, index) in game.scores"
+                ></ClockIcon>
+                {{ game.date }}
+              </div>
+            </td>
+            <td
+              v-for="(score, index) in game.scores.filter((score) => {
+                return activePlayers
+                  .map((player) => player._id)
+                  .includes(score.playerId);
+              })"
               :key="index"
               :style="`background-color: ${tinycolor(
                 getPlayersColors(index)
               ).setAlpha(0.6)};`"
               :class="`bg-opacity-0 p-2 px-6 group-hover:bg-gray-500 text-white font-bold justify-between items-center`"
-          >
-            <div class="flex">
-              <div
+            >
+              <div class="flex">
+                <div
                   class="grow"
                   v-if="
                     (score && score.score != null) ||
                     editedCells[game._id + '-' + score.playerId]
                   "
-              >
-                <div
+                >
+                  <div
                     class="inline text-xl"
                     v-if="!editedCells[game._id + '-' + score.playerId]"
-                >
-                  {{ score ? score.score : "-" }}
-                  <span
+                  >
+                    {{ score ? score.score : "-" }}
+                    <span
                       class="h-6 w-6 text-yellow-500"
                       v-if="score && score.score === game.bestNumberKill"
-                  >
+                    >
                       <StarIcon
-                          class="h-6 w-6 text-yellow-400 inline"
+                        class="h-6 w-6 text-yellow-400 inline"
                       ></StarIcon>
                     </span>
 
-                  <span v-if="score">{{ getHotIndicator(score.score) }}</span>
-                </div>
-                <div v-else>
-                  <form
+                    <span v-if="score">{{ getHotIndicator(score.score) }}</span>
+                  </div>
+                  <div v-else>
+                    <form
                       @submit.prevent="
                         updateScore(
                           game._id,
@@ -225,8 +241,8 @@
                         )
                       "
                       class="flex items-center"
-                  >
-                    <input
+                    >
+                      <input
                         class="bg-gray-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
                         id="`{{game._id}}-{{score.playerId}}"
                         aria-label="`{{game._id}}-{{score.playerId}}"
@@ -237,14 +253,14 @@
                           editedValues[game._id + '-' + score.playerId] =
                             $event.target.value
                         "
-                    />
-                    <XCircleIcon
+                      />
+                      <XCircleIcon
                         @click="
                           editedCells[game._id + '-' + score.playerId] = false
                         "
                         class="h-8 w-8 text-red-300 cursor-pointer"
-                    />
-                    <CheckCircleIcon
+                      />
+                      <CheckCircleIcon
                         @click="
                           updateScore(
                             game._id,
@@ -253,13 +269,13 @@
                           )
                         "
                         class="h-8 w-8 text-green-300 cursor-pointer"
-                    />
-                  </form>
+                      />
+                    </form>
+                  </div>
                 </div>
-              </div>
-              <div class="grow font-normal text-white" v-else>Not played</div>
+                <div class="grow font-normal text-white" v-else>Not played</div>
 
-              <PencilIcon
+                <PencilIcon
                   v-if="!editedCells[game._id + '-' + score.playerId]"
                   @click="
                     ($event) => {
@@ -271,35 +287,35 @@
                     }
                   "
                   class="h-6 w-6 text-white cursor-pointer"
-              />
-            </div>
-          </td>
-          <td
+                />
+              </div>
+            </td>
+            <td
               class="bg-gray-600 group-hover:bg-gray-500 text-left text-white p-2 px-6 font-bold items-center"
-          >
-            <div class="flex">
-              <div
+            >
+              <div class="flex">
+                <div
                   class="grow"
                   v-if="
                     (game && game.rank != null) ||
                     editedCells[game._id + '-rank']
                   "
-              >
-                <div
+                >
+                  <div
                     class="inline text-xl"
                     v-if="!editedCells[game._id + '-rank']"
-                >
-                  {{ game.rank }}
-                  <span>{{ getRankIndicator(game.rank) }}</span>
-                </div>
-                <div v-else>
-                  <form
+                  >
+                    {{ game.rank }}
+                    <span>{{ getRankIndicator(game.rank) }}</span>
+                  </div>
+                  <div v-else>
+                    <form
                       @submit.prevent="
                         updateRank(game._id, editedValues[game._id + '-rank'])
                       "
                       class="flex items-center"
-                  >
-                    <input
+                    >
+                      <input
                         class="bg-gray-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
                         type="number"
                         aria-label="`{{game._id}}-rank"
@@ -308,26 +324,26 @@
                         @input="
                           editedValues[game._id + '-rank'] = $event.target.value
                         "
-                    />
-                    <XCircleIcon
+                      />
+                      <XCircleIcon
                         @click="editedCells[game._id + '-rank'] = false"
                         class="h-8 w-8 text-red-300 cursor-pointer"
-                    />
-                    <CheckCircleIcon
+                      />
+                      <CheckCircleIcon
                         @click="
                           updateRank(game._id, editedValues[game._id + '-rank'])
                         "
                         class="h-8 w-8 text-green-300 cursor-pointer"
-                    />
-                  </form>
+                      />
+                    </form>
+                  </div>
                 </div>
-              </div>
 
-              <div class="grow font-normal text-red-400" v-else>
-                Not defined
-              </div>
+                <div class="grow font-normal text-red-400" v-else>
+                  Not defined
+                </div>
 
-              <PencilIcon
+                <PencilIcon
                   v-if="!editedCells[game._id + '-rank']"
                   @click="
                     ($event) => {
@@ -338,39 +354,43 @@
                     }
                   "
                   class="h-6 w-6 text-white cursor-pointer"
-              />
-            </div>
-          </td>
-          <td
+                />
+              </div>
+            </td>
+            <td
               class="bg-gray-700 group-hover:bg-gray-600 text-center font-bold text-white p-2 text-2xl"
-          >
-            {{ game.scores.map((s) => s.score).reduce((a, b) => Number(a) + Number(b), 0) }}
-          </td>
+            >
+              {{
+                game.scores
+                  .map((s) => s.score)
+                  .reduce((a, b) => Number(a) + Number(b), 0)
+              }}
+            </td>
 
-          <td class="bg-gray-700 group-hover:bg-gray-600 px-2">
-            <div class="flex gap-2 justify-center">
-              <button
+            <td class="bg-gray-700 group-hover:bg-gray-600 px-2">
+              <div class="flex gap-2 justify-center">
+                <button
                   class="flex-1 bg-red-500 px-5 py-2 flex items-center text-white hover:bg-red-400 transition-all"
                   @click="deleteGame(game._id)"
-              >
-                <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4"/>
-                Supprimer
-              </button>
+                >
+                  <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
+                  Supprimer
+                </button>
 
-              <button
+                <button
                   @click="toggleActiveGame(game)"
                   :class="`${
                     game.active
                       ? 'bg-green-500 hover:bg-green-400'
                       : 'bg-zinc-600 hover:zinc-500'
                   } flex-1 px-5 py-2  text-white transition-all`"
-              >
-                {{ game.active ? "Active" : "Disabled" }}
-              </button>
-            </div>
-          </td>
-        </tr>
-      </template>
+                >
+                  {{ game.active ? "Active" : "Disabled" }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        </template>
       </tbody>
     </table>
   </div>
@@ -401,15 +421,15 @@ export default {
       if (player) {
         for (const game of session) {
           const playerScore = game.scores.find(
-              s => s.playerId === player._id,
+            (s) => s.playerId === player._id
           );
           if (playerScore && playerScore.score) {
             totalKills += Number(playerScore.score);
           }
         }
       } else {
-        session.forEach(game => {
-          game.scores.forEach(score => {
+        session.forEach((game) => {
+          game.scores.forEach((score) => {
             if (score.score) {
               totalKills += Number(score.score);
             }
@@ -499,6 +519,10 @@ export default {
         Meteor.call("createPlayer", this.nickname);
         this.nickname = "";
       }
+    },
+
+    toggleActivePlayer(player) {
+      Meteor.call("updatePlayerActiveStatus", player._id, !!!player.active);
     },
     toggleActiveGame(game) {
       Meteor.call("updateGameActiveStatus", game._id, !!!game.active);

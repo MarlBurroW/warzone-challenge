@@ -5,6 +5,7 @@ import App from "./App.vue";
 import { router } from "./router";
 import "../api/methods/index";
 import numeral from "numeral";
+
 // load a locale
 numeral.register("locale", "fr", {
   delimiters: {
