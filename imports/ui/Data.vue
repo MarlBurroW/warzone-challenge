@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <table class="w-full" aria-label="session_lists">
+    <table class="w-full mb-[20rem]" aria-label="session_lists">
       <tbody>
         <template
           v-for="(session, sessionIndex) in limitedGroupedGames
@@ -158,7 +158,7 @@
             </th>
             <th
               scope="col"
-              class="w-[8rem] bg-zinc-600 uppercase text-center text-white p-2 font-bold"
+              class="w-[12rem] bg-zinc-600 uppercase text-center text-white p-2 font-bold"
             >
               Rank
             </th>

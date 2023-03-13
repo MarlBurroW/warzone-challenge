@@ -116,8 +116,6 @@ export const computePlayerScoreFromBacklog = function (player, games) {
   }
 
   games.forEach((game, i) => {
-    player.gamesPlayed = player.gamesPlayed + 1;
-
     if (
       game.rank != null &&
       game.scores.hasOwnProperty(player._id) &&
@@ -150,12 +148,16 @@ export const computePlayerScoreFromBacklog = function (player, games) {
       }
       const playerKills = game.scores[player._id];
 
-      player.totalKills = Number(player.totalKills) + Number(playerKills);
-
       // Retreiving player data from previous iteration to work on it
 
       playerKillList.push(playerKills);
+
+      // Update some player attributes directly
+
+      player.gamesPlayed = player.gamesPlayed + 1;
+      player.totalKills = Number(player.totalKills) + Number(playerKills);
     }
+
     if (player.gamesPlayed >= 5) {
       if (i === games.length - 2) {
         player.lastMmr = calculateMmr(bonus, gameRankList, playerKillList);
@@ -182,9 +184,7 @@ export const computePlayerScoreFromBacklog = function (player, games) {
     return game.scores[player._id];
   });
 
-  // Update some player attributes directly
-
-  // Calculate the trend (up/stable/down) of kills/games from the beginning*
+  // Calculate player statistics
 
   player.standardDeviation = getStandardDeviation(playerKillList);
   player.kgTrending = getPlayerKGTrending(playerKillList);
@@ -197,6 +197,8 @@ export const computePlayerScoreFromBacklog = function (player, games) {
     playerCurrentSessionKillList
   );
   player.currentSessionAvgKg = getAvg(playerCurrentSessionKillList);
+
+  // Update player
 
   Players.update(player._id, {
     $set: {
@@ -257,7 +259,7 @@ const smoothing = function (param) {
     });
     return getAvg(result);
   } else {
-    throw new Error("Smoothing : Param is not an array or is empty");
+    return [];
   }
 };
 
@@ -365,7 +367,7 @@ const getAvg = function (param) {
       }, 0) / param.length
     );
   } else {
-    throw new Error("getAvg: param is not an array or is empty");
+    return 0;
   }
 };
 
