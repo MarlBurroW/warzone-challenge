@@ -743,7 +743,7 @@ export default defineComponent({
     numeral,
     isFire(player) {
       return (
-        player.currentSessionAvgKg > player.avgKg + 1 &&
+        player.currentSessionAvgKg > player.avgKg &&
         this.currentSession.length >= 3
       );
     },
