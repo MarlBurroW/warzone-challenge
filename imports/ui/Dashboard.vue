@@ -176,64 +176,86 @@
 
             <div
               :style="{ borderColor: player.color }"
-              class="lex bg-zinc-600 p-2 border-l-4 rounded-lg flex justify-between mb-5"
+              class="bg-zinc-600 p-2 px-5 border-l-4 rounded-lg mb-5"
             >
-              <div class="text-left" v-if="currentSession">
-                <div class="mb-3 font-thin">Session stats</div>
+              <div class="mb-3 font-thin">Statistics</div>
 
-                <div>
-                  Games played:
-                  <strong>{{
-                    numeral(currentSessionStats[player._id].totalGames).format(
-                      "0"
-                    )
-                  }}</strong>
+              <div class="flex flex justify-between">
+                <div
+                  class="text-left text-sm font-thin leading-6"
+                  v-if="currentSession"
+                >
+                  <div class="mb-3 font-normal">Session stats</div>
+
+                  <div>
+                    Games played:
+                    <strong>{{
+                      numeral(
+                        currentSessionStats[player._id].totalGames
+                      ).format("0")
+                    }}</strong>
+                  </div>
+
+                  <div>
+                    Total kills:
+                    <strong>{{
+                      numeral(currentSessionStats[player._id].totalKill).format(
+                        "0"
+                      )
+                    }}</strong>
+                  </div>
+                  <div>
+                    Avg kills/game:
+                    <strong>{{
+                      numeral(
+                        currentSessionStats[player._id].averageKill
+                      ).format("0,0.00")
+                    }}</strong>
+                  </div>
+                  <div class="mb-3">
+                    Best player:
+                    <strong
+                      >{{
+                        numeral(
+                          currentSessionStats[player._id].topPlayer
+                        ).format("0")
+                      }}
+                      game{{
+                        currentSessionStats[player._id].topPlayer ? "s" : ""
+                      }}</strong
+                    >
+                  </div>
                 </div>
 
-                <div>
-                  Total kills:
-                  <strong>{{
-                    numeral(currentSessionStats[player._id].totalKill).format(
-                      "0"
-                    )
-                  }}</strong>
-                </div>
-                <div>
-                  Avg kills/game:
-                  <strong>{{
-                    numeral(currentSessionStats[player._id].averageKill).format(
-                      "0,0.00"
-                    )
-                  }}</strong>
-                </div>
-                <div class="mb-3">
-                  Top player:
-                  <strong>{{
-                    numeral(currentSessionStats[player._id].topPlayer).format(
-                      "0"
-                    )
-                  }}</strong>
-                </div>
-              </div>
+                <div class="text-right text-sm font-thin leading-6">
+                  <div class="mb-3 font-normal">Global stats</div>
+                  <div>
+                    Games played:
+                    <strong>{{
+                      numeral(player.gamesPlayed).format("0")
+                    }}</strong>
+                  </div>
 
-              <div class="text-right">
-                <div class="mb-3 font-thin">Global stats</div>
-                <div>
-                  Games played:
-                  <strong>{{ numeral(player.gamesPlayed).format("0") }}</strong>
-                </div>
-
-                <div>
-                  Total kills:
-                  <strong>{{ numeral(player.totalKills).format("0") }}</strong>
-                </div>
-                <div>
-                  Avg kills/game:
-                  <strong>{{ numeral(player.avgKg).format("0,0.00") }}</strong>
-                </div>
-                <div class="mb-3">
-                  Top player:
-                  <strong>{{ player.topPlayer }}</strong>
+                  <div>
+                    Total kills:
+                    <strong>{{
+                      numeral(player.totalKills).format("0")
+                    }}</strong>
+                  </div>
+                  <div>
+                    Avg kills/game:
+                    <strong>{{
+                      numeral(player.avgKg).format("0,0.00")
+                    }}</strong>
+                  </div>
+                  <div class="mb-3">
+                    Best player:
+                    <strong
+                      >{{ numeral(player.topPlayer).format("0") }} game{{
+                        player.topPlayer > 1 ? "s" : ""
+                      }}</strong
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -248,7 +270,7 @@
                   Object.assign({}, chartOptions, {
                     scales: {
                       y: {
-                        max: 8,
+                        max: maxKg,
                         ticks: { color: 'white', beginAtZero: true },
                       },
                       x: { ticks: { color: 'white', beginAtZero: true } },
@@ -602,6 +624,21 @@ export default {
           }),
         },
       };
+    },
+
+    maxKg() {
+      const data = Object.values(this.playerChartData)
+        .map((pcd) => {
+          return pcd.avgKg.datasets.map((d) => {
+            return d.data;
+          });
+        })
+        .flat(2)
+
+        .filter((d) => !isNaN(d));
+
+      console.log(data);
+      return Math.max(...data);
     },
 
     playerChartData() {
