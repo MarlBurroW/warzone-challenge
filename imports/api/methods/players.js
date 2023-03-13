@@ -1,12 +1,16 @@
 import { check } from "meteor/check";
 import Players from "../collections/Players.js";
-import { updatePlayerScores, computeGames } from "../utils.js";
+import {
+  updatePlayerScores,
+  computeGames,
+  assignPlayersColors,
+} from "../utils.js";
 
 Meteor.methods({
   createPlayer(nickname) {
     check(nickname, String);
 
-    return Players.insert({
+    const player = Players.insert({
       nickname,
       lastGameKills: 0,
       level: 0,
@@ -21,11 +25,17 @@ Meteor.methods({
       pourcentNextLevel: 0,
       topPlayer: 0,
       star: 0,
+      active: true,
+      color: "#000000",
     });
+    assignPlayersColors();
+
+    return player;
   },
 
   deletePlayer(id) {
     Players.remove(id);
+    assignPlayersColors();
   },
   updatePlayerActiveStatus(playerId, active) {
     Players.update(playerId, {

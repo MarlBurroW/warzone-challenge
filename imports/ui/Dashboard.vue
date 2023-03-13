@@ -14,7 +14,7 @@
         <div
           :key="player._id"
           v-for="(player, index) in activePlayers"
-          :style="{ borderColor: getPlayersColors(index) }"
+          :style="{ borderColor: player.color }"
           class="bg-zinc-800 shadow-xl border-t-8 w-[29rem] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
           <img
@@ -33,7 +33,7 @@
                   v-for="i in currentSessionStats[player._id].topPlayer"
                 >
                   <StarIcon
-                    :style="{ color: getPlayersColors(index) }"
+                    :style="{ color: player.color }"
                     class="h-6 w-6 text-yellow-500"
                   ></StarIcon>
                 </span>
@@ -101,7 +101,7 @@
                       :style="
                         getProgressMmrStyle(player) +
                         'background: ' +
-                        getPlayersColors(index)
+                        player.color
                       "
                     ></div>
                   </div>
@@ -118,7 +118,7 @@
 
             <div class="flex gap-2">
               <div
-                :style="{ borderColor: getPlayersColors(index) }"
+                :style="{ borderColor: player.color }"
                 class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
               >
                 <div class="mb-3 font-thin">Global K/G</div>
@@ -146,7 +146,7 @@
               </div>
 
               <div
-                :style="{ borderColor: getPlayersColors(index) }"
+                :style="{ borderColor: player.color }"
                 class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
               >
                 <div class="mb-3 font-thin">15 last games K/G</div>
@@ -175,7 +175,7 @@
             </div>
 
             <div
-              :style="{ borderColor: getPlayersColors(index) }"
+              :style="{ borderColor: player.color }"
               class="lex bg-zinc-600 p-2 border-l-4 rounded-lg flex justify-between mb-5"
             >
               <div class="text-left" v-if="currentSession">
@@ -238,7 +238,7 @@
               </div>
             </div>
             <div
-              :style="{ borderColor: getPlayersColors(index) }"
+              :style="{ borderColor: player.color }"
               class="lex flex-col bg-zinc-600 p-2 border-l-4 rounded-lg flex-col flex mb-5"
               v-if="currentSession"
             >
@@ -492,7 +492,7 @@ export default {
                   return Number(acc) + Number(score ? score.score : 0);
                 }, 0);
               }),
-              backgroundColor: this.getPlayersColors(),
+              backgroundColor: this.activePlayers.map((p) => p.color),
             },
           ],
         },
@@ -506,7 +506,7 @@ export default {
                   return Number(acc) + Number(score ? score.score : 0);
                 }, 0);
               }),
-              backgroundColor: this.getPlayersColors(),
+              backgroundColor: this.activePlayers.map((p) => p.color),
             },
           ],
         },
@@ -553,8 +553,8 @@ export default {
                     session.length
                   );
                 }),
-                backgroundColor: this.getPlayersColors(index),
-                borderColor: this.getPlayersColors(index),
+                backgroundColor: p.color,
+                borderColor: p.color,
                 borderWidth: 4,
               };
             }),
@@ -574,8 +574,8 @@ export default {
                   })
                   .reduce((acc, s) => Number(acc) + Number(s), 0);
               }),
-              backgroundColor: this.getPlayersColors(index),
-              borderColor: this.getPlayersColors(index),
+              backgroundColor: p.color,
+              borderColor: p.color,
               borderWidth: 1,
             };
           }),
@@ -595,8 +595,8 @@ export default {
                   const score = g.scores.find((s) => s.playerId === p._id);
                   return score ? score.score : 0;
                 }),
-              backgroundColor: this.getPlayersColors(index),
-              borderColor: this.getPlayersColors(index),
+              backgroundColor: p.color,
+              borderColor: p.color,
               borderWidth: 4,
             };
           }),
@@ -634,7 +634,7 @@ export default {
             datasets: [
               {
                 label: "Avg kills / game",
-                backgroundColor: this.getPlayersColors(i),
+                backgroundColor: player.color,
 
                 borderRadius: 4,
                 data: playerStats.map((s) => s.averageKill),
@@ -646,7 +646,7 @@ export default {
             datasets: [
               {
                 label: "Session kills / games",
-                backgroundColor: this.getPlayersColors(i),
+                backgroundColor: player.color,
                 borderRadius: 4,
                 data: latestSessionKills,
               },

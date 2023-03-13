@@ -345,3 +345,26 @@ const getAvgKg = function (playerKillList) {
 
   return avgKg;
 };
+
+export function assignPlayersColors() {
+  const playerColors = [
+    "#0ea5e9",
+    "#f87171",
+    "#fbbf24",
+    "#a3e635",
+    "#10b981",
+    "#6366f1",
+    "#d946ef",
+    "#f43f5e",
+  ];
+
+  const players = Players.find().fetch();
+
+  players.forEach((player, index) => {
+    Players.update(player._id, {
+      $set: {
+        color: playerColors[index],
+      },
+    });
+  });
+}

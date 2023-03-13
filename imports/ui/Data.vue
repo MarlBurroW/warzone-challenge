@@ -5,7 +5,7 @@
     <div class="mx-auto mb-10">
       <form
         @submit.prevent="addPlayer"
-        class="flex w-full mb-10 mx-auto w-[400px]"
+        class="flex w-[25rem] mb-10 mx-auto w-[400px]"
       >
         <input
           class="px-5 py-2 text-white bg-zinc-500 rounded-md mr-5 ring-gray-600 focus:ring-1 grow"
@@ -17,34 +17,37 @@
         />
 
         <button
-          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:text-black hover:bg-gray-300 transition-all"
+          class="bg-[#7ec92e] hover:bg-[#94eb36] px-5 py-2 rounded-md text-white transition-all"
           type="submit"
         >
           Add player
         </button>
       </form>
-      <div class="w-full flex justify-center">
+      <div class="flex justify-center">
         <div
-          class="text-white mx-2 bg-zinc-700 w-96 rounded-md p-5 mb-5 flex justify-between"
-          v-for="player in players"
+          :style="{ borderColor: player.color }"
+          class="text-white border-[0.3rem] mx-2 bg-zinc-700 w-96 font-bold rounded-md p-5 mb-5 flex justify-between items-center"
+          v-for="(player, index) in players"
           :key="player._id"
         >
+          <div
+            @click="toggleActivePlayer(player)"
+            :style="{
+              borderColor: player.color,
+              color: player.color,
+            }"
+            :class="`h-8 w-8 cursor-pointer rounded-md border-[1px] border-white mr-4 `"
+          >
+            <CheckIcon v-if="player.active"></CheckIcon>
+          </div>
           <span>{{ player.nickname }}</span>
 
-          <button
-            @click="toggleActivePlayer(player)"
-            :class="`${
-              player.active
-                ? 'bg-green-500 hover:bg-green-400'
-                : 'bg-zinc-600 hover:zinc-500'
-            } flex-1 px-5 py-2  text-white transition-all`"
-          >
-            {{ player.active ? "Active" : "Disabled" }}
-          </button>
-          <XMarkIcon
+          <div class="grow"></div>
+
+          <TrashIcon
             @click="deletePlayer(player._id)"
-            class="h-8 w-8 cursor-pointer"
-          ></XMarkIcon>
+            class="h-5 w-5 cursor-pointer"
+          ></TrashIcon>
         </div>
       </div>
     </div>
@@ -58,7 +61,7 @@
           <div class="font-bold mb-2 text-white">{{ player.nickname }}</div>
           <input
             type="number"
-            class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
+            class="px-5 py-5 text-white bg-zinc-500 font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
             aria-label="game_score"
             placeholder="Kills (Leave empty if not played)"
             v-model="gameScore[player._id]"
@@ -70,7 +73,7 @@
         <div class="">
           <div class="font-bold mb-2 text-white">Ranking</div>
           <input
-            class="px-5 py-5 text-white bg-zinc-500 text-xl font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
+            class="px-5 py-5 text-white bg-zinc-500 font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
             type="number"
             aria-label="game_rank"
             placeholder="Ranking"
@@ -80,17 +83,48 @@
       </div>
       <div class="w-full flex justify-center">
         <button
-          class="bg-gray-400 px-5 py-2 rounded-md text-white hover:text-black hover:bg-gray-300 transition-all"
+          class="bg-[#7ec92e] hover:bg-[#94eb36] px-5 py-2 rounded-md text-white transition-all"
           type="submit"
         >
           Add game
         </button>
       </div>
     </form>
-    <table class="w-full table-fixed" aria-label="session_lists">
+
+    <div
+      class="flex justify-end bg-zinc-700 text-center text-white p-3 text-center gap-5 items-center"
+    >
+      <div>
+        <button
+          class="px-5 py-1 text-white bg-zinc-500 text-white"
+          @click="toggleActiveGames()"
+        >
+          Activate/Deactivate all games
+        </button>
+      </div>
+
+      <div>
+        <span class="mr-2">Sessions to display:</span>
+
+        <select
+          v-model="displayedSessionsCount"
+          class="px-5 py-1 text-white bg-zinc-500 text-white"
+        >
+          <option
+            v-for="option in displayedSessionsCountOptions"
+            :value="option.value"
+            :key="option.value"
+          >
+            {{ option.text }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <table class="w-full" aria-label="session_lists">
       <tbody>
         <template
-          v-for="(session, sessionIndex) in groupedComputedGames
+          v-for="(session, sessionIndex) in limitedGroupedGames
             .slice()
             .reverse()"
           :key="sessionIndex"
@@ -109,14 +143,14 @@
           <tr>
             <th
               scope="col"
-              class="w-96 bg-zinc-600 uppercase text-center text-white p-2 font-bold"
+              class="w-[20rem] bg-zinc-600 uppercase text-center text-white p-2 font-bold"
             >
               Date
             </th>
             <th
               scope="col"
-              :style="{ backgroundColor: getPlayersColors(index) }"
-              class="text-left uppercase text-center text-white p-2 font-bold"
+              :style="{ backgroundColor: player.color }"
+              class="w-[13rem] text-left uppercase text-center text-white p-2 font-bold"
               v-for="(player, index) in activePlayers"
               :key="player._id"
             >
@@ -124,7 +158,7 @@
             </th>
             <th
               scope="col"
-              class="bg-zinc-600 uppercase text-center text-white p-2 font-bold"
+              class="w-[8rem] bg-zinc-600 uppercase text-center text-white p-2 font-bold"
             >
               Rank
             </th>
@@ -136,7 +170,7 @@
             </th>
             <th
               scope="col"
-              class="w-40 bg-zinc-600 uppercase text-center text-white p-2 font-bold"
+              class="w-[10rem] bg-zinc-600 uppercase text-center text-white p-2 font-bold"
             >
               Actions
             </th>
@@ -160,15 +194,11 @@
               avg)
             </td>
 
-            <td
-              class="bg-zinc-500 text-center text-xl text-white p-2 font-bold"
-            >
+            <td class="bg-zinc-500 text-center text-white p-2 font-bold">
               {{ numeral(getAverageSessionRank(session)).format("0,0.00") }}
               (avg)
             </td>
-            <td
-              class="bg-zinc-500 text-center text-xl text-white p-2 font-bold"
-            >
+            <td class="bg-zinc-500 text-center text-white p-2 font-bold">
               {{ getSessionTotalKills(session) }}
               ({{
                 numeral(getSessionTotalKills(session) / session.length).format(
@@ -177,11 +207,7 @@
               }}
               avg)
             </td>
-            <td class="bg-zinc-500 text-center text-white p-2 font-bold">
-              <button @click="toggleActiveGames()">
-                Tout activer / désactiver
-              </button>
-            </td>
+            <td class="bg-zinc-500 text-center text-white p-2 font-bold"></td>
           </tr>
 
           <tr v-for="(game, index) in session" :key="game._id" class="group">
@@ -203,7 +229,7 @@
               })"
               :key="index"
               :style="`background-color: ${tinycolor(
-                getPlayersColors(index)
+                getPlayerColorByPlayerId(score.playerId)
               ).setAlpha(0.6)};`"
               :class="`bg-opacity-0 p-2 px-6 group-hover:bg-gray-500 text-white font-bold justify-between items-center`"
             >
@@ -358,7 +384,7 @@
               </div>
             </td>
             <td
-              class="bg-gray-700 group-hover:bg-gray-600 text-center font-bold text-white p-2 text-2xl"
+              class="bg-gray-700 group-hover:bg-gray-600 text-center font-bold text-white p-2 text-xl"
             >
               {{
                 game.scores
@@ -367,14 +393,16 @@
               }}
             </td>
 
-            <td class="bg-gray-700 group-hover:bg-gray-600 px-2">
-              <div class="flex gap-2 justify-center">
+            <td
+              class="whitespace-nowrap bg-gray-800 group-hover:bg-gray-600 px-2"
+            >
+              <div class="flex items-center justify-end gap-2">
                 <button
-                  class="flex-1 bg-red-500 px-5 py-2 flex items-center text-white hover:bg-red-400 transition-all"
+                  class="flex bg-red-500 px-5 py-2 items-center text-white hover:bg-red-400 transition-all"
                   @click="deleteGame(game._id)"
                 >
-                  <XMarkIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
-                  Supprimer
+                  <TrashIcon class="h-4 w-4 text-white cursor-pointer mr-4" />
+                  Delete
                 </button>
 
                 <button
@@ -383,7 +411,7 @@
                     game.active
                       ? 'bg-green-500 hover:bg-green-400'
                       : 'bg-zinc-600 hover:zinc-500'
-                  } flex-1 px-5 py-2  text-white transition-all`"
+                  }  px-5 py-2  text-white transition-all`"
                 >
                   {{ game.active ? "Active" : "Disabled" }}
                 </button>
@@ -401,9 +429,11 @@ import numeral from "numeral";
 import {
   PencilIcon,
   CheckCircleIcon,
+  CheckIcon,
   XCircleIcon,
   ClockIcon,
   XMarkIcon,
+  TrashIcon,
   StarIcon,
 } from "@heroicons/vue/24/solid";
 import tinycolor from "tinycolor2";
@@ -414,7 +444,17 @@ import dataMixin from "./data-mixin.js";
 
 export default {
   mixins: [dataMixin],
+  computed: {
+    limitedGroupedGames() {
+      // Get latest element in this.groupedComputedGames limited by this.displayedSessionsCount
 
+      const latestGroupedGames = this.groupedComputedGames.slice(
+        -this.displayedSessionsCount
+      );
+
+      return latestGroupedGames;
+    },
+  },
   methods: {
     getSessionTotalKills(session, player) {
       let totalKills = 0;
@@ -540,6 +580,15 @@ export default {
       editedCells: {},
       editedValues: {},
       activeGames: true,
+      displayedSessionsCount: 1,
+      displayedSessionsCountOptions: [
+        { text: "Only latest", value: 1 },
+        { text: "3 Latest", value: 3 },
+        { text: "6 Latest", value: 6 },
+        { text: "9 Latest", value: 9 },
+        { text: "12 Latest", value: 12 },
+        { text: "All (not recommanded)", value: Infinity },
+      ],
     };
   },
 };
