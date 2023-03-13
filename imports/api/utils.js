@@ -47,7 +47,11 @@ export const computeGames = function () {
 
     // Ensure all kills are numbers, if string, cast to number
 
-    for (let key in game.scores) {
+    if (typeof game.rank === "string") {
+      game.rank = parseInt(game.rank);
+    }
+
+    for (const key in game.scores) {
       if (typeof game.scores[key] === "string") {
         game.scores[key] = parseInt(game.scores[key]);
       }
@@ -57,6 +61,7 @@ export const computeGames = function () {
       $set: {
         scores: game.scores,
         sessionId: sessionCounter,
+        rank: game.rank,
       },
     });
   }
