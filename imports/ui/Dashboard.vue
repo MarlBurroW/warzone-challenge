@@ -22,6 +22,13 @@
             class="absolute z-0 opacity-10 w-full left-0 right-0"
             :src="getMmrLogo(player.level)"
           />
+          <div
+            v-if="isFire(player)"
+            class="absolute flex justify-center w-full left-0 right-0 -top-10"
+          >
+            <fire></fire>
+          </div>
+
           <div class="z-10">
             <div class="flex flex-col">
               <div class="flex flex-wrap h-7 justify-center align-center">
@@ -447,11 +454,12 @@ import { Bar, Line, Doughnut } from "vue-chartjs";
 import "chart.js/auto";
 
 import numeral from "numeral";
+import Fire from "./Fire.vue";
 
 // load a
 numeral.locale("fr");
 export default defineComponent({
-  components: { Bar, Line, Doughnut },
+  components: { Bar, Line, Doughnut, Fire },
   mixins: [dataMixin],
   data() {
     return {
@@ -733,6 +741,12 @@ export default defineComponent({
 
   methods: {
     numeral,
+    isFire(player) {
+      return (
+        player.currentSessionAvgKg > player.avgKg + 1 &&
+        this.currentSession.length >= 3
+      );
+    },
 
     getMmrEvolution(player) {
       if (
