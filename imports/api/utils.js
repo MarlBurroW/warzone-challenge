@@ -2,7 +2,9 @@ import Players from "./collections/Players.js";
 import Games from "./collections/Games.js";
 import moment from "moment";
 
-export function updatePlayerScores() {
+export { updatePlayerScores };
+
+const updatePlayerScores = function () {
   // Fetch players
   const players = Players.find({ active: true }).fetch();
   // Fetch updated game backlog
@@ -10,11 +12,10 @@ export function updatePlayerScores() {
 
   // Compute player scores from backlog
 
-  for (let i = 0; i < players.length; i++) {
-    const player = players[i];
+  for (const player of players) {
     computePlayerScoreFromBacklog(player, games);
   }
-}
+};
 
 export const computeGames = function () {
   let games = Games.find().fetch();
@@ -115,7 +116,9 @@ export const computePlayerScoreFromBacklog = function (player, games) {
         bonus.push(5);
       } else if (gameRank === 2) {
         bonus.push(3);
-      } else if (gameRank > 2 && gameRank <= 5) {
+      } else if (gameRank === 3) {
+        bonus.push(2);
+      } else if (gameRank > 3 && gameRank <= 5) {
         bonus.push(1);
       } else if (gameRank >= 12) {
         bonus.push(-1);
@@ -144,25 +147,21 @@ export const computePlayerScoreFromBacklog = function (player, games) {
       player.totalKills = Number(player.totalKills) + Number(playerKills);
       // Calculate the trend (up/stable/down) of kills/games from the beginning*
 
-      player.avgKg15LastGames = getAvgKg(playerKillList.slice(-15));
+      player.avgKg15LastGames = getAvg(playerKillList.slice(-15));
+
       player.kg15LastGamesTrending = getPlayerKGTrending(
         playerKillList.slice(-15)
       );
 
-      player.avgKg = getAvgKg(playerKillList);
+      player.avgKg = getAvg(playerKillList);
       player.kgTrending = getPlayerKGTrending(playerKillList);
     }
     if (player.gamesPlayed >= 5) {
       if (i === games.length - 2) {
-        player.lastMmr = calculateMmr(
-          player,
-          bonus,
-          gameRankList,
-          playerKillList
-        );
+        player.lastMmr = calculateMmr(bonus, gameRankList, playerKillList);
       }
       if (i === games.length - 1) {
-        player.mmr = calculateMmr(player, bonus, gameRankList, playerKillList);
+        player.mmr = calculateMmr(bonus, gameRankList, playerKillList);
       }
     } else {
       player.mmr = 0;
@@ -198,43 +197,42 @@ export const computePlayerScoreFromBacklog = function (player, games) {
 
 export default {};
 
-const calculateMmr = function (player, bonus, gameRankList, playerKillList) {
-  const averageBonus =
-    bonus.reduce((x, y) => {
-      return +x + +y;
-    }, 0) / bonus.length;
+const calculateMmr = function (bonus, gameRankList, playerKillList) {
+  const smoothingBonus = getAvg(bonus);
+  const smoothingRecentBonus = smoothing(bonus.slice(-20));
+  const WeightedBonus = (smoothingBonus + smoothingRecentBonus * 3) / 4;
 
-  const recentAverageBonus =
-    bonus.slice(-15).reduce((x, y) => {
-      return +x + +y;
-    }, 0) / 15;
+  const smoothingGameRankAverage = getAvg(gameRankList);
+  const smoothingRecentGameAverage = smoothing(gameRankList.slice(-20));
+  const WeightedGameRank =
+    (smoothingGameRankAverage + smoothingRecentGameAverage * 3) / 4;
 
-  let ponderatedAverageBonus = (averageBonus + recentAverageBonus * 3) / 4;
+  const smoothingPlayerKill = getAvg(playerKillList);
+  const smoothingRecentPlayerKill = smoothing(playerKillList.slice(-20));
+  const WeightedPlayerKill =
+    (smoothingPlayerKill + smoothingRecentPlayerKill * 3) / 4;
 
-  const totalGameRankAverage =
-    gameRankList.reduce((x, y) => {
-      return +x + +y;
-    }, 0) / gameRankList.length;
-  const recentGameRankAverage =
-    gameRankList.slice(-15).reduce((x, y) => {
-      return Number(x) + Number(y);
-    }, 0) / 15;
-
-  const recentPlayerKillAverage =
-    playerKillList.slice(-15).reduce((x, y) => {
-      return Number(x) + Number(y);
-    }, 0) / 15;
-  const ponderatedAverageRank =
-    (totalGameRankAverage + recentGameRankAverage * 3) / 4;
-  if (isNaN(ponderatedAverageBonus)) {
-    ponderatedAverageBonus = 0;
-  }
-  const ponderatedPlayerKillAverage =
-    (player.avgKg + recentPlayerKillAverage * 3) / 4 + ponderatedAverageBonus;
+  const WeightedPlayerKillAndBonus = WeightedPlayerKill + WeightedBonus;
 
   return Math.round(
-    (ponderatedPlayerKillAverage * 3 - ponderatedAverageRank + 100) * 10
+    (WeightedPlayerKillAndBonus * 3 - WeightedGameRank + 100) * 10
   );
+};
+
+const smoothing = function (param) {
+  const result = [];
+  if (Array.isArray(param)) {
+    param.forEach((element, i) => {
+      let index = 0;
+      while (index < i + 1) {
+        result.push(element);
+        index++;
+      }
+    });
+    return getAvg(result);
+  } else {
+    throw new Error("Smoothing : Param is not an array or is empty");
+  }
 };
 
 const getLeagueNumber = function (mmr) {
@@ -333,17 +331,16 @@ const getPlayerKGTrending = function (playerKillList) {
   return kgTrending;
 };
 
-const getAvgKg = function (playerKillList) {
-  let avgKg = 0;
-
-  if (playerKillList.length > 0) {
-    avgKg =
-      playerKillList.reduce((x, y) => {
-        return +x + +y;
-      }, 0) / playerKillList.length;
+const getAvg = function (param) {
+  if (Array.isArray(param) && param.length > 0) {
+    return (
+      param.reduce((x, y) => {
+        return Number(x) + Number(y);
+      }, 0) / param.length
+    );
+  } else {
+    throw new Error("getAvg: param is not an array or is empty");
   }
-
-  return avgKg;
 };
 
 export function assignPlayersColors() {
