@@ -341,6 +341,22 @@
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-thin text-2xl text-center mb-5">
+          Stacked kills / games
+        </h1>
+
+        <div class="flex w-full mx-auto overflow-auto">
+          <Bar
+            class="mb-3 w-full h-[400px]"
+            :options="stackedChartOptions"
+            :data="globalChartData.stackedPlayersCurrentSessionKills"
+          />
+        </div>
+      </div>
+
+      <div
+        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      >
+        <h1 class="text-white font-thin text-2xl text-center mb-5">
           Player kills during current session
         </h1>
         <div class="flex mx-auto overflow-auto">
@@ -357,7 +373,7 @@
         <h1 class="text-white font-thin text-2xl text-center mb-5">
           Current session kills repartition
         </h1>
-        <div class="flex w-1/2 mx-auto overflow-auto">
+        <div class="flex mx-auto overflow-auto">
           <Doughnut
             class="mb-3 w-full h-[400px]"
             :options="chartOptions"
@@ -371,6 +387,7 @@
       >
         Global stats
       </h1>
+
       <div
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
@@ -378,7 +395,7 @@
           Team K/G evolution
         </h1>
 
-        <div class="flex w-1/2 mx-auto overflow-auto">
+        <div class="flex mx-auto overflow-auto">
           <Bar
             class="mb-3 w-full h-[400px]"
             :options="chartOptions"
@@ -392,7 +409,7 @@
         <h1 class="text-white font-thin text-2xl text-center mb-5">
           Player total kills during each sessions
         </h1>
-        <div class="flex w-1/2 mx-auto overflow-auto">
+        <div class="flex mx-auto overflow-auto">
           <Bar
             class="mb-3 w-full h-[400px]"
             :options="chartOptions"
@@ -407,7 +424,7 @@
         <h1 class="text-white font-thin text-2xl text-center mb-5">
           Players K/G evolution
         </h1>
-        <div class="flex w-1/2 mx-auto overflow-auto">
+        <div class="flex mx-auto overflow-auto">
           <Line
             class="mb-3 w-full h-[400px]"
             :options="chartOptions"
@@ -421,7 +438,7 @@
         <h1 class="text-white font-thin text-2xl text-center mb-5">
           Total kills repartition
         </h1>
-        <div class="flex w-1/2 mx-auto overflow-auto">
+        <div class="flex mx-auto overflow-auto">
           <Doughnut
             class="mb-3 w-full h-[400px]"
             :options="chartOptions"
@@ -474,6 +491,32 @@ export default defineComponent({
           },
           x: {
             ticks: { color: "white", beginAtZero: true },
+          },
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: "white",
+
+              font: {
+                size: 15,
+              },
+            },
+          },
+        },
+      },
+      stackedChartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: true,
+        scales: {
+          y: {
+            ticks: { color: "white", beginAtZero: true },
+            stacked: true,
+          },
+          x: {
+            ticks: { color: "white", beginAtZero: true },
+            stacked: true,
           },
         },
         plugins: {
@@ -633,6 +676,29 @@ export default defineComponent({
             };
           }),
         },
+
+        stackedPlayersCurrentSessionKills: {
+          labels: [
+            ...latestSessionKills.map((_s, index) => `Game ${index + 1}`),
+          ],
+
+          datasets: this.activePlayers.map((p, index) => {
+            return {
+              label: p.nickname,
+              data: latestSession
+                .slice()
+                .reverse()
+                .map((g) => {
+                  const score = g.scores.find((s) => s.playerId === p._id);
+                  return score ? score.score : 0;
+                }),
+              backgroundColor: p.color,
+              borderColor: p.color,
+              borderWidth: 4,
+            };
+          }),
+        },
+
         playersCurrentSessionKills: {
           labels: [
             ...latestSessionKills.map((_s, index) => `Game ${index + 1}`),
