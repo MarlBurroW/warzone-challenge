@@ -1,0 +1,186 @@
+Index: vite.config.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { defineConfig } from \"vite\";\r\nimport vue from \"@vitejs/plugin-vue\";\r\n\r\nexport default defineConfig({\r\n  plugins: [vue()],\r\n  server: {\r\n    host: \"dev.marlburrow.io\",\r\n  },\r\n  meteor: {\r\n    clientEntry: \"imports/ui/main.js\",\r\n  },\r\n  optimizeDeps: {\r\n    exclude: [\"vue-meteor-tracker\"],\r\n  },\r\n});\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/vite.config.js b/vite.config.js
+--- a/vite.config.js	
++++ b/vite.config.js	
+@@ -3,9 +3,6 @@
+ 
+ export default defineConfig({
+   plugins: [vue()],
+-  server: {
+-    host: "dev.marlburrow.io",
+-  },
+   meteor: {
+     clientEntry: "imports/ui/main.js",
+   },
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"3c4ce4ed-a1b0-409b-9351-c676317b6830\" name=\"Changes\" comment=\"add rank icon\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/imports/api/methods/players.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/imports/api/methods/players.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/imports/api/utils.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/imports/api/utils.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/imports/ui/Dashboard.vue\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/imports/ui/Dashboard.vue\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/imports/ui/data-mixin.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/imports/ui/data-mixin.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/vite.config.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/vite.config.js\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ComposerSettings\">\r\n    <execution />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitToolBoxStore\">\r\n    <option name=\"projectConfigVersion\" value=\"5\" />\r\n    <option name=\"recentBranches\">\r\n      <RecentBranches>\r\n        <option name=\"branchesForRepo\">\r\n          <list>\r\n            <RecentBranchesForRepo>\r\n              <option name=\"branches\">\r\n                <list>\r\n                  <RecentBranch>\r\n                    <option name=\"branchName\" value=\"main\" />\r\n                    <option name=\"lastUsedInstant\" value=\"1677966544\" />\r\n                  </RecentBranch>\r\n                  <RecentBranch>\r\n                    <option name=\"branchName\" value=\"mmr\" />\r\n                    <option name=\"lastUsedInstant\" value=\"1677966197\" />\r\n                  </RecentBranch>\r\n                </list>\r\n              </option>\r\n              <option name=\"repositoryRootUrl\" value=\"file://$PROJECT_DIR$\" />\r\n            </RecentBranchesForRepo>\r\n          </list>\r\n        </option>\r\n      </RecentBranches>\r\n    </option>\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2MWnGF91wxCt6t6vbMwB0vgMveu\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;HbShouldOpenHtmlAsHb&quot;: &quot;enabled&quot;,\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,\r\n    &quot;js.meteor.library.was.enabled&quot;: &quot;true&quot;,\r\n    &quot;js.meteor.project&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;D:/projets/warzone-challenge&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  },\r\n  &quot;keyToStringList&quot;: {\r\n    &quot;js.meteor.library.cached&quot;: [\r\n      &quot;D:/projets/warzone-challenge/.meteor&quot;\r\n    ]\r\n  }\r\n}</component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"3c4ce4ed-a1b0-409b-9351-c676317b6830\" name=\"Changes\" comment=\"\" />\r\n      <created>1677892108806</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1677892108806</updated>\r\n      <workItem from=\"1677892110203\" duration=\"98000\" />\r\n      <workItem from=\"1677892216466\" duration=\"298000\" />\r\n      <workItem from=\"1677892527351\" duration=\"40000\" />\r\n      <workItem from=\"1677892581781\" duration=\"1143000\" />\r\n      <workItem from=\"1677893760290\" duration=\"2335000\" />\r\n      <workItem from=\"1677897803893\" duration=\"8069000\" />\r\n      <workItem from=\"1677902797479\" duration=\"1864000\" />\r\n      <workItem from=\"1677904715976\" duration=\"5236000\" />\r\n      <workItem from=\"1677926631969\" duration=\"20492000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"add mmr\">\r\n      <created>1677903031858</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677903031858</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"improve mmr feature\">\r\n      <created>1677909108341</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677909108341</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"equilibrage mmr\">\r\n      <created>1677913574457</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677913574457</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"equilibrage mmr\">\r\n      <created>1677931985448</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677931985448</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"add rank icon\">\r\n      <created>1677933306999</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677933306999</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"6\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"add mmr\" />\r\n    <MESSAGE value=\"improve mmr feature\" />\r\n    <MESSAGE value=\"equilibrage mmr\" />\r\n    <MESSAGE value=\"add rank icon\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"add rank icon\" />\r\n  </component>\r\n</project>
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -4,12 +4,8 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="add rank icon">
++    <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="update mmr algo">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/imports/api/methods/players.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/methods/players.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/imports/api/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/utils.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/imports/ui/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Dashboard.vue" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/imports/ui/data-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/data-mixin.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -48,6 +44,9 @@
+         </option>
+       </RecentBranches>
+     </option>
++  </component>
++  <component name="HighlightingSettingsPerFile">
++    <setting file="file://$PROJECT_DIR$/imports/ui/Dashboard.vue" root0="SKIP_INSPECTION" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+     <option name="stateVersion" value="1" />
+@@ -57,29 +56,30 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;HbShouldOpenHtmlAsHb&quot;: &quot;enabled&quot;,
+-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+-    &quot;js.meteor.library.was.enabled&quot;: &quot;true&quot;,
+-    &quot;js.meteor.project&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;D:/projets/warzone-challenge&quot;,
+-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "HbShouldOpenHtmlAsHb": "enabled",
++    "RunOnceActivity.OpenProjectViewOnStart": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
++    "WebServerToolWindowFactoryState": "false",
++    "js.meteor.library.was.enabled": "true",
++    "js.meteor.project": "true",
++    "last_opened_file_path": "D:/projets/warzone-challenge",
++    "node.js.detected.package.eslint": "true",
++    "node.js.detected.package.tslint": "true",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "settings.editor.selected.configurable": "preferences.pluginManager",
++    "vue.rearranger.settings.migration": "true"
+   },
+-  &quot;keyToStringList&quot;: {
+-    &quot;js.meteor.library.cached&quot;: [
+-      &quot;D:/projets/warzone-challenge/.meteor&quot;
++  "keyToStringList": {
++    "js.meteor.library.cached": [
++      "D:/projets/warzone-challenge/.meteor"
+     ]
+   }
+-}</component>
++}]]></component>
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+   <component name="TaskManager">
+     <task active="true" id="Default" summary="Default task">
+@@ -133,17 +133,78 @@
+       <option name="project" value="LOCAL" />
+       <updated>1677933306999</updated>
+     </task>
+-    <option name="localTasksCounter" value="6" />
++    <task id="LOCAL-00006" summary="fix">
++      <created>1678650849447</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1678650849447</updated>
++    </task>
++    <task id="LOCAL-00007" summary="remove debug">
++      <created>1678650939872</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1678650939872</updated>
++    </task>
++    <task id="LOCAL-00008" summary="equilibrage mmr">
++      <created>1678651061646</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1678651061646</updated>
++    </task>
++    <task id="LOCAL-00009" summary="equilibrage mmr">
++      <created>1678656639405</created>
++      <option name="number" value="00009" />
++      <option name="presentableId" value="LOCAL-00009" />
++      <option name="project" value="LOCAL" />
++      <updated>1678656639405</updated>
++    </task>
++    <task id="LOCAL-00010" summary="update mmr algo">
++      <created>1678680766274</created>
++      <option name="number" value="00010" />
++      <option name="presentableId" value="LOCAL-00010" />
++      <option name="project" value="LOCAL" />
++      <updated>1678680766274</updated>
++    </task>
++    <option name="localTasksCounter" value="11" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
+   </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State>
++              <option name="FILTERS">
++                <map>
++                  <entry key="branch">
++                    <value>
++                      <list>
++                        <option value="main" />
++                      </list>
++                    </value>
++                  </entry>
++                </map>
++              </option>
++            </State>
++          </value>
++        </entry>
++      </map>
++    </option>
++  </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="add mmr" />
+     <MESSAGE value="improve mmr feature" />
+-    <MESSAGE value="equilibrage mmr" />
+     <MESSAGE value="add rank icon" />
+-    <option name="LAST_COMMIT_MESSAGE" value="add rank icon" />
++    <MESSAGE value="fix" />
++    <MESSAGE value="remove debug" />
++    <MESSAGE value="equilibrage mmr" />
++    <MESSAGE value="update mmr algo" />
++    <option name="LAST_COMMIT_MESSAGE" value="update mmr algo" />
+   </component>
+ </project>
+\ No newline at end of file
