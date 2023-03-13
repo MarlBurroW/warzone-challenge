@@ -18,8 +18,8 @@ Meteor.methods({
       gamesPlayed: 0,
       lastMmr: 0,
       mmr: 0,
-      avgKg15LastGames: 0,
-      kg15LastGamesTrending: 0,
+      currentSessionAvgKg: 0,
+      CurrentSessionTrending: 0,
       avgKg: 0,
       kgTrending: 0,
       pourcentNextLevel: 0,
@@ -27,6 +27,8 @@ Meteor.methods({
       star: 0,
       active: true,
       color: "#000000",
+      standardDeviation: 0,
+      urrentSessionStandardDeviation: 0,
     });
     assignPlayersColors();
 

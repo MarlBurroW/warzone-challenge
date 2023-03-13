@@ -149,25 +149,25 @@
                 :style="{ borderColor: player.color }"
                 class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
               >
-                <div class="mb-3 font-thin">15 last games K/G</div>
+                <div class="mb-3 font-thin">Session K/G</div>
                 <div class="flex justify-center items-end">
                   <span class="text-4xl font-thin"
-                    >{{ numeral(player.avgKg15LastGames).format("0,0.00") }}
+                    >{{ numeral(player.currentSessionAvgKg).format("0,0.00") }}
                   </span>
 
                   <ArrowUpRightIcon
                     class="h-8 w-8 text-green-500"
-                    v-if="player.kg15LastGamesTrending === 1"
+                    v-if="player.CurrentSessionTrending === 1"
                   >
                   </ArrowUpRightIcon>
                   <ArrowRightIcon
                     class="h-8 w-8"
-                    v-if="player.kg15LastGamesTrending === 0"
+                    v-if="player.CurrentSessionTrending === 0"
                   >
                   </ArrowRightIcon>
                   <ArrowDownRightIcon
                     class="h-8 w-8 text-red-500"
-                    v-if="player.kg15LastGamesTrending === -1"
+                    v-if="player.CurrentSessionTrending === -1"
                   >
                   </ArrowDownRightIcon>
                 </div>
@@ -181,6 +181,48 @@
               <div class="mb-3 font-thin">Statistics</div>
 
               <div class="flex flex justify-between">
+                <div class="text-right text-sm font-thin leading-6">
+                  <div class="mb-3 font-normal">Global stats</div>
+                  <div>
+                    Games played:
+                    <strong>{{
+                      numeral(player.gamesPlayed).format("0")
+                    }}</strong>
+                  </div>
+
+                  <div>
+                    Total kills:
+                    <strong>{{
+                      numeral(player.totalKills).format("0")
+                    }}</strong>
+                  </div>
+                  <div>
+                    Avg kills/game:
+                    <strong>{{
+                      numeral(player.avgKg).format("0,0.00")
+                    }}</strong>
+                  </div>
+                  <div>
+                    Best player:
+                    <strong
+                      >{{ numeral(player.topPlayer).format("0") }} game{{
+                        player.topPlayer > 1 ? "s" : ""
+                      }}</strong
+                    >
+                  </div>
+                  <div class="mb-3">
+                    <!-- <InformationCircleIcon
+                      class="h-4 w-4 inline"
+                      title="  Will be higher if the data varies greatly. If the data
+                          is very uniform, the value will be low."
+                    ></InformationCircleIcon> -->
+
+                    Deviation:
+                    <strong>{{
+                      numeral(player.standardDeviation).format("0,0.00")
+                    }}</strong>
+                  </div>
+                </div>
                 <div
                   class="text-left text-sm font-thin leading-6"
                   v-if="currentSession"
@@ -212,7 +254,7 @@
                       ).format("0,0.00")
                     }}</strong>
                   </div>
-                  <div class="mb-3">
+                  <div>
                     Best player:
                     <strong
                       >{{
@@ -225,36 +267,16 @@
                       }}</strong
                     >
                   </div>
-                </div>
-
-                <div class="text-right text-sm font-thin leading-6">
-                  <div class="mb-3 font-normal">Global stats</div>
-                  <div>
-                    Games played:
+                  <div
+                    class="mb-3"
+                    title="Will be higher if the data varies greatly. If the data is very uniform, the value will be low."
+                  >
+                    Deviation:
                     <strong>{{
-                      numeral(player.gamesPlayed).format("0")
+                      numeral(player.currentSessionStandardDeviation).format(
+                        "0,0.00"
+                      )
                     }}</strong>
-                  </div>
-
-                  <div>
-                    Total kills:
-                    <strong>{{
-                      numeral(player.totalKills).format("0")
-                    }}</strong>
-                  </div>
-                  <div>
-                    Avg kills/game:
-                    <strong>{{
-                      numeral(player.avgKg).format("0,0.00")
-                    }}</strong>
-                  </div>
-                  <div class="mb-3">
-                    Best player:
-                    <strong
-                      >{{ numeral(player.topPlayer).format("0") }} game{{
-                        player.topPlayer > 1 ? "s" : ""
-                      }}</strong
-                    >
                   </div>
                 </div>
               </div>
@@ -414,12 +436,13 @@ import {
   ArrowRightIcon,
   ArrowUpRightIcon,
   StarIcon,
+  InformationCircleIcon,
 } from "@heroicons/vue/24/solid";
 </script>
 
 <script>
 import dataMixin from "./data-mixin.js";
-
+import { defineComponent } from "vue";
 import { Bar, Line, Doughnut } from "vue-chartjs";
 import "chart.js/auto";
 
@@ -427,7 +450,7 @@ import numeral from "numeral";
 
 // load a
 numeral.locale("fr");
-export default {
+export default defineComponent({
   components: { Bar, Line, Doughnut },
   mixins: [dataMixin],
   data() {
@@ -637,7 +660,6 @@ export default {
 
         .filter((d) => !isNaN(d));
 
-      console.log(data);
       return Math.max(...data);
     },
 
@@ -799,5 +821,5 @@ export default {
       return map[level];
     },
   },
-};
+});
 </script>

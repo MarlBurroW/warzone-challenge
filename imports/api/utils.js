@@ -45,8 +45,17 @@ export const computeGames = function () {
       }
     }
 
+    // Ensure all kills are numbers, if string, cast to number
+
+    for (let key in game.scores) {
+      if (typeof game.scores[key] === "string") {
+        game.scores[key] = parseInt(game.scores[key]);
+      }
+    }
+
     Games.update(game._id, {
       $set: {
+        scores: game.scores,
         sessionId: sessionCounter,
       },
     });
@@ -92,12 +101,14 @@ export const computePlayerScoreFromBacklog = function (player, games) {
         gamesPlayed: 0,
         mmr: 0,
         lastMmr: 0,
-        avgKg15LastGames: 0,
-        kg15LastGamesTrending: 0,
+        currentSessionAvgKg: 0,
+        CurrentSessionTrending: 0,
         avgKg: 0,
         kgTrending: 0,
         pourcentNextLevel: 0,
         topPlayer: 0,
+        standardDeviation: 0,
+        urrentSessionStandardDeviation: 0,
       },
     });
 
@@ -105,6 +116,8 @@ export const computePlayerScoreFromBacklog = function (player, games) {
   }
 
   games.forEach((game, i) => {
+    player.gamesPlayed = player.gamesPlayed + 1;
+
     if (
       game.rank != null &&
       game.scores.hasOwnProperty(player._id) &&
@@ -137,24 +150,11 @@ export const computePlayerScoreFromBacklog = function (player, games) {
       }
       const playerKills = game.scores[player._id];
 
+      player.totalKills = Number(player.totalKills) + Number(playerKills);
+
       // Retreiving player data from previous iteration to work on it
 
       playerKillList.push(playerKills);
-
-      // Update some player attributes directly
-
-      player.gamesPlayed = player.gamesPlayed + 1;
-      player.totalKills = Number(player.totalKills) + Number(playerKills);
-      // Calculate the trend (up/stable/down) of kills/games from the beginning*
-
-      player.avgKg15LastGames = getAvg(playerKillList.slice(-15));
-
-      player.kg15LastGamesTrending = getPlayerKGTrending(
-        playerKillList.slice(-15)
-      );
-
-      player.avgKg = getAvg(playerKillList);
-      player.kgTrending = getPlayerKGTrending(playerKillList);
     }
     if (player.gamesPlayed >= 5) {
       if (i === games.length - 2) {
@@ -174,6 +174,30 @@ export const computePlayerScoreFromBacklog = function (player, games) {
   player.level = getLeagueNumber(player.mmr);
   player.pourcentNextLevel = getPourcentNextLevel(player.mmr, player.level);
 
+  const latestSessionGames = games.filter((game) => {
+    return game.sessionId === games[games.length - 1].sessionId;
+  });
+
+  const playerCurrentSessionKillList = latestSessionGames.map((game) => {
+    return game.scores[player._id];
+  });
+
+  // Update some player attributes directly
+
+  // Calculate the trend (up/stable/down) of kills/games from the beginning*
+
+  player.standardDeviation = getStandardDeviation(playerKillList);
+  player.kgTrending = getPlayerKGTrending(playerKillList);
+  player.avgKg = getAvg(playerKillList);
+
+  player.currentSessionStandardDeviation = getStandardDeviation(
+    playerCurrentSessionKillList
+  );
+  player.CurrentSessionTrending = getPlayerKGTrending(
+    playerCurrentSessionKillList
+  );
+  player.currentSessionAvgKg = getAvg(playerCurrentSessionKillList);
+
   Players.update(player._id, {
     $set: {
       balance: player.balance,
@@ -186,11 +210,13 @@ export const computePlayerScoreFromBacklog = function (player, games) {
       mmr: player.mmr,
       lastMmr: player.lastMmr,
       pourcentNextLevel: player.pourcentNextLevel,
-      avgKg15LastGames: player.avgKg15LastGames,
-      kg15LastGamesTrending: player.kg15LastGamesTrending,
+      currentSessionAvgKg: player.currentSessionAvgKg,
+      CurrentSessionTrending: player.CurrentSessionTrending,
       avgKg: player.avgKg,
       kgTrending: player.kgTrending,
       topPlayer: player.topPlayer,
+      standardDeviation: player.standardDeviation,
+      currentSessionStandardDeviation: player.currentSessionStandardDeviation,
     },
   });
 };
@@ -364,4 +390,13 @@ export function assignPlayersColors() {
       },
     });
   });
+}
+
+function getStandardDeviation(array) {
+  const n = array.length;
+  const mean = array.reduce((acc, val) => acc + val, 0) / n;
+  const variance =
+    array.reduce((acc, val) => acc + (val - mean) ** 2, 0) / (n - 1);
+  const standardDeviation = Math.sqrt(variance);
+  return standardDeviation;
 }

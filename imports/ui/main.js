@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+
 import { VueMeteor } from "vue-meteor-tracker";
 
 import App from "./App.vue";
