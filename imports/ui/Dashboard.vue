@@ -744,7 +744,9 @@ export default defineComponent({
     isFire(player) {
       return (
         player.currentSessionAvgKg > player.avgKg &&
-        this.currentSession.length >= 3
+        this.currentSession.filter((g) => {
+          return g.scores.find((s) => s.playerId === player._id).score != null;
+        }).length >= 3
       );
     },
 
