@@ -228,17 +228,16 @@ export default {};
 const calculateMmr = function (bonus, gameRankList, playerKillList) {
   const smoothingBonus = getAvg(bonus);
   const smoothingRecentBonus = smoothing(bonus.slice(-20));
-  const WeightedBonus = (smoothingBonus + smoothingRecentBonus * 3) / 4;
+  const WeightedBonus = (smoothingBonus + smoothingRecentBonus) / 2;
 
   const smoothingGameRankAverage = getAvg(gameRankList);
   const smoothingRecentGameAverage = smoothing(gameRankList.slice(-20));
   const WeightedGameRank =
-    (smoothingGameRankAverage + smoothingRecentGameAverage * 3) / 4;
+    (smoothingGameRankAverage + smoothingRecentGameAverage) / 2;
 
   const smoothingPlayerKill = getAvg(playerKillList);
   const smoothingRecentPlayerKill = smoothing(playerKillList.slice(-20));
-  const WeightedPlayerKill =
-    (smoothingPlayerKill + smoothingRecentPlayerKill * 3) / 4;
+  const WeightedPlayerKill = (smoothingPlayerKill + smoothingRecentPlayerKill) / 2;
 
   const WeightedPlayerKillAndBonus = WeightedPlayerKill + WeightedBonus;
 
