@@ -462,6 +462,7 @@ import {
   StarIcon,
   InformationCircleIcon,
 } from "@heroicons/vue/24/solid";
+import tinycolor from "tinycolor2";
 </script>
 
 <script>
@@ -638,6 +639,12 @@ export default defineComponent({
             ...this.activePlayers.map((p, index) => {
               return {
                 label: p.nickname,
+                cubicInterpolationMode: "monotone",
+                tension: 0.4,
+                pointRadius: 5,
+                pointHoverRadius: 15,
+                pointHitRadius: 30,
+                pointStyle: "circle",
                 data: sessions.map((session) => {
                   return (
                     session
@@ -652,6 +659,7 @@ export default defineComponent({
                 backgroundColor: p.color,
                 borderColor: p.color,
                 borderWidth: 4,
+                pointBorderWidth: 0,
               };
             }),
           ],
@@ -662,6 +670,7 @@ export default defineComponent({
           datasets: this.activePlayers.map((p, index) => {
             return {
               label: p.nickname,
+
               data: sessions.map((session) => {
                 return session
                   .map((g) => {
@@ -685,6 +694,7 @@ export default defineComponent({
           datasets: this.activePlayers.map((p, index) => {
             return {
               label: p.nickname,
+
               data: latestSession
                 .slice()
                 .reverse()
@@ -707,6 +717,12 @@ export default defineComponent({
           datasets: this.activePlayers.map((p, index) => {
             return {
               label: p.nickname,
+              cubicInterpolationMode: "monotone",
+              tension: 0.4,
+              pointRadius: 5,
+              pointHoverRadius: 15,
+              pointHitRadius: 30,
+              pointStyle: "circle",
               data: latestSession
                 .slice()
                 .reverse()
@@ -715,8 +731,11 @@ export default defineComponent({
                   return score ? score.score : 0;
                 }),
               backgroundColor: p.color,
+
               borderColor: p.color,
+              pointBackgroundColor: p.color,
               borderWidth: 4,
+              pointBorderWidth: 0,
             };
           }),
         },
