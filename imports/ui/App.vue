@@ -28,9 +28,7 @@ import { Squares2X2Icon, TableCellsIcon } from "@heroicons/vue/24/solid";
         </router-link>
       </div>
       <router-view v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" :key="$route.fullPath"></component>
-        </keep-alive>
+        <component :is="Component" :key="$route.fullPath"></component>
       </router-view>
     </div>
   </div>
