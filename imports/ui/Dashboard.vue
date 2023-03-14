@@ -20,7 +20,7 @@
           <video
             v-if="isOnFire(player)"
             autoplay
-            class="absolute left-0 right-0 mx-auto -top-[15rem] z-0 h-[40rem] object-cover"
+            class="absolute left-0 right-0 mx-auto w-[20rem] -top-[14rem] z-0 h-[35rem] object-cover"
             loop
             muted
             playsinline
@@ -64,7 +64,7 @@
               </div>
               <div class="mb-5 flex justify-center">
                 <img
-                  class="w-34 h-34 brightness-130 pointer-events-none select-none"
+                  class="w-[12rem] h-[12rem] brightness-130 pointer-events-none select-none"
                   alt="mmr_logo"
                   :src="getMmrLogo(player.level)"
                 />
@@ -658,7 +658,7 @@ export default defineComponent({
           labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
           datasets: [
             {
-              label: "Team average kills per session",
+              label: "Team avg kills",
               data: sessions.map((session) => {
                 return (
                   session
@@ -775,7 +775,7 @@ export default defineComponent({
           labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
           datasets: [
             {
-              label: "Global team ranks",
+              label: "Team average rank",
               data: sessions.map((session) => {
                 return (
                   session
@@ -819,7 +819,7 @@ export default defineComponent({
           ],
           datasets: [
             {
-              label: "Current session team ranks",
+              label: "Team rank",
               data: latestSession.map((g) => {
                 return g.rank;
               }),
