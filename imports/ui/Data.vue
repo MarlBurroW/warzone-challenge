@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <table class="w-full mb-[20rem]" aria-label="session_lists">
+    <table class="w-full mb-[2rem]" aria-label="session_lists">
       <tbody>
         <template
           v-for="(session, sessionIndex) in limitedGroupedGames
@@ -421,6 +421,57 @@
         </template>
       </tbody>
     </table>
+
+    <div class="flex justify-between w-[40rem] mx-auto">
+      <div class="text-center">
+        <h1 class="font-bold text-3xl mb-10 text-white text-center">
+          Export data
+        </h1>
+        <button
+          class="bg-[#7ec92e] hover:bg-[#94eb36] px-5 py-2 rounded-md text-white transition-all"
+          type="submit"
+          @click="exportData"
+        >
+          Export data
+        </button>
+      </div>
+      <div class="text-center">
+        <h1 class="font-bold text-3xl mb-10 text-white text-center">
+          Import data
+        </h1>
+        <input
+          ref="importInput"
+          class="hidden"
+          accept="application/json"
+          type="file"
+          @change="onImportFileChange"
+        />
+        <button
+          class="bg-[#7ec92e] hover:bg-[#94eb36] px-5 py-2 rounded-md text-white transition-all"
+          type="submit"
+          @click="openFile"
+        >
+          Browse file
+        </button>
+
+        <div class="bg-red-500 text-white p-2 mt-2" v-if="importError">
+          {{ importError }}
+        </div>
+      </div>
+
+      <div class="text-center">
+        <h1 class="font-bold text-3xl mb-10 text-white text-center">
+          Reset data
+        </h1>
+        <button
+          class="bg-red-500 hover:bg-red-400 px-5 py-2 rounded-md text-white transition-all"
+          type="submit"
+          @click="resetData"
+        >
+          Reset data
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -456,6 +507,73 @@ export default {
     },
   },
   methods: {
+    resetData() {
+      if (confirm("Are you sure you want to reset all data?")) {
+        Meteor.call("resetData");
+      }
+    },
+    exportData() {
+      const data = {
+        players: this.players,
+        games: this.games,
+      };
+
+      // create variable formattedCurrentDatetime containing current date in format YYYY-MM-DD-HH-MM-SS
+      const formattedCurrentDatetime = new Date()
+        .toISOString()
+        .replace(/:/g, "-")
+        .replace(/\./g, "-");
+
+      const dataStr =
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify(data));
+      const downloadAnchorNode = document.createElement("a");
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute(
+        "download",
+        `wzc-data-${formattedCurrentDatetime}.json`
+      );
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+    },
+
+    openFile(data) {
+      // Just open the hidden file input browser by ref
+
+      this.$refs.importInput.click();
+    },
+
+    onImportFileChange(event) {
+      this.error = null;
+
+      // Get the file from the event
+      const file = event.target.files[0];
+
+      // Create a new file reader
+      const reader = new FileReader();
+
+      // When the file is loaded, parse the JSON and update the data
+      reader.onload = (event) => {
+        const data = JSON.parse(event.target.result);
+
+        Meteor.call("importData", data, (err, res) => {
+          if (err) {
+            this.importError = err.message;
+          } else {
+            console.log("Data imported");
+          }
+        });
+      };
+
+      reader.onerror = (event) => {
+        this.importError = "Error while reading file";
+      };
+
+      // Read the file as text
+      reader.readAsText(file);
+    },
+
     getSessionTotalKills(session, player) {
       let totalKills = 0;
       if (player) {
@@ -563,6 +681,7 @@ export default {
   },
   data() {
     return {
+      importError: null,
       nickname: "",
       gameScore: {},
       gameRank: null,
