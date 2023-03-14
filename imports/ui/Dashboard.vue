@@ -7,7 +7,7 @@
       <img
         alt="background"
         src="/images/bg.jpg"
-        class="absolute z-0 block opacity-30 w-full h-full left-0 right-0 top-0 bottom-0 object-cover"
+        class="absolute pointer-events-none select-none z-0 block opacity-30 w-full h-full left-0 right-0 top-0 bottom-0 object-cover"
       />
 
       <div class="flex w-full justify-center flex-wrap">
@@ -17,9 +17,18 @@
           :style="{ borderColor: player.color }"
           class="bg-zinc-800 shadow-xl border-t-8 w-[29rem] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
+          <video
+            v-if="isOnFire(player)"
+            autoplay
+            class="absolute w-full opacity-50 left-0 right-0 top-0 bottom-0 z-0 h-full object-cover"
+            loop
+            muted
+          >
+            <source src="/videos/fire.webm" type="video/webm" />
+          </video>
           <img
             alt="mmr_logo"
-            class="absolute z-0 opacity-10 w-full left-0 right-0"
+            class="absolute pointer-events-none z-0 opacity-10 w-full left-0 right-0 select-none"
             :src="getMmrLogo(player.level)"
           />
           <div
@@ -45,13 +54,14 @@
                   ></StarIcon>
                 </span>
               </div>
+
               <div class="text-3xl mb-5 font-black">
                 {{ isOnFire(player) ? "🔥" : "" }}{{ player.nickname
                 }}{{ isOnFire(player) ? "🔥" : "" }}
               </div>
               <div class="mb-5 flex justify-center">
                 <img
-                  class="w-34 h-34 brightness-130"
+                  class="w-34 h-34 brightness-130 pointer-events-none select-none"
                   alt="mmr_logo"
                   :src="getMmrLogo(player.level)"
                 />
