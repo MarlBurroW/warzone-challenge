@@ -29,6 +29,18 @@ export default {
     },
   },
   methods: {
+    getRankIndicator(rank) {
+      switch (rank) {
+        case 1:
+          return "🥇";
+        case 2:
+          return "🥈";
+        case 3:
+          return "🥉";
+        default:
+          return "";
+      }
+    },
     getPlayerColorByPlayerId(playerId) {
       const player = this.players.find((player) => {
         return player._id === playerId;

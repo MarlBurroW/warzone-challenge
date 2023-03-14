@@ -395,12 +395,42 @@
         </div>
       </div>
 
+      <div
+        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      >
+        <h1 class="text-white font-thin text-2xl text-center mb-5">
+          Current session team ranks (Lower is better)
+        </h1>
+
+        <div class="flex mx-auto overflow-auto">
+          <Bar
+            class="mb-3 w-full h-[400px]"
+            :options="chartOptions"
+            :data="globalChartData.currentSessionTeamRanks"
+          />
+        </div>
+      </div>
+
       <h1
         class="text-white font-thin text-6xl text-center mb-[100px] mt-[100px]"
       >
         Global stats
       </h1>
+      <div
+        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+      >
+        <h1 class="text-white font-thin text-2xl text-center mb-5">
+          Average team rank evolution (Lower is better)
+        </h1>
 
+        <div class="flex mx-auto overflow-auto">
+          <Bar
+            class="mb-3 w-full h-[400px]"
+            :options="chartOptions"
+            :data="globalChartData.globalTeamRanks"
+          />
+        </div>
+      </div>
       <div
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
@@ -736,6 +766,77 @@ export default defineComponent({
               borderWidth: 4,
             };
           }),
+        },
+
+        globalTeamRanks: {
+          labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
+          datasets: [
+            {
+              label: "Global team ranks",
+              data: sessions.map((session) => {
+                return (
+                  session
+                    .map((g) => {
+                      return g.rank;
+                    })
+                    .reduce((acc, s) => Number(acc) + Number(s), 0) /
+                  session.length
+                );
+              }),
+              backgroundColor: sessions.map((session) => {
+                const avgRank =
+                  session
+                    .map((g) => {
+                      return g.rank;
+                    })
+                    .reduce((acc, s) => Number(acc) + Number(s), 0) /
+                  session.length;
+
+                if (avgRank === 1) {
+                  return "#fde047";
+                } else if (avgRank === 2) {
+                  return "#a3e635";
+                } else if (avgRank === 3) {
+                  return "#a3e635";
+                } else if (avgRank > 10) {
+                  return "#dc2626";
+                } else {
+                  return "rgba(108, 117, 125, 0.50)";
+                }
+              }),
+              borderWidth: 1,
+            },
+          ],
+        },
+        currentSessionTeamRanks: {
+          labels: [
+            ...latestSession.map(
+              (g, index) => `Game ${index + 1} ${this.getRankIndicator(g.rank)}`
+            ),
+          ],
+          datasets: [
+            {
+              label: "Current session team ranks",
+              data: latestSession.map((g) => {
+                return g.rank;
+              }),
+              backgroundColor: latestSession.map((g) => {
+                if (g.rank === 1) {
+                  return "#fde047";
+                } else if (g.rank === 2) {
+                  return "#a3e635";
+                } else if (g.rank === 3) {
+                  return "#a3e635";
+                } else if (g.rank > 10) {
+                  return "#dc2626";
+                } else {
+                  return "rgba(108, 117, 125, 0.50)";
+                }
+              }),
+
+              borderWidth: 1,
+            },
+          ],
         },
 
         playersCurrentSessionKills: {
