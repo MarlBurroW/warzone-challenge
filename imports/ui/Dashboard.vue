@@ -20,11 +20,14 @@
           <video
             v-if="isOnFire(player)"
             autoplay
-            class="absolute w-full opacity-20 left-0 right-0 top-0 bottom-0 z-0 h-full object-cover"
+            class="absolute left-0 right-0 mx-auto -top-[15rem] z-0 h-[40rem] object-cover"
             loop
             muted
+            playsinline
+            webkit-playsinline
           >
             <source src="/videos/fire.webm" type="video/webm" />
+            <!-- <source src="/videos/fire2.mp4" type="video/mp4" /> -->
           </video>
           <img
             alt="mmr_logo"
@@ -35,7 +38,7 @@
             v-if="isOnFire(player)"
             class="absolute flex justify-center w-full left-0 right-0 -top-20"
           >
-            <fire></fire>
+            <!-- <fire></fire> -->
           </div>
 
           <div class="z-10">
