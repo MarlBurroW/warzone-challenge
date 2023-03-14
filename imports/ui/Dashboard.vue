@@ -20,7 +20,7 @@
           <video
             v-if="isOnFire(player)"
             autoplay
-            class="absolute w-full opacity-50 left-0 right-0 top-0 bottom-0 z-0 h-full object-cover"
+            class="absolute w-full opacity-20 left-0 right-0 top-0 bottom-0 z-0 h-full object-cover"
             loop
             muted
           >
@@ -139,7 +139,7 @@
             <div class="flex gap-2">
               <div
                 :style="{ borderColor: player.color }"
-                class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
+                class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full bg-opacity-50"
               >
                 <div class="mb-3 font-thin">Global K/G</div>
                 <div class="flex justify-center items-end">
@@ -167,7 +167,7 @@
 
               <div
                 :style="{ borderColor: player.color }"
-                class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full"
+                class="bg-zinc-600 p-2 border-l-4 rounded-lg mb-5 w-full bg-opacity-50"
               >
                 <div class="mb-3 font-thin">Session K/G</div>
                 <div class="flex justify-center items-end">
@@ -196,7 +196,7 @@
 
             <div
               :style="{ borderColor: player.color }"
-              class="bg-zinc-600 p-2 px-5 border-l-4 rounded-lg mb-5"
+              class="bg-zinc-600 p-2 px-5 border-l-4 rounded-lg mb-5 bg-opacity-50"
             >
               <div class="mb-3 font-thin">Statistics</div>
 
@@ -303,7 +303,7 @@
             </div>
             <div
               :style="{ borderColor: player.color }"
-              class="lex flex-col bg-zinc-600 p-2 border-l-4 rounded-lg flex-col flex mb-5"
+              class="lex flex-col bg-zinc-600 p-2 border-l-4 rounded-lg flex-col flex mb-5 bg-opacity-50"
               v-if="currentSession"
             >
               <Bar
