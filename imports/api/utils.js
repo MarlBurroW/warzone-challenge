@@ -2,7 +2,7 @@ import Players from "./collections/Players.js";
 import Games from "./collections/Games.js";
 import moment from "moment";
 
-export { updatePlayerScores };
+export { updatePlayerScores,assignPlayersColors };
 
 const updatePlayerScores = function () {
   // Fetch players
@@ -153,7 +153,7 @@ export const computePlayerScoreFromBacklog = function (player, games) {
       }
       const playerKills = game.scores[player._id];
 
-      // Retreiving player data from previous iteration to work on it
+      // Retrieving player data from previous iteration to work on it
 
       playerKillList.push(playerKills);
 
@@ -235,9 +235,6 @@ export const computePlayerScoreFromBacklog = function (player, games) {
     },
   });
 };
-
-export default {};
-
 const calculateMmr = function (bonus, gameRankList, playerKillList) {
   const smoothingBonus = getAvg(bonus);
   const smoothingRecentBonus = smoothing(bonus.slice(-20));
@@ -384,7 +381,7 @@ const getAvg = function (param) {
   }
 };
 
-export function assignPlayersColors() {
+const assignPlayersColors =  function () {
   const playerColors = [
     "#0ea5e9",
     "#f87171",

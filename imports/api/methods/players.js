@@ -28,7 +28,7 @@ Meteor.methods({
       active: true,
       color: "#000000",
       coefficientOfVariation: 0,
-      urrentSessionStandardDeviation: 0,
+      currentSessionStandardDeviation: 0,
     });
     assignPlayersColors();
 
