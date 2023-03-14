@@ -107,8 +107,8 @@ export const computePlayerScoreFromBacklog = function (player, games) {
         kgTrending: 0,
         pourcentNextLevel: 0,
         topPlayer: 0,
-        standardDeviation: 0,
-        urrentSessionStandardDeviation: 0,
+        coefficientOfVariation: 0,
+        currentSessionCoefficientOfVariation: 0,
       },
     });
 
@@ -186,19 +186,23 @@ export const computePlayerScoreFromBacklog = function (player, games) {
 
   // Calculate player statistics
 
-  player.standardDeviation = getStandardDeviation(playerKillList);
-  player.kgTrending = getPlayerKGTrending(playerKillList);
-  player.avgKg = getAvg(playerKillList);
+  player.coefficientOfVariation = getCoefficientOfVariation(
+    playerKillList.filter((d) => !isNaN(d))
+  );
+  player.kgTrending = getPlayerKGTrending(
+    playerKillList.filter((d) => !isNaN(d))
+  );
+  player.avgKg = getAvg(playerKillList.filter((d) => !isNaN(d)));
 
-  player.currentSessionStandardDeviation = getStandardDeviation(
-    playerCurrentSessionKillList
+  player.currentSessionCoefficientOfVariation = getCoefficientOfVariation(
+    playerCurrentSessionKillList.filter((d) => !isNaN(d))
   );
   player.CurrentSessionTrending = getPlayerKGTrending(
-    playerCurrentSessionKillList
+    playerCurrentSessionKillList.filter((d) => !isNaN(d))
   );
 
   player.currentSessionAvgKg = getAvg(
-    playerCurrentSessionKillList.filter((d) => d !== undefined)
+    playerCurrentSessionKillList.filter((d) => !isNaN(d))
   );
 
   // Update player
@@ -220,8 +224,9 @@ export const computePlayerScoreFromBacklog = function (player, games) {
       avgKg: player.avgKg,
       kgTrending: player.kgTrending,
       topPlayer: player.topPlayer,
-      standardDeviation: player.standardDeviation,
-      currentSessionStandardDeviation: player.currentSessionStandardDeviation,
+      coefficientOfVariation: player.coefficientOfVariation,
+      currentSessionCoefficientOfVariation:
+        player.currentSessionCoefficientOfVariation,
     },
   });
 };
@@ -397,11 +402,12 @@ export function assignPlayersColors() {
   });
 }
 
-function getStandardDeviation(array) {
+function getCoefficientOfVariation(array) {
   const n = array.length;
   const mean = array.reduce((acc, val) => acc + val, 0) / n;
   const variance =
     array.reduce((acc, val) => acc + (val - mean) ** 2, 0) / (n - 1);
-  const standardDeviation = Math.sqrt(variance);
-  return standardDeviation;
+  const sd = Math.sqrt(variance);
+  const coefficientOfVariation = (sd / mean) * 100;
+  return coefficientOfVariation;
 }

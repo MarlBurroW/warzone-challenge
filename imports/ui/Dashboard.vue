@@ -227,9 +227,9 @@
                           is very uniform, the value will be low."
                     ></InformationCircleIcon> -->
 
-                    Deviation:
+                    Variation:
                     <strong>{{
-                      numeral(player.standardDeviation).format("0,0.00")
+                      numeral(player.coefficientOfVariation).format("0,0.00")
                     }}</strong>
                   </div>
                 </div>
@@ -281,11 +281,11 @@
                     class="mb-3"
                     title="Will be higher if the data varies greatly. If the data is very uniform, the value will be low."
                   >
-                    Deviation:
+                    Variation:
                     <strong>{{
-                      numeral(player.currentSessionStandardDeviation).format(
-                        "0,0.00"
-                      )
+                      numeral(
+                        player.currentSessionCoefficientOfVariation
+                      ).format("0,0.00")
                     }}</strong>
                   </div>
                 </div>
@@ -649,14 +649,30 @@ export default defineComponent({
                 pointHitRadius: 30,
                 pointStyle: "circle",
                 data: sessions.map((session) => {
+                  const playerSessionGames = session.filter((g) => {
+                    return g.scores.find(
+                      (s) => s.playerId === p._id && s.score !== null
+                    );
+                  });
+
+                  const playerSessionGameCount = playerSessionGames.length;
+
+                  if (playerSessionGameCount === 0) {
+                    return null;
+                  }
+
                   return (
-                    session
+                    playerSessionGames
                       .map((g) => {
-                        return g.scores.find((s) => s.playerId === p._id)
-                          ?.score;
+                        const score = g.scores.find(
+                          (s) => s.playerId === p._id
+                        );
+                        return score && score.score !== null
+                          ? score.score
+                          : null;
                       })
                       .reduce((acc, s) => Number(acc) + Number(s), 0) /
-                    session.length
+                    playerSessionGameCount
                   );
                 }),
                 backgroundColor: p.color,
@@ -729,9 +745,15 @@ export default defineComponent({
               data: latestSession
                 .slice()
                 .reverse()
+
                 .map((g) => {
                   const score = g.scores.find((s) => s.playerId === p._id);
-                  return score ? score.score : 0;
+
+                  if (score && score.score !== null) {
+                    return score.score;
+                  } else {
+                    return null;
+                  }
                 }),
               backgroundColor: p.color,
 
