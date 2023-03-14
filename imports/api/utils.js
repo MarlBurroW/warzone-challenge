@@ -196,7 +196,10 @@ export const computePlayerScoreFromBacklog = function (player, games) {
   player.CurrentSessionTrending = getPlayerKGTrending(
     playerCurrentSessionKillList
   );
-  player.currentSessionAvgKg = getAvg(playerCurrentSessionKillList);
+
+  player.currentSessionAvgKg = getAvg(
+    playerCurrentSessionKillList.filter((d) => d !== undefined)
+  );
 
   // Update player
 
@@ -237,7 +240,8 @@ const calculateMmr = function (bonus, gameRankList, playerKillList) {
 
   const smoothingPlayerKill = getAvg(playerKillList);
   const smoothingRecentPlayerKill = smoothing(playerKillList.slice(-20));
-  const WeightedPlayerKill = (smoothingPlayerKill + smoothingRecentPlayerKill) / 2;
+  const WeightedPlayerKill =
+    (smoothingPlayerKill + smoothingRecentPlayerKill) / 2;
 
   const WeightedPlayerKillAndBonus = WeightedPlayerKill + WeightedBonus;
 

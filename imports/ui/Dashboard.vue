@@ -23,8 +23,8 @@
             :src="getMmrLogo(player.level)"
           />
           <div
-            v-if="isFire(player)"
-            class="absolute flex justify-center w-full left-0 right-0 -top-10"
+            v-if="isOnFire(player)"
+            class="absolute flex justify-center w-full left-0 right-0 -top-20"
           >
             <fire></fire>
           </div>
@@ -45,7 +45,10 @@
                   ></StarIcon>
                 </span>
               </div>
-              <div class="text-3xl mb-5 font-black">{{ player.nickname }}</div>
+              <div class="text-3xl mb-5 font-black">
+                {{ isOnFire(player) ? "🔥" : "" }}{{ player.nickname
+                }}{{ isOnFire(player) ? "🔥" : "" }}
+              </div>
               <div class="mb-5 flex justify-center">
                 <img
                   class="w-34 h-34 brightness-130"
@@ -341,7 +344,7 @@
         class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-thin text-2xl text-center mb-5">
-          Stacked kills / games
+          Stacked players kills / current session games
         </h1>
 
         <div class="flex w-full mx-auto overflow-auto">
@@ -744,6 +747,7 @@ export default defineComponent({
 
     maxKg() {
       const data = Object.values(this.playerChartData)
+
         .map((pcd) => {
           return pcd.avgKg.datasets.map((d) => {
             return d.data;
@@ -753,7 +757,7 @@ export default defineComponent({
 
         .filter((d) => !isNaN(d));
 
-      return Math.max(...data);
+      return Math.ceil(Math.max(...data));
     },
 
     playerChartData() {
@@ -826,7 +830,7 @@ export default defineComponent({
 
   methods: {
     numeral,
-    isFire(player) {
+    isOnFire(player) {
       return (
         player.currentSessionAvgKg > player.avgKg &&
         this.currentSession.filter((g) => {
