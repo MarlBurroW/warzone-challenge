@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="add rank icon">
+    <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="add rank parsing">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imports/api/methods/players.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/methods/players.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imports/api/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Dashboard.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/data-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/data-mixin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,6 +53,9 @@
       </RecentBranches>
     </option>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/imports/ui/Dashboard.vue" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -57,29 +64,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HbShouldOpenHtmlAsHb&quot;: &quot;enabled&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;js.meteor.library.was.enabled&quot;: &quot;true&quot;,
-    &quot;js.meteor.project&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/projets/warzone-challenge&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HbShouldOpenHtmlAsHb": "enabled",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.laravel-idea.search-composer-json": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "false",
+    "WebServerToolWindowFactoryState": "false",
+    "js.meteor.library.was.enabled": "true",
+    "js.meteor.project": "true",
+    "last_opened_file_path": "D:/projets/warzone-challenge",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "tv.twelvetone.intellij.plugins.intellivue.preferences.IntellivueConfigurable",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;js.meteor.library.cached&quot;: [
-      &quot;D:/projets/warzone-challenge/.meteor&quot;
+  "keyToStringList": {
+    "js.meteor.library.cached": [
+      "D:/projets/warzone-challenge/.meteor"
     ]
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -97,6 +107,11 @@
       <workItem from="1677902797479" duration="1864000" />
       <workItem from="1677904715976" duration="5236000" />
       <workItem from="1677926631969" duration="20492000" />
+      <workItem from="1678725301635" duration="11216000" />
+      <workItem from="1678762830392" duration="1651000" />
+      <workItem from="1678780830313" duration="2000" />
+      <workItem from="1678780847454" duration="192000" />
+      <workItem from="1678781171848" duration="2310000" />
     </task>
     <task id="LOCAL-00001" summary="add mmr">
       <created>1677903031858</created>
@@ -133,17 +148,61 @@
       <option name="project" value="LOCAL" />
       <updated>1677933306999</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="equilibrage mmr">
+      <created>1678730492802</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1678730492802</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add rank parsing">
+      <created>1678734706224</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1678734706224</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="add mmr" />
     <MESSAGE value="improve mmr feature" />
-    <MESSAGE value="equilibrage mmr" />
     <MESSAGE value="add rank icon" />
-    <option name="LAST_COMMIT_MESSAGE" value="add rank icon" />
+    <MESSAGE value="equilibrage mmr" />
+    <MESSAGE value="add rank parsing" />
+    <option name="LAST_COMMIT_MESSAGE" value="add rank parsing" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

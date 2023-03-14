@@ -1,0 +1,216 @@
+Index: imports/api/utils.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import Players from \"./collections/Players.js\";\r\nimport Games from \"./collections/Games.js\";\r\nimport moment from \"moment\";\r\n\r\n\r\n\r\nexport {updatePlayerScores};\r\n\r\nconst updatePlayerScores = function() {\r\n  // Fetch players\r\n  const players = Players.find({ active: true }).fetch();\r\n  // Fetch updated game backlog\r\n  const games = Games.find({ active: true }).fetch();\r\n\r\n  // Compute player scores from backlog\r\n\r\n  for (const player of players) {\r\n    computePlayerScoreFromBacklog(player, games);\r\n  }\r\n};\r\n\r\n\r\nexport const computeGames = function () {\r\n  let games = Games.find().fetch();\r\n\r\n  let sessionCounter = 1;\r\n\r\n  // Sort games by createdDate asc to compute in the right order\r\n\r\n  games = games.sort((a, b) => {\r\n    return a.createdAt - b.createdAt;\r\n  });\r\n\r\n  for (let i = 0; i < games.length; i++) {\r\n    const game = games[i];\r\n\r\n    const currentGameDate = moment(game.createdAt);\r\n\r\n    const previousGame = games[i - 1];\r\n\r\n    if (previousGame) {\r\n      const previousGameDate = moment(previousGame.createdAt);\r\n\r\n      const diff = currentGameDate.diff(previousGameDate, \"minutes\");\r\n\r\n      if (diff >= 60) {\r\n        sessionCounter = sessionCounter + 1;\r\n      }\r\n    }\r\n\r\n    Games.update(game._id, {\r\n      $set: {\r\n        sessionId: sessionCounter,\r\n      },\r\n    });\r\n  }\r\n};\r\n\r\nexport const computePlayerScoreFromBacklog = function (player, games) {\r\n  // Order games by createdDate asc\r\n\r\n  // Reset player attributes\r\n\r\n  player.balance = 0;\r\n  player.lastGameKills = 0;\r\n  player.requiredKills = 1;\r\n  player.requiredBalanceToUpgrade = 2;\r\n  player.level = 0;\r\n  player.totalKills = 0;\r\n  player.gamesPlayed = 0;\r\n  player.mrr = 0;\r\n  player.pourcentNextLevel = 0;\r\n  player.topPlayer = 0;\r\n\r\n  // Sort games by createdDate asc to compute in the right order\r\n\r\n  games = games.sort((a, b) => {\r\n    return a.createdAt - b.createdAt;\r\n  });\r\n\r\n  // Iterate over games\r\n\r\n  const gameRankList = [];\r\n  const playerKillList = [];\r\n  const bonus = [];\r\n\r\n  // Reset player attributes if no games\r\n\r\n  if (games.length === 0) {\r\n    Players.update(player._id, {\r\n      $set: {\r\n        lastGameKills: 0,\r\n        level: 0,\r\n        totalKills: 0,\r\n        gamesPlayed: 0,\r\n        mmr: 0,\r\n        lastMmr: 0,\r\n        avgKg15LastGames: 0,\r\n        kg15LastGamesTrending: 0,\r\n        avgKg: 0,\r\n        kgTrending: 0,\r\n        pourcentNextLevel: 0,\r\n        topPlayer: 0,\r\n      },\r\n    });\r\n\r\n    return;\r\n  }\r\n\r\n  games.forEach((game, i) => {\r\n    if (\r\n      game.rank != null &&\r\n      game.scores.hasOwnProperty(player._id) &&\r\n      game.scores[player._id] !== null\r\n    ) {\r\n      const gameRank = Number(game.rank);\r\n      gameRankList.push(gameRank);\r\n      if (gameRank === 1) {\r\n        bonus.push(5);\r\n      } else if (gameRank === 2) {\r\n        bonus.push(3);\r\n      } else if (gameRank === 3) {\r\n        bonus.push(2);\r\n      } else if (gameRank > 3 && gameRank <= 5) {\r\n        bonus.push(1);\r\n      }\r\n      else if (gameRank >= 12){\r\n        bonus.push(-1);\r\n      }\r\n    }\r\n    // Check if player has played in this game, and only compute score if so\r\n\r\n    if (\r\n      game.scores.hasOwnProperty(player._id) &&\r\n      game.scores[player._id] !== null\r\n    ) {\r\n      const arrScores = Object.values(game.scores);\r\n      const maxScore = Math.max(...arrScores);\r\n      if (game.scores[player._id] >= maxScore) {\r\n        player.topPlayer++;\r\n      }\r\n      const playerKills = game.scores[player._id];\r\n\r\n      // Retreiving player data from previous iteration to work on it\r\n\r\n      playerKillList.push(playerKills);\r\n\r\n      // Update some player attributes directly\r\n\r\n      player.gamesPlayed = player.gamesPlayed + 1;\r\n      player.totalKills = Number(player.totalKills) + Number(playerKills);\r\n      // Calculate the trend (up/stable/down) of kills/games from the beginning*\r\n\r\n\r\n     player.avgKg15LastGames = getAvg(playerKillList.slice(-15));\r\n\r\n\r\n      player.kg15LastGamesTrending = getPlayerKGTrending(\r\n        playerKillList.slice(-15)\r\n      );\r\n\r\n      player.avgKg = getAvg(playerKillList);\r\n      player.kgTrending = getPlayerKGTrending(playerKillList);\r\n    }\r\n    if (player.gamesPlayed >= 5) {\r\n      if (i === games.length - 2) {\r\n        player.lastMmr = calculateMmr(\r\n          bonus,\r\n          gameRankList,\r\n          playerKillList\r\n        );\r\n      }\r\n      if (i === games.length - 1) {\r\n        player.mmr = calculateMmr(bonus, gameRankList, playerKillList);\r\n      }\r\n    } else {\r\n      player.mmr = 0;\r\n      player.lastMmr = 0;\r\n    }\r\n  });\r\n\r\n  // calculate mmr\r\n\r\n  player.level = getLeagueNumber(player.mmr);\r\n  player.pourcentNextLevel = getPourcentNextLevel(player.mmr, player.level);\r\n\r\n  Players.update(player._id, {\r\n    $set: {\r\n      balance: player.balance,\r\n      lastGameKills: player.lastGameKills,\r\n      requiredKills: player.requiredKills,\r\n      requiredBalanceToUpgrade: player.requiredBalanceToUpgrade,\r\n      level: player.level,\r\n      gamesPlayed: player.gamesPlayed,\r\n      totalKills: player.totalKills,\r\n      mmr: player.mmr,\r\n      lastMmr: player.lastMmr,\r\n      pourcentNextLevel: player.pourcentNextLevel,\r\n      avgKg15LastGames: player.avgKg15LastGames,\r\n      kg15LastGamesTrending: player.kg15LastGamesTrending,\r\n      avgKg: player.avgKg,\r\n      kgTrending: player.kgTrending,\r\n      topPlayer: player.topPlayer,\r\n    },\r\n  });\r\n};\r\n\r\nexport default {};\r\n\r\nconst calculateMmr = function (bonus, gameRankList, playerKillList) {\r\n\r\n  const smoothingBonus = getAvg(bonus);\r\n  const smoothingRecentBonus = smoothing(bonus.slice(-20));\r\n  const WeightedBonus = (smoothingBonus + smoothingRecentBonus * 3) / 4;\r\n\r\n  const smoothingGameRankAverage = getAvg(gameRankList);\r\n  const smoothingRecentGameAverage = smoothing(gameRankList.slice(-20));\r\n  const WeightedGameRank = (smoothingGameRankAverage + smoothingRecentGameAverage * 3) / 4;\r\n\r\n  const smoothingPlayerKill = getAvg(playerKillList);\r\n  const smoothingRecentPlayerKill = smoothing(playerKillList.slice(-20));\r\n  const WeightedPlayerKill = (smoothingPlayerKill + smoothingRecentPlayerKill * 3) / 4;\r\n\r\n  const WeightedPlayerKillAndBonus = WeightedPlayerKill + WeightedBonus;\r\n\r\n  return Math.round(\r\n    (WeightedPlayerKillAndBonus * 3 - (WeightedGameRank)  + 100) * 10\r\n  );\r\n};\r\n\r\nconst smoothing = function(param){\r\n  const result = [];\r\n  if(Array.isArray(param)) {\r\n    param.forEach((element, i) => {\r\n      let index = 0;\r\n      while (index < i + 1) {\r\n        result.push(element);\r\n        index++;\r\n      }\r\n    });\r\n    return getAvg(result);\r\n  }else{\r\n    throw new Error(\"Smoothing : Param is not an array or is empty\");\r\n  }\r\n}\r\n\r\nconst getLeagueNumber = function (mmr) {\r\n  if (mmr === 0) {\r\n    return 0;\r\n  }\r\n  switch (true) {\r\n    case mmr < 950:\r\n      return 1;\r\n    case mmr < 965:\r\n      return 2;\r\n    case mmr < 980:\r\n      return 3;\r\n    case mmr < 995:\r\n      return 4;\r\n    case mmr < 1010:\r\n      return 5;\r\n    case mmr < 1025:\r\n      return 6;\r\n    case mmr < 1040:\r\n      return 7;\r\n    case mmr < 1055:\r\n      return 8;\r\n    case mmr < 1070:\r\n      return 9;\r\n    case mmr < 1085:\r\n      return 10;\r\n    case mmr < 1100:\r\n      return 11;\r\n    case mmr < 1115:\r\n      return 12;\r\n    case mmr < 1130:\r\n      return 13;\r\n    case mmr < 1145:\r\n      return 14;\r\n    case mmr < 1160:\r\n      return 15;\r\n    case mmr < 1175:\r\n      return 16;\r\n    case mmr < 1190:\r\n      return 17;\r\n    case mmr < 1205:\r\n      return 18;\r\n    case mmr < 1220:\r\n      return 19;\r\n    case mmr >= 1235:\r\n      return 20;\r\n    default:\r\n      return 0;\r\n  }\r\n};\r\n\r\nconst getPourcentNextLevel = function (mmr, level) {\r\n  if (level >= 19) {\r\n    return 100;\r\n  }\r\n  let test = false;\r\n  let increment = 0;\r\n  if (mmr && level) {\r\n    while (!test) {\r\n      if (getLeagueNumber(mmr + increment) !== level) {\r\n        test = true;\r\n      } else {\r\n        increment++;\r\n      }\r\n    }\r\n    if (level === 19) {\r\n      return Math.trunc((30 - increment) * 100) / 30;\r\n    } else {\r\n      return Math.trunc((15 - increment) * 100) / 15;\r\n    }\r\n  }\r\n  return 0;\r\n};\r\n\r\nconst getPlayerKGTrending = function (playerKillList) {\r\n  let kgTrending = 0;\r\n\r\n  if (playerKillList.length > 1) {\r\n    // Compute the trend of kills/games\r\n\r\n    let kgTrend = 0;\r\n\r\n    for (let i = 0; i < playerKillList.length - 1; i++) {\r\n      kgTrend = kgTrend + playerKillList[i + 1] - playerKillList[i];\r\n\r\n      if (kgTrend > 0) {\r\n        kgTrending = 1;\r\n      } else if (kgTrend < 0) {\r\n        kgTrending = -1;\r\n      } else {\r\n        kgTrending = 0;\r\n      }\r\n    }\r\n  }\r\n  return kgTrending;\r\n};\r\n\r\nconst getAvg = function (param) {\r\n  if (Array.isArray(param) && param.length > 0) {\r\n    return param.reduce((x, y) => {\r\n        return Number(x) + Number(y);\r\n      }, 0) / param.length;\r\n  }else{\r\n    throw new Error('getAvg: param is not an array or is empty');\r\n  }\r\n};\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/imports/api/utils.js b/imports/api/utils.js
+--- a/imports/api/utils.js	
++++ b/imports/api/utils.js	
+@@ -116,15 +116,12 @@
+       const gameRank = Number(game.rank);
+       gameRankList.push(gameRank);
+       if (gameRank === 1) {
+-        bonus.push(5);
++        bonus.push(4);
+       } else if (gameRank === 2) {
+-        bonus.push(3);
+-      } else if (gameRank === 3) {
+         bonus.push(2);
+-      } else if (gameRank > 3 && gameRank <= 5) {
++      } else if (gameRank === 3) {
+         bonus.push(1);
+-      }
+-      else if (gameRank >= 12){
++      } else if (gameRank >= 12){
+         bonus.push(-1);
+       }
+     }
+@@ -209,19 +206,19 @@
+ 
+ const calculateMmr = function (bonus, gameRankList, playerKillList) {
+ 
+-  const smoothingBonus = getAvg(bonus);
+-  const smoothingRecentBonus = smoothing(bonus.slice(-20));
+-  const WeightedBonus = (smoothingBonus + smoothingRecentBonus * 3) / 4;
++  const averageBonus = getAvg(bonus);
++  const smoothingRecentBonus = smoothing(bonus.slice(-15));
++  const weightedBonus = (averageBonus + smoothingRecentBonus * 2) / 3;
+ 
+   const smoothingGameRankAverage = getAvg(gameRankList);
+-  const smoothingRecentGameAverage = smoothing(gameRankList.slice(-20));
+-  const WeightedGameRank = (smoothingGameRankAverage + smoothingRecentGameAverage * 3) / 4;
++  const smoothingRecentGameAverage = smoothing(gameRankList.slice(-15));
++  const WeightedGameRank = (smoothingGameRankAverage + smoothingRecentGameAverage) / 2;
+ 
+   const smoothingPlayerKill = getAvg(playerKillList);
+-  const smoothingRecentPlayerKill = smoothing(playerKillList.slice(-20));
+-  const WeightedPlayerKill = (smoothingPlayerKill + smoothingRecentPlayerKill * 3) / 4;
++  const smoothingRecentPlayerKill = smoothing(playerKillList.slice(-15));
++  const WeightedPlayerKill = (smoothingPlayerKill + smoothingRecentPlayerKill) / 2;
+ 
+-  const WeightedPlayerKillAndBonus = WeightedPlayerKill + WeightedBonus;
++  const WeightedPlayerKillAndBonus = WeightedPlayerKill + weightedBonus;
+ 
+   return Math.round(
+     (WeightedPlayerKillAndBonus * 3 - (WeightedGameRank)  + 100) * 10
+@@ -238,6 +235,7 @@
+         index++;
+       }
+     });
++    console.log("smoothing result : ", result);
+     return getAvg(result);
+   }else{
+     throw new Error("Smoothing : Param is not an array or is empty");
+Index: vite.config.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { defineConfig } from \"vite\";\r\nimport vue from \"@vitejs/plugin-vue\";\r\n\r\nexport default defineConfig({\r\n  plugins: [vue()],\r\n  server: {\r\n    host: \"dev.marlburrow.io\",\r\n  },\r\n  meteor: {\r\n    clientEntry: \"imports/ui/main.js\",\r\n  },\r\n  optimizeDeps: {\r\n    exclude: [\"vue-meteor-tracker\"],\r\n  },\r\n});\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/vite.config.js b/vite.config.js
+--- a/vite.config.js	
++++ b/vite.config.js	
+@@ -3,9 +3,6 @@
+ 
+ export default defineConfig({
+   plugins: [vue()],
+-  server: {
+-    host: "dev.marlburrow.io",
+-  },
+   meteor: {
+     clientEntry: "imports/ui/main.js",
+   },
+Index: .idea/sonarlint/issuestore/index.pb
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/sonarlint/issuestore/index.pb b/.idea/sonarlint/issuestore/index.pb
+--- a/.idea/sonarlint/issuestore/index.pb	
++++ b/.idea/sonarlint/issuestore/index.pb	
+@@ -1,0 +1,25 @@
++
++R
++"imports/api/collections/Players.js,2\f\2f1c94c28c2f3092e6a120e828cb57d1d9127c99
++L
++imports/api/methods/games.js,e\e\eeaa56b7fc6b5e7b02b7e57c321cec38d6f01655
++Q
++!imports/api/publications/index.js,4\a\4acee2bc8599dfa4aa84ba26a51c9aa6732cb563
++Q
++!imports/api/publications/games.js,0\6\065ac61cebdf30689ac5b2b32845e0e703df9bf7
++P
++ imports/api/collections/Games.js,0\3\03a27f523d08ed9049eff182ba39e3ab6209eb14
++S
++#imports/api/publications/players.js,c\c\cc246db9c36a2de6295b5b4f8b81757d5f02063c
++H
++imports/ui/Dashboard.vue,4\0\405ab0aafa3415a13582964c9526aa9a62b4e1b7
++N
++imports/api/methods/players.js,f\6\f6be8c91bfd848485f7c74c28d2573684e049014
++C
++imports/ui/Data.vue,7\b\7b3b5dc3c723dad7a9b313ce6545ee98bb6e05d9
++H
++imports/ui/data-mixin.js,9\3\9323c74e45616c4a2fa7607ab27b80e00b7c75ba
++>
++vite.config.js,2\3\23e488f27597a265a6ab2b1efbe18221c6f88c2f
++D
++imports/api/utils.js,6\d\6d78e75ca7cb83de64d5173747278cb8117b6c1f
+\ No newline at end of file
+Index: .idea/sonarlint/securityhotspotstore/index.pb
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/sonarlint/securityhotspotstore/index.pb b/.idea/sonarlint/securityhotspotstore/index.pb
+--- a/.idea/sonarlint/securityhotspotstore/index.pb	
++++ b/.idea/sonarlint/securityhotspotstore/index.pb	
+@@ -1,0 +1,25 @@
++
++R
++"imports/api/collections/Players.js,2\f\2f1c94c28c2f3092e6a120e828cb57d1d9127c99
++L
++imports/api/methods/games.js,e\e\eeaa56b7fc6b5e7b02b7e57c321cec38d6f01655
++Q
++!imports/api/publications/index.js,4\a\4acee2bc8599dfa4aa84ba26a51c9aa6732cb563
++Q
++!imports/api/publications/games.js,0\6\065ac61cebdf30689ac5b2b32845e0e703df9bf7
++P
++ imports/api/collections/Games.js,0\3\03a27f523d08ed9049eff182ba39e3ab6209eb14
++S
++#imports/api/publications/players.js,c\c\cc246db9c36a2de6295b5b4f8b81757d5f02063c
++H
++imports/ui/Dashboard.vue,4\0\405ab0aafa3415a13582964c9526aa9a62b4e1b7
++N
++imports/api/methods/players.js,f\6\f6be8c91bfd848485f7c74c28d2573684e049014
++C
++imports/ui/Data.vue,7\b\7b3b5dc3c723dad7a9b313ce6545ee98bb6e05d9
++H
++imports/ui/data-mixin.js,9\3\9323c74e45616c4a2fa7607ab27b80e00b7c75ba
++>
++vite.config.js,2\3\23e488f27597a265a6ab2b1efbe18221c6f88c2f
++D
++imports/api/utils.js,6\d\6d78e75ca7cb83de64d5173747278cb8117b6c1f
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"3c4ce4ed-a1b0-409b-9351-c676317b6830\" name=\"Changes\" comment=\"add rank icon\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/imports/api/methods/players.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/imports/api/methods/players.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/imports/api/utils.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/imports/api/utils.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/imports/ui/Dashboard.vue\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/imports/ui/Dashboard.vue\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/imports/ui/data-mixin.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/imports/ui/data-mixin.js\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/vite.config.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/vite.config.js\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ComposerSettings\">\r\n    <execution />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitToolBoxStore\">\r\n    <option name=\"projectConfigVersion\" value=\"5\" />\r\n    <option name=\"recentBranches\">\r\n      <RecentBranches>\r\n        <option name=\"branchesForRepo\">\r\n          <list>\r\n            <RecentBranchesForRepo>\r\n              <option name=\"branches\">\r\n                <list>\r\n                  <RecentBranch>\r\n                    <option name=\"branchName\" value=\"main\" />\r\n                    <option name=\"lastUsedInstant\" value=\"1677966544\" />\r\n                  </RecentBranch>\r\n                  <RecentBranch>\r\n                    <option name=\"branchName\" value=\"mmr\" />\r\n                    <option name=\"lastUsedInstant\" value=\"1677966197\" />\r\n                  </RecentBranch>\r\n                </list>\r\n              </option>\r\n              <option name=\"repositoryRootUrl\" value=\"file://$PROJECT_DIR$\" />\r\n            </RecentBranchesForRepo>\r\n          </list>\r\n        </option>\r\n      </RecentBranches>\r\n    </option>\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2MWnGF91wxCt6t6vbMwB0vgMveu\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;HbShouldOpenHtmlAsHb&quot;: &quot;enabled&quot;,\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,\r\n    &quot;js.meteor.library.was.enabled&quot;: &quot;true&quot;,\r\n    &quot;js.meteor.project&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;D:/projets/warzone-challenge&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  },\r\n  &quot;keyToStringList&quot;: {\r\n    &quot;js.meteor.library.cached&quot;: [\r\n      &quot;D:/projets/warzone-challenge/.meteor&quot;\r\n    ]\r\n  }\r\n}</component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"3c4ce4ed-a1b0-409b-9351-c676317b6830\" name=\"Changes\" comment=\"\" />\r\n      <created>1677892108806</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1677892108806</updated>\r\n      <workItem from=\"1677892110203\" duration=\"98000\" />\r\n      <workItem from=\"1677892216466\" duration=\"298000\" />\r\n      <workItem from=\"1677892527351\" duration=\"40000\" />\r\n      <workItem from=\"1677892581781\" duration=\"1143000\" />\r\n      <workItem from=\"1677893760290\" duration=\"2335000\" />\r\n      <workItem from=\"1677897803893\" duration=\"8069000\" />\r\n      <workItem from=\"1677902797479\" duration=\"1864000\" />\r\n      <workItem from=\"1677904715976\" duration=\"5236000\" />\r\n      <workItem from=\"1677926631969\" duration=\"20492000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"add mmr\">\r\n      <created>1677903031858</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677903031858</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"improve mmr feature\">\r\n      <created>1677909108341</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677909108341</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"equilibrage mmr\">\r\n      <created>1677913574457</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677913574457</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"equilibrage mmr\">\r\n      <created>1677931985448</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677931985448</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"add rank icon\">\r\n      <created>1677933306999</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677933306999</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"6\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"add mmr\" />\r\n    <MESSAGE value=\"improve mmr feature\" />\r\n    <MESSAGE value=\"equilibrage mmr\" />\r\n    <MESSAGE value=\"add rank icon\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"add rank icon\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -6,10 +6,7 @@
+   <component name="ChangeListManager">
+     <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="add rank icon">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/imports/api/methods/players.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/methods/players.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/imports/api/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/utils.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/imports/ui/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Dashboard.vue" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/imports/ui/data-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/data-mixin.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -48,6 +45,9 @@
+         </option>
+       </RecentBranches>
+     </option>
++  </component>
++  <component name="HighlightingSettingsPerFile">
++    <setting file="file://$PROJECT_DIR$/imports/ui/Dashboard.vue" root0="SKIP_INSPECTION" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+     <option name="stateVersion" value="1" />
+@@ -138,6 +138,29 @@
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+     <option name="version" value="3" />
++  </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State>
++              <option name="FILTERS">
++                <map>
++                  <entry key="branch">
++                    <value>
++                      <list>
++                        <option value="mmr" />
++                      </list>
++                    </value>
++                  </entry>
++                </map>
++              </option>
++            </State>
++          </value>
++        </entry>
++      </map>
++    </option>
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="add mmr" />
