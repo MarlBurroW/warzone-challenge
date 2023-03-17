@@ -6,9 +6,12 @@
 
 html {
   font-size: 14px;
+  background-color: #7ec92e;
 }
 
-
+.hot-mmr-logo {
+  filter: sepia(50%) saturate(10) blur(0px) brightness(1) contrast(100%);
+}
 
 /* Pour les écrans 1080p */
 @media screen and (max-width: 1920px) {

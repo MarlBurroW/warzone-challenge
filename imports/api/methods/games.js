@@ -12,15 +12,14 @@ Meteor.methods({
       rank: rank,
     });
 
-    updatePlayerScores();
     computeGames();
-
+    updatePlayerScores();
     return gameCreated;
   },
   deleteGame(id) {
     Games.remove(id);
-    updatePlayerScores();
     computeGames();
+    updatePlayerScores();
   },
 
   updateGameScore(gameId, playerId, score) {
@@ -34,8 +33,8 @@ Meteor.methods({
         [`scores.${playerId}`]: newScore,
       },
     });
-    updatePlayerScores();
     computeGames();
+    updatePlayerScores();
   },
 
   updateGameRank(gameId, rank) {
@@ -47,8 +46,8 @@ Meteor.methods({
         rank: rank,
       },
     });
-    updatePlayerScores();
     computeGames();
+    updatePlayerScores();
   },
 
   updateGameActiveStatus(gameId, active) {
@@ -57,9 +56,8 @@ Meteor.methods({
         active: active,
       },
     });
-
-    updatePlayerScores();
     computeGames();
+    updatePlayerScores();
   },
   updateGamesActiveStatus(active) {
     Games.update(
@@ -73,8 +71,8 @@ Meteor.methods({
         multi: true,
       }
     );
-    updatePlayerScores();
     computeGames();
+    updatePlayerScores();
   },
 });
 console.log("Game methods registered");

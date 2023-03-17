@@ -2,7 +2,7 @@ import Players from "./collections/Players.js";
 import Games from "./collections/Games.js";
 import moment from "moment";
 
-export { updatePlayerScores,assignPlayersColors };
+export { updatePlayerScores, assignPlayersColors };
 
 const updatePlayerScores = function () {
   // Fetch players
@@ -206,6 +206,8 @@ export const computePlayerScoreFromBacklog = function (player, games) {
     playerCurrentSessionKillList.filter((d) => !isNaN(d))
   );
 
+  console.log(playerCurrentSessionKillList.filter((d) => !isNaN(d)));
+
   player.currentSessionAvgKg = getAvg(
     playerCurrentSessionKillList.filter((d) => !isNaN(d))
   );
@@ -381,7 +383,7 @@ const getAvg = function (param) {
   }
 };
 
-const assignPlayersColors =  function () {
+const assignPlayersColors = function () {
   const playerColors = [
     "#0ea5e9",
     "#f87171",
@@ -402,7 +404,7 @@ const assignPlayersColors =  function () {
       },
     });
   });
-}
+};
 
 function getCoefficientOfVariation(array) {
   const n = array.length;
