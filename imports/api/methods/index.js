@@ -1,2 +1,0 @@
-import "./games";
-import "./players";

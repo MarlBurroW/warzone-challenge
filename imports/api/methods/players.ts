@@ -1,17 +1,22 @@
-import { check } from "meteor/check";
-import Players from "../collections/Players.js";
+import { Document } from 'bson';
+import { check } from 'meteor/check';
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import { Players } from '../collections/Players';
 import {
   updatePlayerScores,
   computeGames,
   assignPlayersColors,
-} from "../utils.js";
+} from '../utils';
 
 Meteor.methods({
-  createPlayer(nickname) {
+  createPlayer(nickname: string) {
     check(nickname, String);
 
     const player = Players.insert({
-      nickname,
+      createdAt: new Date(),
+      rank: 0,
+      nickname: nickname,
       lastGameKills: 0,
       level: 0,
       totalKills: 0,
@@ -26,7 +31,7 @@ Meteor.methods({
       topPlayer: 0,
       star: 0,
       active: true,
-      color: "#000000",
+      color: '#000000',
       coefficientOfVariation: 0,
       currentSessionStandardDeviation: 0,
     });
@@ -35,11 +40,14 @@ Meteor.methods({
     return player;
   },
 
-  deletePlayer(id) {
+  deletePlayer(id: string | Mongo.ObjectID | Mongo.Selector<Document>) {
     Players.remove(id);
     assignPlayersColors();
   },
-  updatePlayerActiveStatus(playerId, active) {
+  updatePlayerActiveStatus(
+    playerId: string | Mongo.ObjectID | Mongo.Selector<Document>,
+    active: boolean
+  ) {
     Players.update(playerId, {
       $set: {
         active: active,
@@ -50,4 +58,3 @@ Meteor.methods({
     computeGames();
   },
 });
-console.log("Player methods registered");

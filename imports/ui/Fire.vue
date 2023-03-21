@@ -1,5 +1,5 @@
 <template>
   <div class="fire">
-    <div class="particle" v-for="index in 50" :key="index"></div>
+    <div v-for="index in 50" :key="index" class="particle"></div>
   </div>
 </template>

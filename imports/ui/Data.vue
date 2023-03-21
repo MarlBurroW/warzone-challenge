@@ -4,15 +4,15 @@
 
     <div class="mx-auto mb-10">
       <form
-        @submit.prevent="addPlayer"
         class="flex w-[25rem] mb-10 mx-auto w-[400px]"
+        @submit.prevent="addPlayer"
       >
         <input
+          id="nickname"
+          v-model="nickname"
           class="px-5 py-2 text-white bg-zinc-500 rounded-md mr-5 ring-gray-600 focus:ring-1 grow"
           aria-label="nickname"
-          id="nickname"
           type="text"
-          v-model="nickname"
           placeholder="Nickname"
         />
 
@@ -25,18 +25,18 @@
       </form>
       <div class="flex justify-center">
         <div
+          v-for="player in players"
+          :key="player._id"
           :style="{ borderColor: player.color }"
           class="text-white border-[0.3rem] mx-2 bg-zinc-700 w-96 font-bold rounded-md p-5 mb-5 flex justify-between items-center"
-          v-for="(player, index) in players"
-          :key="player._id"
         >
           <div
-            @click="toggleActivePlayer(player)"
             :style="{
               borderColor: player.color,
               color: player.color,
             }"
             :class="`h-8 w-8 cursor-pointer rounded-md border-[1px] border-white mr-4 `"
+            @click="toggleActivePlayer(player)"
           >
             <CheckIcon v-if="player.active"></CheckIcon>
           </div>
@@ -45,8 +45,8 @@
           <div class="grow"></div>
 
           <TrashIcon
-            @click="deletePlayer(player._id)"
             class="h-5 w-5 cursor-pointer"
+            @click="deletePlayer(player._id)"
           ></TrashIcon>
         </div>
       </div>
@@ -57,14 +57,14 @@
     </h1>
     <form class="flex flex-col items-center p-5 mb-5" @submit.prevent="addGame">
       <div class="flex mb-5 gap-2 text-center w-full">
-        <div class="w-full" key="player._id" v-for="player in activePlayers">
+        <div v-for="player in activePlayers" :key="player._id" class="w-full">
           <div class="font-bold mb-2 text-white">{{ player.nickname }}</div>
           <input
+            v-model="gameScore[player._id]"
             type="number"
             class="px-5 py-5 text-white bg-zinc-500 font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
             aria-label="game_score"
             placeholder="Kills (Leave empty if not played)"
-            v-model="gameScore[player._id]"
           />
         </div>
       </div>
@@ -73,11 +73,11 @@
         <div class="">
           <div class="font-bold mb-2 text-white">Ranking</div>
           <input
+            v-model="gameRank"
             class="px-5 py-5 text-white bg-zinc-500 font-bold w-full text-center rounded-md ring-gray-600 focus:ring-1"
             type="number"
             aria-label="game_rank"
             placeholder="Ranking"
-            v-model="gameRank"
           />
         </div>
       </div>
@@ -104,16 +104,18 @@
       </div>
 
       <div>
-        <span class="mr-2">Sessions to display:</span>
-
+        <label for="displayedSessionsCount" class="mr-2"
+          >Sessions to display:</label
+        >
         <select
+          id="displayedSessionsCount"
           v-model="displayedSessionsCount"
           class="px-5 py-1 text-white bg-zinc-500 text-white"
         >
           <option
             v-for="option in displayedSessionsCountOptions"
-            :value="option.value"
             :key="option.value"
+            :value="option.value"
           >
             {{ option.text }}
           </option>
@@ -148,11 +150,11 @@
               Date
             </th>
             <th
+              v-for="player in activePlayers"
+              :key="player._id"
               scope="col"
               :style="{ backgroundColor: player.color }"
               class="w-[13rem] text-left uppercase text-center text-white p-2 font-bold"
-              v-for="(player, index) in activePlayers"
-              :key="player._id"
             >
               {{ player.nickname }}
             </th>
@@ -181,28 +183,28 @@
             </td>
 
             <td
-              class="bg-zinc-400 text-center text-white p-2 font-bold"
               v-for="player in activePlayers"
               :key="player._id"
+              class="bg-zinc-400 text-center text-white p-2 font-bold"
             >
               {{ getSessionTotalKills(session, player) }}
               ({{
                 numeral(
                   getSessionTotalKills(session, player) / session.length
-                ).format("0,0.00")
+                ).format('0,0.00')
               }}
               avg)
             </td>
 
             <td class="bg-zinc-500 text-center text-white p-2 font-bold">
-              {{ numeral(getAverageSessionRank(session)).format("0,0.00") }}
+              {{ numeral(getAverageSessionRank(session)).format('0,0.00') }}
               (avg)
             </td>
             <td class="bg-zinc-500 text-center text-white p-2 font-bold">
               {{ getSessionTotalKills(session) }}
               ({{
                 numeral(getSessionTotalKills(session) / session.length).format(
-                  "0,0.00"
+                  '0,0.00'
                 )
               }}
               avg)
@@ -210,7 +212,7 @@
             <td class="bg-zinc-500 text-center text-white p-2 font-bold"></td>
           </tr>
 
-          <tr v-for="(game, index) in session" :key="game._id" class="group">
+          <tr v-for="game in session" :key="game._id" class="group">
             <td
               class="text-center group-hover:bg-gray-600 bg-gray-700 text-center text-white p-2 items-center"
             >
@@ -222,7 +224,7 @@
               </div>
             </td>
             <td
-              v-for="(score, index) in game.scores.filter((score) => {
+              v-for="(score, index) in game.scores.filter(() => {
                 return activePlayers
                   .map((player) => player._id)
                   .includes(score.playerId);
@@ -235,20 +237,20 @@
             >
               <div class="flex">
                 <div
-                  class="grow"
                   v-if="
                     (score && score.score != null) ||
                     editedCells[game._id + '-' + score.playerId]
                   "
+                  class="grow"
                 >
                   <div
-                    class="inline text-xl"
                     v-if="!editedCells[game._id + '-' + score.playerId]"
+                    class="inline text-xl"
                   >
-                    {{ score ? score.score : "-" }}
+                    {{ score ? score.score : '-' }}
                     <span
-                      class="h-6 w-6 text-yellow-500"
                       v-if="score && score.score === game.bestNumberKill"
+                      class="h-6 w-6 text-yellow-500"
                     >
                       <StarIcon
                         class="h-6 w-6 text-yellow-400 inline"
@@ -259,6 +261,7 @@
                   </div>
                   <div v-else>
                     <form
+                      class="flex items-center"
                       @submit.prevent="
                         updateScore(
                           game._id,
@@ -266,27 +269,27 @@
                           editedValues[game._id + '-' + score.playerId]
                         )
                       "
-                      class="flex items-center"
                     >
                       <input
-                        class="bg-gray-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
                         id="`{{game._id}}-{{score.playerId}}"
+                        :ref="game._id + '-' + score.playerId"
+                        class="bg-gray-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
                         aria-label="`{{game._id}}-{{score.playerId}}"
                         type="number"
                         :value="score.score"
-                        :ref="game._id + '-' + score.playerId"
                         @input="
                           editedValues[game._id + '-' + score.playerId] =
                             $event.target.value
                         "
                       />
                       <XCircleIcon
+                        class="h-8 w-8 text-red-300 cursor-pointer"
                         @click="
                           editedCells[game._id + '-' + score.playerId] = false
                         "
-                        class="h-8 w-8 text-red-300 cursor-pointer"
                       />
                       <CheckCircleIcon
+                        class="h-8 w-8 text-green-300 cursor-pointer"
                         @click="
                           updateScore(
                             game._id,
@@ -294,15 +297,15 @@
                             editedValues[game._id + '-' + score.playerId]
                           )
                         "
-                        class="h-8 w-8 text-green-300 cursor-pointer"
                       />
                     </form>
                   </div>
                 </div>
-                <div class="grow font-normal text-white" v-else>Not played</div>
+                <div v-else class="grow font-normal text-white">Not played</div>
 
                 <PencilIcon
                   v-if="!editedCells[game._id + '-' + score.playerId]"
+                  class="h-6 w-6 text-white cursor-pointer"
                   @click="
                     ($event) => {
                       focusInput(game._id + '-' + score.playerId);
@@ -312,7 +315,6 @@
                         score.score;
                     }
                   "
-                  class="h-6 w-6 text-white cursor-pointer"
                 />
               </div>
             </td>
@@ -321,56 +323,57 @@
             >
               <div class="flex">
                 <div
-                  class="grow"
                   v-if="
                     (game && game.rank != null) ||
                     editedCells[game._id + '-rank']
                   "
+                  class="grow"
                 >
                   <div
-                    class="inline text-xl"
                     v-if="!editedCells[game._id + '-rank']"
+                    class="inline text-xl"
                   >
                     {{ game.rank }}
                     <span>{{ getRankIndicator(game.rank) }}</span>
                   </div>
                   <div v-else>
                     <form
+                      class="flex items-center"
                       @submit.prevent="
                         updateRank(game._id, editedValues[game._id + '-rank'])
                       "
-                      class="flex items-center"
                     >
                       <input
+                        :ref="game._id + '-rank'"
                         class="bg-gray-400 w-full text-center px-2 py-1 rounded-md text-white mr-2"
                         type="number"
                         aria-label="`{{game._id}}-rank"
                         :value="game.rank"
-                        :ref="game._id + '-rank'"
                         @input="
                           editedValues[game._id + '-rank'] = $event.target.value
                         "
                       />
                       <XCircleIcon
-                        @click="editedCells[game._id + '-rank'] = false"
                         class="h-8 w-8 text-red-300 cursor-pointer"
+                        @click="editedCells[game._id + '-rank'] = false"
                       />
                       <CheckCircleIcon
+                        class="h-8 w-8 text-green-300 cursor-pointer"
                         @click="
                           updateRank(game._id, editedValues[game._id + '-rank'])
                         "
-                        class="h-8 w-8 text-green-300 cursor-pointer"
                       />
                     </form>
                   </div>
                 </div>
 
-                <div class="grow font-normal text-red-400" v-else>
+                <div v-else class="grow font-normal text-red-400">
                   Not defined
                 </div>
 
                 <PencilIcon
                   v-if="!editedCells[game._id + '-rank']"
+                  class="h-6 w-6 text-white cursor-pointer"
                   @click="
                     ($event) => {
                       focusInput(game._id + '-rank');
@@ -379,7 +382,6 @@
                       editedValues[game._id + '-rank'] = game.rank;
                     }
                   "
-                  class="h-6 w-6 text-white cursor-pointer"
                 />
               </div>
             </td>
@@ -406,14 +408,14 @@
                 </button>
 
                 <button
-                  @click="toggleActiveGame(game)"
                   :class="`${
                     game.active
                       ? 'bg-green-500 hover:bg-green-400'
                       : 'bg-zinc-600 hover:zinc-500'
                   }  px-5 py-2  text-white transition-all`"
+                  @click="toggleActiveGame(game)"
                 >
-                  {{ game.active ? "Active" : "Disabled" }}
+                  {{ game.active ? 'Active' : 'Disabled' }}
                 </button>
               </div>
             </td>
@@ -424,44 +426,61 @@
   </div>
 </template>
 
-<script setup>
-import numeral from "numeral";
+<script setup lang="ts">
+import numeral from 'numeral';
 import {
-  PencilIcon,
   CheckCircleIcon,
   CheckIcon,
-  XCircleIcon,
   ClockIcon,
-  XMarkIcon,
-  TrashIcon,
+  PencilIcon,
   StarIcon,
-} from "@heroicons/vue/24/solid";
-import tinycolor from "tinycolor2";
+  TrashIcon,
+  XCircleIcon,
+} from '@heroicons/vue/24/solid';
+import tinycolor from 'tinycolor2';
 </script>
 
-<script>
-import dataMixin from "./data-mixin.js";
+<script lang="ts">
+import { defineComponent } from 'vue';
+import dataMixin from './data-mixin';
+import { Meteor } from 'meteor/meteor';
+import { Player } from '../api/collections/Players';
+import { Game, Score } from '../api/collections/Games';
 
-export default {
+export default defineComponent({
   mixins: [dataMixin],
+  data() {
+    return {
+      nickname: '',
+      gameScore: {},
+      gameRank: null,
+      editedCells: {},
+      editedValues: {},
+      activeGames: true,
+      displayedSessionsCount: 1,
+      displayedSessionsCountOptions: [
+        { text: 'Only latest', value: 1 },
+        { text: '3 Latest', value: 3 },
+        { text: '6 Latest', value: 6 },
+        { text: '9 Latest', value: 9 },
+        { text: '12 Latest', value: 12 },
+        { text: 'All (not recommanded)', value: Infinity },
+      ],
+    };
+  },
   computed: {
     limitedGroupedGames() {
       // Get latest element in this.groupedComputedGames limited by this.displayedSessionsCount
-
-      const latestGroupedGames = this.groupedComputedGames.slice(
-        -this.displayedSessionsCount
-      );
-
-      return latestGroupedGames;
+      return this.groupedComputedGames.slice(-this.displayedSessionsCount);
     },
   },
   methods: {
-    getSessionTotalKills(session, player) {
+    getSessionTotalKills(session: any[], player: Player) {
       let totalKills = 0;
       if (player) {
         for (const game of session) {
           const playerScore = game.scores.find(
-            (s) => s.playerId === player._id
+            (s: { playerId: string }) => s.playerId === player._id
           );
           if (playerScore && playerScore.score) {
             totalKills += Number(playerScore.score);
@@ -478,7 +497,7 @@ export default {
       }
       return totalKills;
     },
-    getAverageSessionRank(session) {
+    getAverageSessionRank(session: string | any[]) {
       let result = null;
       if (session && session.length > 0) {
         let totalRank = 0;
@@ -494,91 +513,74 @@ export default {
       }
       return result;
     },
-    focusInput(ref) {
+    focusInput(ref: string | number) {
       setTimeout(() => {
         // Focus and select the input
         this.$refs[ref][0].focus();
         this.$refs[ref][0].select();
       }, 1);
     },
-    updateScore(gameId, playerId, score) {
-      Meteor.call("updateGameScore", gameId, playerId, score);
+    updateScore(gameId: string, playerId: string, score: number) {
+      Meteor.call('updateGameScore', gameId, playerId, score);
       this.editedCells[`${gameId}-${playerId}`] = false;
     },
-    updateRank(gameId, rank) {
-      Meteor.call("updateGameRank", gameId, rank);
-      this.editedCells[gameId + "-rank"] = false;
+    updateRank(gameId: string, rank: number) {
+      Meteor.call('updateGameRank', gameId, rank);
+      this.editedCells[gameId + '-rank'] = false;
     },
-    getHotIndicator(kills) {
+    getHotIndicator(kills: number): string {
       switch (true) {
         case kills >= 12:
-          return "🔥🔥🔥";
+          return '🔥🔥🔥';
         case kills >= 9:
-          return "🔥🔥";
+          return '🔥🔥';
         case kills >= 6:
-          return "🔥";
+          return '🔥';
         case kills <= 1:
-          return "💩";
+          return '💩';
         case kills <= 2:
-          return "🤢";
+          return '🤢';
         default:
-          return "";
+          return '';
       }
     },
 
-    deleteGame(gameId) {
-      if (confirm("Êtes-vous sûr de vouloir supprimer cette partie ?")) {
-        Meteor.call("deleteGame", gameId);
+    deleteGame(gameId: string) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette partie ?')) {
+        Meteor.call('deleteGame', gameId);
       }
     },
     addGame() {
-      Meteor.call("createGame", this.gameScore, this.gameRank);
+      console.log('addGame', this.gameScore);
+      const score: Score[] = this.gameScore;
+      Meteor.call('createGame', score, this.gameRank);
       this.gameScore = {};
       this.gameRank = null;
     },
-    deletePlayer(playerId) {
-      if (confirm("Êtes-vous sûr de vouloir supprimer ce joueur ?")) {
+    deletePlayer(playerId: string) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer ce joueur ?')) {
         this.gameScore = {};
-        Meteor.call("deletePlayer", playerId);
+        Meteor.call('deletePlayer', playerId);
       }
     },
 
     addPlayer() {
-      if (!this.nickname.length < 1) {
-        Meteor.call("createPlayer", this.nickname);
-        this.nickname = "";
+      if (this.nickname.length >= 1) {
+        Meteor.call('createPlayer', this.nickname);
+        this.nickname = '';
       }
     },
 
-    toggleActivePlayer(player) {
-      Meteor.call("updatePlayerActiveStatus", player._id, !!!player.active);
+    toggleActivePlayer(player: Player) {
+      Meteor.call('updatePlayerActiveStatus', player._id, !player.active);
     },
-    toggleActiveGame(game) {
-      Meteor.call("updateGameActiveStatus", game._id, !!!game.active);
+    toggleActiveGame(game: Game) {
+      Meteor.call('updateGameActiveStatus', game._id, !game.active);
     },
     toggleActiveGames() {
-      Meteor.call("updateGamesActiveStatus", !this.activeGames);
+      Meteor.call('updateGamesActiveStatus', !this.activeGames);
       this.activeGames = !this.activeGames;
     },
   },
-  data() {
-    return {
-      nickname: "",
-      gameScore: {},
-      gameRank: null,
-      editedCells: {},
-      editedValues: {},
-      activeGames: true,
-      displayedSessionsCount: 1,
-      displayedSessionsCountOptions: [
-        { text: "Only latest", value: 1 },
-        { text: "3 Latest", value: 3 },
-        { text: "6 Latest", value: 6 },
-        { text: "9 Latest", value: 9 },
-        { text: "12 Latest", value: 12 },
-        { text: "All (not recommanded)", value: Infinity },
-      ],
-    };
-  },
-};
+});
 </script>

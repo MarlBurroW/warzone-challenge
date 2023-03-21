@@ -1,14 +1,13 @@
-import Games from "../api/collections/Games";
-import Players from "../api/collections/Players";
-import _ from "lodash";
-import moment from "moment";
+import { Games, IComputedGame, IComputedScore } from '../api/collections/Games';
+import { Players, Player } from '../api/collections/Players';
+import { ComponentOptionsMixin } from 'vue';
+import _, { toArray } from 'lodash';
 
-export default {
-  data() {
-    return {
-      activeOnly: false,
-    };
-  },
+export interface IDataMixin extends ComponentOptionsMixin {
+  activeOnly: boolean;
+}
+const dataMixin: IDataMixin = {
+  activeOnly: false,
   meteor: {
     $subscribe: {
       games: [],
@@ -29,89 +28,78 @@ export default {
     },
   },
   methods: {
-    getRankIndicator(rank) {
+    getRankIndicator(rank: number): string {
       switch (rank) {
         case 1:
-          return "🥇";
+          return '🥇';
         case 2:
-          return "🥈";
+          return '🥈';
         case 3:
-          return "🥉";
+          return '🥉';
         default:
-          return "";
+          return '';
       }
     },
-    getPlayerColorByPlayerId(playerId) {
-      const player = this.players.find((player) => {
+    getPlayerColorByPlayerId(playerId: string): string {
+      const player = this.players.find((player: { _id: string }) => {
         return player._id === playerId;
       });
 
-      return player ? player.color : "#000000";
+      return player ? player.color : '#000000';
     },
   },
   computed: {
-    groupedComputedGames() {
+    groupedComputedGames(): { [sessionId: string]: IComputedGame[] } {
       // return computedGames grouped by sessionId in an array
-
-      const groupedGames = _.groupBy(this.computedGames, "sessionId");
-
-      const groupedGamesArray = [];
-
-      for (let key in groupedGames) {
-        groupedGamesArray.push(groupedGames[key]);
-      }
-
-      return groupedGamesArray;
+      return _.groupBy(this.computedGames, 'sessionId');
     },
     computedGames() {
-      const games = [];
+      const games: IComputedGame[] = [];
 
       const allGames = this.activeOnly ? this.activeGames : this.games;
-
       for (let i = 0; i < allGames.length; i++) {
         const game = allGames[i];
-
-        const computedGame = {
+        const computedGame: IComputedGame = {
           _id: game._id,
           sessionId: game.sessionId,
-          scores: [],
-          date:
-            moment(game.createdAt).format("DD/MM HH:mm") +
-            " (" +
-            moment(game.createdAt).fromNow() +
-            ")",
           createdAt: game.createdAt,
+          scores: [] as IComputedScore[],
           rank: game.rank,
-          bestNumberKill: null,
+          bestNumberKill: 0,
           active: game.active,
         };
-
         for (let j = 0; j < this.players.length; j++) {
           const player = this.players[j];
-          computedGame.scores.push({
-            score: game.scores.hasOwnProperty(player._id)
+
+          const score: IComputedScore = {
+            score: Object.prototype.hasOwnProperty.call(game.scores, player._id)
               ? game.scores[player._id]
               : null,
             nickname: player.nickname,
             playerId: player._id,
-          });
+          };
+          computedGame.scores.push(score);
 
           // Find the best number of kills
-
-          if (
+          // TODO: find a better way to do this
+          /* if (
             !computedGame.bestNumberKill ||
             computedGame.bestNumberKill < game.scores[player._id]
           ) {
             computedGame.bestNumberKill = game.scores[player._id];
-          }
+          }*/
         }
 
         games.push(computedGame);
       }
 
       return games.sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
       });
     },
   },
 };
+
+export default dataMixin;
