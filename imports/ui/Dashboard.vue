@@ -17,26 +17,23 @@
           :style="{ borderColor: player.color }"
           class="bg-zinc-800 shadow-xl border-t-8 w-[29rem] relative p-2 m-2 mb-10 rounded-md flex flex-col text-center justify-between text-white px-12 py-10"
         >
-          <video
+          <img
             v-if="isOnFire(player)"
-            autoplay
-            class="absolute w-full opacity-20 left-0 right-0 top-0 bottom-0 z-0 h-full object-cover"
-            loop
-            muted
-          >
-            <source src="/videos/fire.webm" type="video/webm" />
-          </video>
+            src="/images/fire.gif"
+            class="absolute -top-[2rem] w-[22rem]"
+          />
+
           <img
             alt="mmr_logo"
             class="absolute pointer-events-none z-0 opacity-10 w-full left-0 right-0 select-none"
             :src="getMmrLogo(player.level)"
           />
-          <div
+          <!-- <div
             v-if="isOnFire(player)"
             class="absolute flex justify-center w-full left-0 right-0 -top-20"
-          >
-            <fire></fire>
-          </div>
+          > -->
+          <!-- <fire></fire> -->
+          <!-- </div> -->
 
           <div class="z-10">
             <div class="flex flex-col">
@@ -61,7 +58,9 @@
               </div>
               <div class="mb-5 flex justify-center">
                 <img
-                  class="w-34 h-34 brightness-130 pointer-events-none select-none"
+                  :class="`${
+                    isOnFire(player) ? 'hot-mmr-logo' : ''
+                  } w-[12rem] h-[12rem] brightness-130 pointer-events-none select-none`"
                   alt="mmr_logo"
                   :src="getMmrLogo(player.level)"
                 />
@@ -351,7 +350,7 @@
       </h1>
 
       <div
-        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+        class="bg-zinc-800 relative flex-1 min-w-[300px] p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-thin text-2xl text-center mb-5">
           Stacked players kills / current session games
@@ -365,9 +364,8 @@
           />
         </div>
       </div>
-
       <div
-        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+        class="bg-zinc-800 relative flex-1 min-w-[300px] p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-thin text-2xl text-center mb-5">
           Players kills during current session
@@ -381,7 +379,7 @@
         </div>
       </div>
       <div
-        class="bg-zinc-800 p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
+        class="bg-zinc-800 relative flex-1 min-w-[300px] p-10 max-w-[80rem] mx-auto rounded-xl shadow-xl mb-10 border-t-8 border-[#7ec92e]"
       >
         <h1 class="text-white font-thin text-2xl text-center mb-5">
           Current session kills repartition
@@ -669,7 +667,7 @@ export default defineComponent({
           labels: [...sessions.map((session, index) => `Session ${index + 1}`)],
           datasets: [
             {
-              label: 'Team average kills per session',
+              label: "Team avg kills",
               data: sessions.map((session) => {
                 return (
                   session
@@ -788,7 +786,7 @@ export default defineComponent({
           labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
           datasets: [
             {
-              label: 'Global team ranks',
+              label: "Team average rank",
               data: sessions.map((session) => {
                 return (
                   session
@@ -826,29 +824,39 @@ export default defineComponent({
         },
         currentSessionTeamRanks: {
           labels: [
-            ...latestSession.map(
-              (g, index) => `Game ${index + 1} ${this.getRankIndicator(g.rank)}`
-            ),
+            ...latestSession
+              .slice()
+              .reverse()
+              .map(
+                (g, index) =>
+                  `Game ${index + 1} ${this.getRankIndicator(g.rank)}`
+              ),
           ],
           datasets: [
             {
-              label: 'Current session team ranks',
-              data: latestSession.map((g: { rank: number }) => {
-                return g.rank;
-              }),
-              backgroundColor: latestSession.map((g: { rank: number }) => {
-                if (g.rank === 1) {
-                  return '#fde047';
-                } else if (g.rank === 2) {
-                  return '#a3e635';
-                } else if (g.rank === 3) {
-                  return '#a3e635';
-                } else if (g.rank > 10) {
-                  return '#dc2626';
-                } else {
-                  return 'rgba(108, 117, 125, 0.50)';
-                }
-              }),
+              label: "Team rank",
+              data: latestSession
+                .slice()
+                .reverse()
+                .map((g) => {
+                  return g.rank;
+                }),
+              backgroundColor: latestSession
+                .slice()
+                .reverse()
+                .map((g) => {
+                  if (g.rank === 1) {
+                    return "#fde047";
+                  } else if (g.rank === 2) {
+                    return "#a3e635";
+                  } else if (g.rank === 3) {
+                    return "#a3e635";
+                  } else if (g.rank > 10) {
+                    return "#dc2626";
+                  } else {
+                    return "rgba(108, 117, 125, 0.50)";
+                  }
+                }),
 
               borderWidth: 1,
             },
