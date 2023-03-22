@@ -1,2 +1,2 @@
-import './games';
-import './players';
+import './games'
+import './players'

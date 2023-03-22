@@ -496,202 +496,383 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ArrowDownRightIcon,
-  ArrowRightIcon,
-  ArrowUpRightIcon,
-  StarIcon,
-  InformationCircleIcon,
-} from '@heroicons/vue/24/solid';
-import tinycolor from 'tinycolor2';
+  import {
+    ArrowDownRightIcon,
+    ArrowRightIcon,
+    ArrowUpRightIcon,
+    StarIcon,
+    InformationCircleIcon,
+  } from '@heroicons/vue/24/solid'
+  import tinycolor from 'tinycolor2'
 </script>
 
 <script lang="ts">
-import dataMixin from './data-mixin';
-import { IComputedScore } from '../api/collections/Games';
-import { Player } from '../api/collections/Players';
-import { defineComponent } from 'vue';
-import { Bar, Line, Doughnut } from 'vue-chartjs';
-import 'chart.js/auto';
-import numeral from 'numeral';
-import Fire from './Fire.vue';
+  import dataMixin from './data-mixin'
+  import { IComputedScore } from '../api/collections/Games'
+  import { Player } from '../api/collections/Players'
+  import { defineComponent } from 'vue'
+  import { Bar, Line, Doughnut } from 'vue-chartjs'
+  import 'chart.js/auto'
+  import numeral from 'numeral'
+  import Fire from './Fire.vue'
 
-numeral.locale('fr');
+  numeral.locale('fr')
 
-export default defineComponent({
-  components: { Bar, Line, Doughnut, Fire },
-  mixins: [dataMixin],
-  data() {
-    return {
-      activeOnly: true,
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: true,
-        scales: {
-          y: {
-            ticks: { color: 'white', beginAtZero: true },
+  export default defineComponent({
+    components: { Bar, Line, Doughnut, Fire },
+    mixins: [dataMixin],
+    data() {
+      return {
+        activeOnly: true,
+        chartOptions: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: true,
+          scales: {
+            y: {
+              ticks: { color: 'white', beginAtZero: true },
+            },
+            x: {
+              ticks: { color: 'white', beginAtZero: true },
+            },
           },
-          x: {
-            ticks: { color: 'white', beginAtZero: true },
-          },
-        },
-        plugins: {
-          legend: {
-            labels: {
-              color: 'white',
+          plugins: {
+            legend: {
+              labels: {
+                color: 'white',
 
-              font: {
-                size: 15,
+                font: {
+                  size: 15,
+                },
               },
             },
           },
         },
-      },
-      stackedChartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: true,
-        scales: {
-          y: {
-            ticks: { color: 'white', beginAtZero: true },
-            stacked: true,
+        stackedChartOptions: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: true,
+          scales: {
+            y: {
+              ticks: { color: 'white', beginAtZero: true },
+              stacked: true,
+            },
+            x: {
+              ticks: { color: 'white', beginAtZero: true },
+              stacked: true,
+            },
           },
-          x: {
-            ticks: { color: 'white', beginAtZero: true },
-            stacked: true,
-          },
-        },
-        plugins: {
-          legend: {
-            labels: {
-              color: 'white',
+          plugins: {
+            legend: {
+              labels: {
+                color: 'white',
 
-              font: {
-                size: 15,
+                font: {
+                  size: 15,
+                },
               },
             },
           },
         },
-      },
-    };
-  },
-
-  computed: {
-    currentSessionMaxPlayerKill() {
-      const currentSession : any[] = this.groupedComputedGames[this.groupedComputedGames.length - 1];
-
-      // Iterate over all score and find the max
-
-      return currentSession.reduce((accGame, game) => {
-        const maxGameScore = game.scores.reduce((accScore, score) => {
-          return Math.max(accScore, score.score);
-        }, 0);
-
-        return Math.max(accGame, maxGameScore);
-      }, 0);
+      }
     },
 
-    globalChartData() {
-      const sessions : [] = this.groupedComputedGames;
-      const latestSession = this.currentSession ? this.currentSession : [];
-      const latestSessionKills = latestSession
-        .slice()
-        .reverse()
-        .map((g) => {
-          return g.scores.reduce(
-            (acc, s) => Number(acc) + Number(s.score, 0),
-            0
-          );
-        });
+    computed: {
+      currentSessionMaxPlayerKill() {
+        const currentSession: any[] =
+          this.groupedComputedGames[this.groupedComputedGames.length - 1]
 
-      return {
-        latestSessionKills: {
-          labels: [
-            ...latestSessionKills.map((_s, index) => `Game ${index + 1}`),
-          ],
-          datasets: [
-            {
-              label: 'Latest session team kills',
-              data: latestSessionKills,
-              backgroundColor: 'rgba(25, 255, 25, 0.2)',
-              borderColor: 'rgba(25, 255, 25, 1)',
-              borderWidth: 1,
-            },
-          ],
-        },
-        globalKillsRepartition: {
-          labels: this.activePlayers.map(
-            (p: { nickname: string }) => p.nickname
-          ),
-          datasets: [
-            {
-              data: this.activePlayers.map((p: { _id: string }) => {
-                return this.computedGames.reduce((acc, g) => {
-                  const score = g.scores.find(
-                    (s: { playerId: string }) => s.playerId === p._id
-                  );
-                  return Number(acc) + Number(score ? score.score : 0);
-                }, 0);
-              }),
-              backgroundColor: this.activePlayers.map(
-                (p: { color: string }) => p.color
-              ),
-            },
-          ],
-        },
-        currentSessionKillsRepartition: {
-          labels: this.activePlayers.map(
-            (p: { nickname: string }) => p.nickname
-          ),
-          datasets: [
-            {
-              data: this.activePlayers.map((p: { _id: string }) => {
-                return latestSession.reduce(
-                  (acc: number, g: { scores: IComputedScore[] }) => {
-                    const score = g.scores.find((s) => s.playerId === p._id);
-                    return Number(acc) + Number(score ? score.score : 0);
-                  },
-                  0
-                );
-              }),
-              backgroundColor: this.activePlayers.map(
-                (p: { color: string }) => p.color
-              ),
-            },
-          ],
-        },
+        // Iterate over all score and find the max
 
-        teamAverageKillsPerSession: {
-          labels: sessions ? [...sessions.map((session, index) => `Session ${index + 1}`)] : [],
-          datasets: [
-            {
-              label: "Team avg kills",
-              data: sessions ? sessions.map((session) => {
-                return (
-                  session
-                    .map((g) => {
-                      return g.scores.reduce(
-                        (acc, s) => Number(acc) + Number(s.score),
-                        0
-                      );
+        return currentSession.reduce((accGame, game) => {
+          const maxGameScore = game.scores.reduce((accScore, score) => {
+            return Math.max(accScore, score.score)
+          }, 0)
+
+          return Math.max(accGame, maxGameScore)
+        }, 0)
+      },
+
+      globalChartData() {
+        const sessions: [] = this.groupedComputedGames
+        const latestSession = this.currentSession ? this.currentSession : []
+        const latestSessionKills = latestSession
+          .slice()
+          .reverse()
+          .map((g) => {
+            return g.scores.reduce(
+              (acc, s) => Number(acc) + Number(s.score, 0),
+              0
+            )
+          })
+
+        return {
+          latestSessionKills: {
+            labels: [
+              ...latestSessionKills.map((_s, index) => `Game ${index + 1}`),
+            ],
+            datasets: [
+              {
+                label: 'Latest session team kills',
+                data: latestSessionKills,
+                backgroundColor: 'rgba(25, 255, 25, 0.2)',
+                borderColor: 'rgba(25, 255, 25, 1)',
+                borderWidth: 1,
+              },
+            ],
+          },
+          globalKillsRepartition: {
+            labels: this.activePlayers.map(
+              (p: { nickname: string }) => p.nickname
+            ),
+            datasets: [
+              {
+                data: this.activePlayers.map((p: { _id: string }) => {
+                  return this.computedGames.reduce((acc, g) => {
+                    const score = g.scores.find(
+                      (s: { playerId: string }) => s.playerId === p._id
+                    )
+                    return Number(acc) + Number(score ? score.score : 0)
+                  }, 0)
+                }),
+                backgroundColor: this.activePlayers.map(
+                  (p: { color: string }) => p.color
+                ),
+              },
+            ],
+          },
+          currentSessionKillsRepartition: {
+            labels: this.activePlayers.map(
+              (p: { nickname: string }) => p.nickname
+            ),
+            datasets: [
+              {
+                data: this.activePlayers.map((p: { _id: string }) => {
+                  return latestSession.reduce(
+                    (acc: number, g: { scores: IComputedScore[] }) => {
+                      const score = g.scores.find((s) => s.playerId === p._id)
+                      return Number(acc) + Number(score ? score.score : 0)
+                    },
+                    0
+                  )
+                }),
+                backgroundColor: this.activePlayers.map(
+                  (p: { color: string }) => p.color
+                ),
+              },
+            ],
+          },
+
+          teamAverageKillsPerSession: {
+            labels: sessions
+              ? [...sessions.map((session, index) => `Session ${index + 1}`)]
+              : [],
+            datasets: [
+              {
+                label: 'Team avg kills',
+                data: sessions
+                  ? sessions.map((session) => {
+                      return (
+                        session
+                          .map((g) => {
+                            return g.scores.reduce(
+                              (acc, s) => Number(acc) + Number(s.score),
+                              0
+                            )
+                          })
+                          .reduce((acc, s) => Number(acc) + Number(s), 0) /
+                        session.length
+                      )
                     })
-                    .reduce((acc, s) => Number(acc) + Number(s), 0) /
-                  session.length
-                );
-              }) : [],
-              backgroundColor: 'rgba(16, 185, 129, 0.50)',
+                  : [],
+                backgroundColor: 'rgba(16, 185, 129, 0.50)',
 
-              borderWidth: 1,
-            },
-          ],
+                borderWidth: 1,
+              },
+            ],
+          },
 
-        },
+          sessionsPlayerAvgKillsPerSession: {
+            labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
+            datasets: [
+              ...this.activePlayers.map((p, index) => {
+                return {
+                  label: p.nickname,
+                  cubicInterpolationMode: 'monotone',
+                  tension: 0.4,
+                  pointRadius: 5,
+                  pointHoverRadius: 15,
+                  pointHitRadius: 30,
+                  pointStyle: 'circle',
+                  data: sessions.map((session) => {
+                    const playerSessionGames = session.filter((g) => {
+                      return g.scores.find(
+                        (s) => s.playerId === p._id && s.score !== null
+                      )
+                    })
 
-        sessionsPlayerAvgKillsPerSession: {
-          labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
-          datasets: [
-            ...this.activePlayers.map((p, index) => {
+                    const playerSessionGameCount = playerSessionGames.length
+
+                    if (playerSessionGameCount === 0) {
+                      return null
+                    }
+
+                    return (
+                      playerSessionGames
+                        .map((g) => {
+                          const score = g.scores.find(
+                            (s) => s.playerId === p._id
+                          )
+                          return score && score.score !== null
+                            ? score.score
+                            : null
+                        })
+                        .reduce((acc, s) => Number(acc) + Number(s), 0) /
+                      playerSessionGameCount
+                    )
+                  }),
+                  backgroundColor: p.color,
+                  borderColor: p.color,
+                  borderWidth: 4,
+                  pointBorderWidth: 0,
+                }
+              }),
+            ],
+          },
+
+          playersSessionKills: {
+            labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
+            datasets: this.activePlayers.map((p, index) => {
+              return {
+                label: p.nickname,
+
+                data: sessions.map((session) => {
+                  return session
+                    .map((g) => {
+                      const score = g.scores.find((s) => s.playerId === p._id)
+                      return score ? score.score : 0
+                    })
+                    .reduce((acc, s) => Number(acc) + Number(s), 0)
+                }),
+                backgroundColor: p.color,
+                borderColor: p.color,
+                borderWidth: 1,
+              }
+            }),
+          },
+
+          stackedPlayersCurrentSessionKills: {
+            labels: [
+              ...latestSessionKills.map((_s, index) => `Game ${index + 1}`),
+            ],
+
+            datasets: this.activePlayers.map((p, index) => {
+              return {
+                label: p.nickname,
+
+                data: latestSession
+                  .slice()
+                  .reverse()
+                  .map((g) => {
+                    const score = g.scores.find(
+                      (s: { playerId: string }) => s.playerId === p._id
+                    )
+                    return score ? score.score : 0
+                  }),
+                backgroundColor: p.color,
+                borderColor: p.color,
+                borderWidth: 4,
+              }
+            }),
+          },
+
+          globalTeamRanks: {
+            labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
+            datasets: [
+              {
+                label: 'Team average rank',
+                data: sessions.map((session) => {
+                  return (
+                    session
+                      .map((g: { rank: number }) => {
+                        return g.rank
+                      })
+                      .reduce((acc: number, s: number) => acc + s, 0) /
+                    session.length
+                  )
+                }),
+                backgroundColor: sessions.map((session) => {
+                  const avgRank =
+                    session
+                      .map((g) => {
+                        return g.rank
+                      })
+                      .reduce((acc: number, s: number) => acc + s, 0) /
+                    session.length
+
+                  if (avgRank === 1) {
+                    return '#fde047'
+                  } else if (avgRank === 2) {
+                    return '#a3e635'
+                  } else if (avgRank === 3) {
+                    return '#a3e635'
+                  } else if (avgRank > 10) {
+                    return '#dc2626'
+                  } else {
+                    return 'rgba(108, 117, 125, 0.50)'
+                  }
+                }),
+                borderWidth: 1,
+              },
+            ],
+          },
+          currentSessionTeamRanks: {
+            labels: [
+              ...latestSession
+                .slice()
+                .reverse()
+                .map(
+                  (g, index) =>
+                    `Game ${index + 1} ${this.getRankIndicator(g.rank)}`
+                ),
+            ],
+            datasets: [
+              {
+                label: 'Team rank',
+                data: latestSession
+                  .slice()
+                  .reverse()
+                  .map((g) => {
+                    return g.rank
+                  }),
+                backgroundColor: latestSession
+                  .slice()
+                  .reverse()
+                  .map((g) => {
+                    if (g.rank === 1) {
+                      return '#fde047'
+                    } else if (g.rank === 2) {
+                      return '#a3e635'
+                    } else if (g.rank === 3) {
+                      return '#a3e635'
+                    } else if (g.rank > 10) {
+                      return '#dc2626'
+                    } else {
+                      return 'rgba(108, 117, 125, 0.50)'
+                    }
+                  }),
+
+                borderWidth: 1,
+              },
+            ],
+          },
+
+          playersCurrentSessionKills: {
+            labels: [
+              ...latestSessionKills.map((_s, index) => `Game ${index + 1}`),
+            ],
+
+            datasets: this.activePlayers.map((p, index) => {
               return {
                 label: p.nickname,
                 cubicInterpolationMode: 'monotone',
@@ -700,403 +881,227 @@ export default defineComponent({
                 pointHoverRadius: 15,
                 pointHitRadius: 30,
                 pointStyle: 'circle',
-                data: sessions.map((session) => {
-                  const playerSessionGames = session.filter((g) => {
-                    return g.scores.find(
-                      (s) => s.playerId === p._id && s.score !== null
-                    );
-                  });
+                data: latestSession
+                  .slice()
+                  .reverse()
 
-                  const playerSessionGameCount = playerSessionGames.length;
+                  .map((g) => {
+                    const score = g.scores.find(
+                      (s: { playerId: string }) => s.playerId === p._id
+                    )
 
-                  if (playerSessionGameCount === 0) {
-                    return null;
-                  }
-
-                  return (
-                    playerSessionGames
-                      .map((g) => {
-                        const score = g.scores.find(
-                          (s) => s.playerId === p._id
-                        );
-                        return score && score.score !== null
-                          ? score.score
-                          : null;
-                      })
-                      .reduce((acc, s) => Number(acc) + Number(s), 0) /
-                    playerSessionGameCount
-                  );
-                }),
+                    if (score && score.score !== null) {
+                      return score.score
+                    } else {
+                      return null
+                    }
+                  }),
                 backgroundColor: p.color,
+
                 borderColor: p.color,
+                pointBackgroundColor: p.color,
                 borderWidth: 4,
                 pointBorderWidth: 0,
-              };
+              }
             }),
-          ],
-        },
+          },
+        }
+      },
 
-        playersSessionKills: {
-          labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
-          datasets: this.activePlayers.map((p, index) => {
-            return {
-              label: p.nickname,
+      maxKg() {
+        const data = Object.values(this.playerChartData)
 
-              data: sessions.map((session) => {
-                return session
-                  .map((g) => {
-                    const score = g.scores.find((s) => s.playerId === p._id);
-                    return score ? score.score : 0;
-                  })
-                  .reduce((acc, s) => Number(acc) + Number(s), 0);
-              }),
-              backgroundColor: p.color,
-              borderColor: p.color,
-              borderWidth: 1,
-            };
-          }),
-        },
-
-        stackedPlayersCurrentSessionKills: {
-          labels: [
-            ...latestSessionKills.map((_s, index) => `Game ${index + 1}`),
-          ],
-
-          datasets: this.activePlayers.map((p, index) => {
-            return {
-              label: p.nickname,
-
-              data: latestSession
-                .slice()
-                .reverse()
-                .map((g) => {
-                  const score = g.scores.find(
-                    (s: { playerId: string }) => s.playerId === p._id
-                  );
-                  return score ? score.score : 0;
-                }),
-              backgroundColor: p.color,
-              borderColor: p.color,
-              borderWidth: 4,
-            };
-          }),
-        },
-
-        globalTeamRanks: {
-          labels: [...sessions.map((_s, index) => `Session ${index + 1}`)],
-          datasets: [
-            {
-              label: "Team average rank",
-              data: sessions.map((session) => {
-                return (
-                  session
-                    .map((g: { rank: number }) => {
-                      return g.rank;
-                    })
-                    .reduce((acc: number, s: number) => acc + s, 0) /
-                  session.length
-                );
-              }),
-              backgroundColor: sessions.map((session) => {
-                const avgRank =
-                  session
-                    .map((g) => {
-                      return g.rank;
-                    })
-                    .reduce((acc: number, s: number) => acc + s, 0) /
-                  session.length;
-
-                if (avgRank === 1) {
-                  return '#fde047';
-                } else if (avgRank === 2) {
-                  return '#a3e635';
-                } else if (avgRank === 3) {
-                  return '#a3e635';
-                } else if (avgRank > 10) {
-                  return '#dc2626';
-                } else {
-                  return 'rgba(108, 117, 125, 0.50)';
-                }
-              }),
-              borderWidth: 1,
-            },
-          ],
-        },
-        currentSessionTeamRanks: {
-          labels: [
-            ...latestSession
-              .slice()
-              .reverse()
-              .map(
-                (g, index) =>
-                  `Game ${index + 1} ${this.getRankIndicator(g.rank)}`
-              ),
-          ],
-          datasets: [
-            {
-              label: "Team rank",
-              data: latestSession
-                .slice()
-                .reverse()
-                .map((g) => {
-                  return g.rank;
-                }),
-              backgroundColor: latestSession
-                .slice()
-                .reverse()
-                .map((g) => {
-                  if (g.rank === 1) {
-                    return "#fde047";
-                  } else if (g.rank === 2) {
-                    return "#a3e635";
-                  } else if (g.rank === 3) {
-                    return "#a3e635";
-                  } else if (g.rank > 10) {
-                    return "#dc2626";
-                  } else {
-                    return "rgba(108, 117, 125, 0.50)";
-                  }
-                }),
-
-              borderWidth: 1,
-            },
-          ],
-        },
-
-        playersCurrentSessionKills: {
-          labels: [
-            ...latestSessionKills.map((_s, index) => `Game ${index + 1}`),
-          ],
-
-          datasets: this.activePlayers.map((p, index) => {
-            return {
-              label: p.nickname,
-              cubicInterpolationMode: 'monotone',
-              tension: 0.4,
-              pointRadius: 5,
-              pointHoverRadius: 15,
-              pointHitRadius: 30,
-              pointStyle: 'circle',
-              data: latestSession
-                .slice()
-                .reverse()
-
-                .map((g) => {
-                  const score = g.scores.find(
-                    (s: { playerId: string }) => s.playerId === p._id
-                  );
-
-                  if (score && score.score !== null) {
-                    return score.score;
-                  } else {
-                    return null;
-                  }
-                }),
-              backgroundColor: p.color,
-
-              borderColor: p.color,
-              pointBackgroundColor: p.color,
-              borderWidth: 4,
-              pointBorderWidth: 0,
-            };
-          }),
-        },
-      };
-    },
-
-    maxKg() {
-      const data = Object.values(this.playerChartData)
-
-        .map((pcd) => {
-          return pcd.avgKg.datasets.map((d) => {
-            return d.data;
-          });
-        })
-        .flat(2)
-
-        .filter((d) => !isNaN(d));
-
-      return Math.ceil(Math.max(...data));
-    },
-
-    playerChartData() {
-      const options = {};
-
-      const sessions = this.groupedComputedGames;
-
-      const sessionsStats = sessions.map((s) => this.getSessionStats(s));
-
-      for (let i = 0; i < this.activePlayers.length; i++) {
-        const player = this.activePlayers[i];
-
-        const playerSessionsKills = sessions.map((session) => {
-          return session
-            .map((g) => {
-              const score = g.scores.find(
-                (s: { playerId: string }) => s.playerId === player._id
-              );
-              return score ? score.score : 0;
+          .map((pcd) => {
+            return pcd.avgKg.datasets.map((d) => {
+              return d.data
             })
-            .reverse();
-        });
+          })
+          .flat(2)
 
-        const latestSessionKills =
-          playerSessionsKills[playerSessionsKills.length - 1];
+          .filter((d) => !isNaN(d))
 
-        const playerStats = sessionsStats.map((s) => s[player._id]);
+        return Math.ceil(Math.max(...data))
+      },
 
-        options[player._id] = {
-          avgKg: {
-            labels: [...playerStats.map((_s, index) => `Session ${index + 1}`)],
-            datasets: [
-              {
-                label: 'Avg kills / game',
-                backgroundColor: player.color,
+      playerChartData() {
+        const options = {}
 
-                borderRadius: 4,
-                data: playerStats.map(
-                  (s: { averageKill: number }) => s.averageKill
-                ),
-              },
-            ],
-          },
-          latestSessionKills: {
-            labels: [...latestSessionKills.map((_g, index) => index + 1)],
-            datasets: [
-              {
-                label: 'Session kills / games',
-                backgroundColor: player.color,
-                borderRadius: 4,
-                data: latestSessionKills,
-              },
-            ],
-          },
-        };
-      }
-      return options;
-    },
+        const sessions = this.groupedComputedGames
 
-    currentSessionStats() {
-      if (this.currentSession) {
-        return this.getSessionStats(this.currentSession);
-      }
+        const sessionsStats = sessions.map((s) => this.getSessionStats(s))
 
-      return null;
-    },
+        for (let i = 0; i < this.activePlayers.length; i++) {
+          const player = this.activePlayers[i]
 
-    currentSession() {
-      // return last session of this.groupedComputedGames
+          const playerSessionsKills = sessions.map((session) => {
+            return session
+              .map((g) => {
+                const score = g.scores.find(
+                  (s: { playerId: string }) => s.playerId === player._id
+                )
+                return score ? score.score : 0
+              })
+              .reverse()
+          })
 
-      return this.groupedComputedGames[this.groupedComputedGames.length - 1];
-    },
-  },
+          const latestSessionKills =
+            playerSessionsKills[playerSessionsKills.length - 1]
 
-  methods: {
-    numeral,
-    isOnFire(player: Player): boolean {
-      if (player.currentSessionAvgKg && player.avgKg) {
-        return (
-          player.currentSessionAvgKg > player.avgKg &&
-          this.currentSession.filter((g) => {
-            return (
-              g.scores.find((s) => s.playerId === player._id).score != null
-            );
-          }).length >= 3
-        );
-      }
-      return false;
-    },
+          const playerStats = sessionsStats.map((s) => s[player._id])
 
-    getMmrEvolution(player: Player) {
-      if (
-        player.mmr &&
-        player.mmr != 0 &&
-        player.lastMmr &&
-        player.lastMmr != 0
-      ) {
-        return Math.round(player.mmr - player.lastMmr);
-      }
-      return null;
-    },
-    getProgressMmrStyle(player: Player) {
-      return `width:${player.pourcentNextLevel}%;`;
-    },
-    getSessionStats(session) {
-      const stats = {};
-      if (!session) {
-        return stats;
-      }
-      for (const element of this.activePlayers) {
-        const player = element;
+          options[player._id] = {
+            avgKg: {
+              labels: [
+                ...playerStats.map((_s, index) => `Session ${index + 1}`),
+              ],
+              datasets: [
+                {
+                  label: 'Avg kills / game',
+                  backgroundColor: player.color,
 
-        stats[player._id] = {
-          totalKill: 0,
-          totalGames: 0,
-          averageKill: 0,
-          topPlayer: 0,
-        };
-
-        console.log('session', session);
-        const playedGames = session
-          .filter((game) =>
-            game.scores.map((s) => s.playerId).includes(player._id)
-          )
-          .filter(
-            (game) =>
-              game.scores.find((s) => s.playerId === player._id).score !== null
-          );
-
-        // get top player number by session
-        for (const game of playedGames) {
-          const maxScore = Math.max(...game.scores.map((s) => s.score));
-          const playerScore = game.scores.find(
-            (s: { playerId: string }) => s.playerId === player._id
-          ).score;
-          if (playerScore >= maxScore) {
-            stats[player._id].topPlayer += 1;
+                  borderRadius: 4,
+                  data: playerStats.map(
+                    (s: { averageKill: number }) => s.averageKill
+                  ),
+                },
+              ],
+            },
+            latestSessionKills: {
+              labels: [...latestSessionKills.map((_g, index) => index + 1)],
+              datasets: [
+                {
+                  label: 'Session kills / games',
+                  backgroundColor: player.color,
+                  borderRadius: 4,
+                  data: latestSessionKills,
+                },
+              ],
+            },
           }
         }
-        stats[player._id].totalGames = playedGames.length;
-        stats[player._id].totalKill = playedGames
-          .map(
-            (game) =>
-              game.scores.find(
-                (s: { playerId: string }) => s.playerId === player._id
-              ).score
-          )
-          .reduce((a: number, b: number) => a + b, 0);
-        stats[player._id].averageKill =
-          stats[player._id].totalKill / stats[player._id].totalGames;
-      }
+        return options
+      },
 
-      return stats;
+      currentSessionStats() {
+        if (this.currentSession) {
+          return this.getSessionStats(this.currentSession)
+        }
+
+        return null
+      },
+
+      currentSession() {
+        // return last session of this.groupedComputedGames
+
+        return this.groupedComputedGames[this.groupedComputedGames.length - 1]
+      },
     },
-    getMmrLogo(level: number): string {
-      const map = {
-        0: '/images/new/nc.png',
-        1: '/images/new/vomit.png',
-        2: '/images/new/b3.png',
-        3: '/images/new/b2.png',
-        4: '/images/new/b1.png',
-        5: '/images/new/a3.png',
-        6: '/images/new/a2.png',
-        7: '/images/new/a1.png',
-        8: '/images/new/g3.png',
-        9: '/images/new/g2.png',
-        10: '/images/new/g1.png',
-        11: '/images/new/p3.png',
-        12: '/images/new/p2.png',
-        13: '/images/new/p1.png',
-        14: '/images/new/d3.png',
-        15: '/images/new/d2.png',
-        16: '/images/new/d1.png',
-        17: '/images/new/m3.png',
-        18: '/images/new/m2.png',
-        19: '/images/new/m1.png',
-        20: '/images/new/gm.png',
-      };
-      return map[level];
+
+    methods: {
+      numeral,
+      isOnFire(player: Player): boolean {
+        if (player.currentSessionAvgKg && player.avgKg) {
+          return (
+            player.currentSessionAvgKg > player.avgKg &&
+            this.currentSession.filter((g) => {
+              return (
+                g.scores.find((s) => s.playerId === player._id).score != null
+              )
+            }).length >= 3
+          )
+        }
+        return false
+      },
+
+      getMmrEvolution(player: Player) {
+        if (
+          player.mmr &&
+          player.mmr != 0 &&
+          player.lastMmr &&
+          player.lastMmr != 0
+        ) {
+          return Math.round(player.mmr - player.lastMmr)
+        }
+        return null
+      },
+      getProgressMmrStyle(player: Player) {
+        return `width:${player.pourcentNextLevel}%;`
+      },
+      getSessionStats(session) {
+        const stats = {}
+        if (!session) {
+          return stats
+        }
+        for (const element of this.activePlayers) {
+          const player = element
+          stats[player._id] = {
+            totalKill: 0,
+            totalGames: 0,
+            averageKill: 0,
+            topPlayer: 0,
+          }
+
+          const playedGames = session
+            .filter((game) =>
+              game.scores.map((s) => s.playerId).includes(player._id)
+            )
+            .filter(
+              (game) =>
+                game.scores.find((s) => s.playerId === player._id).score !==
+                null
+            )
+
+          // get top player number by session
+          for (const game of playedGames) {
+            const maxScore = Math.max(...game.scores.map((s) => s.score))
+            const playerScore = game.scores.find(
+              (s: { playerId: string }) => s.playerId === player._id
+            ).score
+            if (playerScore >= maxScore) {
+              stats[player._id].topPlayer += 1
+            }
+          }
+          stats[player._id].totalGames = playedGames.length
+          stats[player._id].totalKill = playedGames
+            .map(
+              (game) =>
+                game.scores.find(
+                  (s: { playerId: string }) => s.playerId === player._id
+                ).score
+            )
+            .reduce((a: number, b: number) => a + b, 0)
+          stats[player._id].averageKill =
+            stats[player._id].totalKill / stats[player._id].totalGames
+        }
+
+        return stats
+      },
+      getMmrLogo(level: number): string {
+        const map = {
+          0: '/images/new/nc.png',
+          1: '/images/new/vomit.png',
+          2: '/images/new/b3.png',
+          3: '/images/new/b2.png',
+          4: '/images/new/b1.png',
+          5: '/images/new/a3.png',
+          6: '/images/new/a2.png',
+          7: '/images/new/a1.png',
+          8: '/images/new/g3.png',
+          9: '/images/new/g2.png',
+          10: '/images/new/g1.png',
+          11: '/images/new/p3.png',
+          12: '/images/new/p2.png',
+          13: '/images/new/p1.png',
+          14: '/images/new/d3.png',
+          15: '/images/new/d2.png',
+          16: '/images/new/d1.png',
+          17: '/images/new/m3.png',
+          18: '/images/new/m2.png',
+          19: '/images/new/m1.png',
+          20: '/images/new/gm.png',
+        }
+        return map[level]
+      },
     },
-  },
-});
+  })
 </script>

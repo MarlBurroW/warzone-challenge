@@ -1,17 +1,13 @@
-import { Document } from 'bson';
-import { check } from 'meteor/check';
-import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
-import { Players } from '../collections/Players';
-import {
-  updatePlayerScores,
-  computeGames,
-  assignPlayersColors,
-} from '../utils';
+import { Document } from 'bson'
+import { check } from 'meteor/check'
+import { Meteor } from 'meteor/meteor'
+import { Mongo } from 'meteor/mongo'
+import { Players } from '../collections/Players'
+import { updatePlayerScores, computeGames, assignPlayersColors } from '../utils'
 
 Meteor.methods({
   createPlayer(nickname: string) {
-    check(nickname, String);
+    check(nickname, String)
 
     const player = Players.insert({
       createdAt: new Date(),
@@ -34,15 +30,15 @@ Meteor.methods({
       color: '#000000',
       coefficientOfVariation: 0,
       currentSessionStandardDeviation: 0,
-    });
-    assignPlayersColors();
+    })
+    assignPlayersColors()
 
-    return player;
+    return player
   },
 
   deletePlayer(id: string | Mongo.ObjectID | Mongo.Selector<Document>) {
-    Players.remove(id);
-    assignPlayersColors();
+    Players.remove(id)
+    assignPlayersColors()
   },
   updatePlayerActiveStatus(
     playerId: string | Mongo.ObjectID | Mongo.Selector<Document>,
@@ -52,9 +48,9 @@ Meteor.methods({
       $set: {
         active: active,
       },
-    });
+    })
 
-    updatePlayerScores();
-    computeGames();
+    updatePlayerScores()
+    computeGames()
   },
-});
+})

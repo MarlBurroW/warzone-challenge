@@ -1,11 +1,12 @@
-import { createApp } from 'vue';
+import { createApp } from 'vue'
 
-import { VueMeteor } from 'vue-meteor-tracker';
+import { VueMeteor } from 'vue-meteor-tracker'
 
-import App from './App.vue';
-import { router } from './router';
-import '../api/methods/index';
-import numeral from 'numeral';
+import App from './App.vue'
+import { router } from './router'
+import '../api/methods/index'
+
+import numeral from 'numeral'
 
 // load a locale
 numeral.register('locale', 'fr', {
@@ -20,15 +21,15 @@ numeral.register('locale', 'fr', {
     trillion: 't',
   },
   ordinal: function (number) {
-    return number === 1 ? 'er' : 'ème';
+    return number === 1 ? 'er' : 'ème'
   },
   currency: {
     symbol: '€',
   },
-});
+})
 Meteor.startup(() => {
-  const app = createApp(App);
-  app.use(router);
-  app.use(VueMeteor);
-  app.mount('#app');
-});
+  const app = createApp(App)
+  app.use(router)
+  app.use(VueMeteor)
+  app.mount('#app')
+})

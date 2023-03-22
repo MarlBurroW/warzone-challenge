@@ -23,6 +23,7 @@
           Add player
         </button>
       </form>
+
       <div class="flex justify-center">
         <div
           v-for="player in players"
@@ -220,14 +221,14 @@
                 <ClockIcon
                   class="h-6 w-6 text-white-300 cursor-pointer mr-3"
                 ></ClockIcon>
-              {{ game.date }}
+                {{ game.date }}
               </div>
             </td>
             <td
               v-for="(score, index) in game.scores.filter((score) => {
                 return activePlayers
                   .map((player) => player._id)
-                  .includes(score.playerId);
+                  .includes(score.playerId)
               })"
               :key="index"
               :style="`background-color: ${tinycolor(
@@ -308,11 +309,11 @@
                   class="h-6 w-6 text-white cursor-pointer"
                   @click="
                     ($event) => {
-                      focusInput(game._id + '-' + score.playerId);
+                      focusInput(game._id + '-' + score.playerId)
 
-                      editedCells[game._id + '-' + score.playerId] = true;
+                      editedCells[game._id + '-' + score.playerId] = true
                       editedValues[game._id + '-' + score.playerId] =
-                        score.score;
+                        score.score
                     }
                   "
                 />
@@ -376,10 +377,10 @@
                   class="h-6 w-6 text-white cursor-pointer"
                   @click="
                     ($event) => {
-                      focusInput(game._id + '-rank');
+                      focusInput(game._id + '-rank')
 
-                      editedCells[game._id + '-rank'] = true;
-                      editedValues[game._id + '-rank'] = game.rank;
+                      editedCells[game._id + '-rank'] = true
+                      editedValues[game._id + '-rank'] = game.rank
                     }
                   "
                 />
@@ -456,7 +457,7 @@
           Browse file
         </button>
 
-        <div class="bg-red-500 text-white p-2 mt-2" v-if="importError">
+        <div v-if="importError" class="bg-red-500 text-white p-2 mt-2">
           {{ importError }}
         </div>
       </div>
@@ -478,247 +479,236 @@
 </template>
 
 <script setup lang="ts">
-import numeral from 'numeral';
-import {
-  CheckCircleIcon,
-  CheckIcon,
-  ClockIcon,
-  PencilIcon,
-  StarIcon,
-  TrashIcon,
-  XCircleIcon,
-} from '@heroicons/vue/24/solid';
-import tinycolor from 'tinycolor2';
+  import numeral from 'numeral'
+  import {
+    CheckCircleIcon,
+    CheckIcon,
+    ClockIcon,
+    PencilIcon,
+    StarIcon,
+    TrashIcon,
+    XCircleIcon,
+  } from '@heroicons/vue/24/solid'
+  import tinycolor from 'tinycolor2'
 </script>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import dataMixin from './data-mixin';
-import { Meteor } from 'meteor/meteor';
-import { Player } from '../api/collections/Players';
-import { Game, Score } from '../api/collections/Games';
+  import { defineComponent } from 'vue'
+  import dataMixin from './data-mixin'
+  import { Meteor } from 'meteor/meteor'
+  import { Player } from '../api/collections/Players'
+  import { Game, Score } from '../api/collections/Games'
 
-export default defineComponent({
-  mixins: [dataMixin],
-  data() {
-    return {
-      nickname: '',
-      gameScore: {},
-      gameRank: null,
-      editedCells: {},
-      editedValues: {},
-      activeGames: true,
-      displayedSessionsCount: 1,
-      displayedSessionsCountOptions: [
-        { text: 'Only latest', value: 1 },
-        { text: '3 Latest', value: 3 },
-        { text: '6 Latest', value: 6 },
-        { text: '9 Latest', value: 9 },
-        { text: '12 Latest', value: 12 },
-        { text: 'All (not recommanded)', value: Infinity },
-      ],
-    };
-  },
-  computed: {
-    limitedGroupedGames() {
-      // Get latest element in this.groupedComputedGames limited by this.displayedSessionsCount
-      return this.groupedComputedGames.slice(-this.displayedSessionsCount);
-    },
-  },
-  methods: {
-    resetData() {
-      if (confirm("Are you sure you want to reset all data?")) {
-        Meteor.call("resetData");
+  export default defineComponent({
+    mixins: [dataMixin],
+    data() {
+      return {
+        importError: null,
+        nickname: '',
+        gameScore: {},
+        gameRank: null,
+        editedCells: {},
+        editedValues: {},
+        activeGames: true,
+        displayedSessionsCount: 1,
+        displayedSessionsCountOptions: [
+          { text: 'Only latest', value: 1 },
+          { text: '3 Latest', value: 3 },
+          { text: '6 Latest', value: 6 },
+          { text: '9 Latest', value: 9 },
+          { text: '12 Latest', value: 12 },
+          { text: 'All (not recommanded)', value: Infinity },
+        ],
       }
     },
-    exportData() {
-      const data = {
-        players: this.players,
-        games: this.games,
-      };
-      console.log("mdr");
-      // create variable formattedCurrentDatetime containing current date in format YYYY-MM-DD-HH-MM-SS
-      const formattedCurrentDatetime = new Date()
-        .toISOString()
-        .replace(/:/g, "-")
-        .replace(/\./g, "-");
-
-      const dataStr =
-        "data:text/json;charset=utf-8," +
-        encodeURIComponent(JSON.stringify(data));
-      const downloadAnchorNode = document.createElement("a");
-      downloadAnchorNode.setAttribute("href", dataStr);
-      downloadAnchorNode.setAttribute(
-        "download",
-        `wzc-data-${formattedCurrentDatetime}.json`
-      );
-      document.body.appendChild(downloadAnchorNode); // required for firefox
-      downloadAnchorNode.click();
-      downloadAnchorNode.remove();
+    computed: {
+      limitedGroupedGames() {
+        // Get latest element in this.groupedComputedGames limited by this.displayedSessionsCount
+        return this.groupedComputedGames.slice(-this.displayedSessionsCount)
+      },
     },
+    methods: {
+      resetData() {
+        if (confirm('Are you sure you want to reset all data?')) {
+          Meteor.call('resetData')
+        }
+      },
+      exportData() {
+        const data = {
+          players: this.players,
+          games: this.games,
+        }
+        // create variable formattedCurrentDatetime containing current date in format YYYY-MM-DD-HH-MM-SS
+        const formattedCurrentDatetime = new Date()
+          .toISOString()
+          .replace(/:/g, '-')
+          .replace(/\./g, '-')
 
-    openFile(data) {
-      // Just open the hidden file input browser by ref
+        const dataStr =
+          'data:text/json;charset=utf-8,' +
+          encodeURIComponent(JSON.stringify(data))
+        const downloadAnchorNode = document.createElement('a')
+        downloadAnchorNode.setAttribute('href', dataStr)
+        downloadAnchorNode.setAttribute(
+          'download',
+          `wzc-data-${formattedCurrentDatetime}.json`
+        )
+        document.body.appendChild(downloadAnchorNode) // required for firefox
+        downloadAnchorNode.click()
+        downloadAnchorNode.remove()
+      },
 
-      this.$refs.importInput.click();
-    },
+      openFile(data: any) {
+        // Just open the hidden file input browser by ref
+        this.$refs.importInput.click()
+      },
 
-    onImportFileChange(event) {
-      this.error = null;
+      onImportFileChange(event: { target: { files: any[] } }) {
+        this.error = null
 
-      // Get the file from the event
-      const file = event.target.files[0];
+        // Get the file from the event
+        const file = event.target.files[0]
 
-      // Create a new file reader
-      const reader = new FileReader();
+        // Create a new file reader
+        const reader = new FileReader()
 
-      // When the file is loaded, parse the JSON and update the data
-      reader.onload = (event) => {
-        const data = JSON.parse(event.target.result);
+        // When the file is loaded, parse the JSON and update the data
+        reader.onload = (event) => {
+          if (
+            event.target?.result &&
+            typeof event.target?.result === 'string'
+          ) {
+            const data = JSON.parse(event.target.result)
 
-        Meteor.call("importData", data, (err, res) => {
-          if (err) {
-            this.importError = err.message;
+            Meteor.call(
+              'importData',
+              data,
+              (err: { message: any }, res: any) => {
+                if (err) {
+                  this.importError = err.message
+                } else {
+                  console.log('Data imported')
+                }
+              }
+            )
           } else {
-            console.log("Data imported");
-          }
-        });
-      };
-
-      reader.onerror = (event) => {
-        this.importError = "Error while reading file";
-      };
-
-      // Read the file as text
-      reader.readAsText(file);
-    },
-
-    getSessionTotalKills(session, player) {
-      let totalKills = 0;
-      if (player) {
-        for (const game of session) {
-          const playerScore = game.scores.find(
-            (s: { playerId: string }) => s.playerId === player._id
-          );
-          if (playerScore && playerScore.score) {
-            totalKills += Number(playerScore.score);
+            this.importError = 'Error while reading file'
           }
         }
-      } else {
-        session.forEach((game) => {
-          game.scores.forEach((score) => {
-            if (score.score) {
-              totalKills += Number(score.score);
+
+        reader.onerror = (event) => {
+          this.importError = 'Error while reading file'
+        }
+
+        // Read the file as text
+        reader.readAsText(file)
+      },
+
+      getSessionTotalKills(session: Game[], player: Player) {
+        let totalKills = 0
+        if (player) {
+          for (const game of session) {
+            const playerScore = game.scores.find(
+              (s: { playerId: string }) => s.playerId === player._id
+            )
+            if (playerScore && playerScore.score) {
+              totalKills += Number(playerScore.score)
             }
-          });
-        });
-      }
-      return totalKills;
-    },
-    getAverageSessionRank(session: string | any[]) {
-      let result = null;
-      if (session && session.length > 0) {
-        let totalRank = 0;
-        let notDefined = 0;
-        for (const game of session) {
-          if (game.rank) {
-            totalRank += Number(game.rank);
-          } else {
-            notDefined++;
           }
+        } else {
+          session.forEach((game) => {
+            game.scores.forEach((score) => {
+              if (score.score) {
+                totalKills += Number(score.score)
+              }
+            })
+          })
         }
-        result = totalRank / (session.length - notDefined);
-      }
-      return result;
-    },
-    focusInput(ref: string | number) {
-      setTimeout(() => {
-        // Focus and select the input
-        this.$refs[ref][0].focus();
-        this.$refs[ref][0].select();
-      }, 1);
-    },
-    updateScore(gameId: string, playerId: string, score: number) {
-      Meteor.call('updateGameScore', gameId, playerId, score);
-      this.editedCells[`${gameId}-${playerId}`] = false;
-    },
-    updateRank(gameId: string, rank: number) {
-      Meteor.call('updateGameRank', gameId, rank);
-      this.editedCells[gameId + '-rank'] = false;
-    },
-    getHotIndicator(kills: number): string {
-      switch (true) {
-        case kills >= 12:
-          return '🔥🔥🔥';
-        case kills >= 9:
-          return '🔥🔥';
-        case kills >= 6:
-          return '🔥';
-        case kills <= 1:
-          return '💩';
-        case kills <= 2:
-          return '🤢';
-        default:
-          return '';
-      }
-    },
+        return totalKills
+      },
+      getAverageSessionRank(session: string | any[]) {
+        let result = null
+        if (session && session.length > 0) {
+          let totalRank = 0
+          let notDefined = 0
+          for (const game of session) {
+            if (game.rank) {
+              totalRank += Number(game.rank)
+            } else {
+              notDefined++
+            }
+          }
+          result = totalRank / (session.length - notDefined)
+        }
+        return result
+      },
+      focusInput(ref: string | number) {
+        setTimeout(() => {
+          // Focus and select the input
+          this.$refs[ref][0].focus()
+          this.$refs[ref][0].select()
+        }, 1)
+      },
+      updateScore(gameId: string, playerId: string, score: number) {
+        Meteor.call('updateGameScore', gameId, playerId, score)
+        this.editedCells[`${gameId}-${playerId}`] = false
+      },
+      updateRank(gameId: string, rank: number) {
+        Meteor.call('updateGameRank', gameId, rank)
+        this.editedCells[gameId + '-rank'] = false
+      },
+      getHotIndicator(kills: number): string {
+        switch (true) {
+          case kills >= 12:
+            return '🔥🔥🔥'
+          case kills >= 9:
+            return '🔥🔥'
+          case kills >= 6:
+            return '🔥'
+          case kills <= 1:
+            return '💩'
+          case kills <= 2:
+            return '🤢'
+          default:
+            return ''
+        }
+      },
 
-    deleteGame(gameId: string) {
-      if (confirm('Êtes-vous sûr de vouloir supprimer cette partie ?')) {
-        Meteor.call('deleteGame', gameId);
-      }
-    },
-    addGame() {
-      console.log('addGame', this.gameScore);
-      const score: Score[] = this.gameScore;
-      Meteor.call('createGame', score, this.gameRank);
-      this.gameScore = {};
-      this.gameRank = null;
-    },
-    deletePlayer(playerId: string) {
-      if (confirm('Êtes-vous sûr de vouloir supprimer ce joueur ?')) {
-        this.gameScore = {};
-        Meteor.call('deletePlayer', playerId);
-      }
-    },
+      deleteGame(gameId: string) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette partie ?')) {
+          Meteor.call('deleteGame', gameId)
+        }
+      },
+      addGame() {
+        const score: Score[] = this.gameScore
+        Meteor.call('createGame', score, this.gameRank)
+        this.gameScore = {}
+        this.gameRank = null
+      },
+      deletePlayer(playerId: string) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce joueur ?')) {
+          this.gameScore = {}
+          Meteor.call('deletePlayer', playerId)
+        }
+      },
 
-    addPlayer() {
-      if (this.nickname.length >= 1) {
-        Meteor.call('createPlayer', this.nickname);
-        this.nickname = '';
-      }
-    },
+      addPlayer() {
+        if (this.nickname.length >= 1) {
+          Meteor.call('createPlayer', this.nickname)
+          this.nickname = ''
+        }
+      },
 
-    toggleActivePlayer(player: Player) {
-      Meteor.call('updatePlayerActiveStatus', player._id, !player.active);
+      toggleActivePlayer(player: Player) {
+        Meteor.call('updatePlayerActiveStatus', player._id, !player.active)
+      },
+      toggleActiveGame(game: Game) {
+        Meteor.call('updateGameActiveStatus', game._id, !game.active)
+      },
+      toggleActiveGames() {
+        Meteor.call('updateGamesActiveStatus', !this.activeGames)
+        this.activeGames = !this.activeGames
+      },
     },
-    toggleActiveGame(game: Game) {
-      Meteor.call('updateGameActiveStatus', game._id, !game.active);
-    },
-    toggleActiveGames() {
-      Meteor.call('updateGamesActiveStatus', !this.activeGames);
-      this.activeGames = !this.activeGames;
-    },
-  },
-  data() {
-    return {
-      importError: null,
-      nickname: "",
-      gameScore: {},
-      gameRank: null,
-      editedCells: {},
-      editedValues: {},
-      activeGames: true,
-      displayedSessionsCount: 1,
-      displayedSessionsCountOptions: [
-        { text: "Only latest", value: 1 },
-        { text: "3 Latest", value: 3 },
-        { text: "6 Latest", value: 6 },
-        { text: "9 Latest", value: 9 },
-        { text: "12 Latest", value: 12 },
-        { text: "All (not recommanded)", value: Infinity },
-      ],
-    };
-  },
-});
+  })
 </script>

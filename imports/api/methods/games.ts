@@ -1,7 +1,7 @@
-import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
-import { Game, Games, Score } from '../collections/Games';
-import { updatePlayerScores, computeGames } from '../utils';
+import { Meteor } from 'meteor/meteor'
+import { Mongo } from 'meteor/mongo'
+import { Game, Games, Score } from '../collections/Games'
+import { updatePlayerScores, computeGames } from '../utils'
 
 Meteor.methods({
   createGame(scores: Score[], rank: number) {
@@ -10,16 +10,16 @@ Meteor.methods({
       active: true,
       scores,
       rank: rank,
-    });
-    computeGames();
-    updatePlayerScores();
+    })
+    computeGames()
+    updatePlayerScores()
 
-    return gameCreated;
+    return gameCreated
   },
   deleteGame(id: string | Mongo.ObjectID | Mongo.Selector<Game>) {
-    Games.remove(id);
-    computeGames();
-    updatePlayerScores();
+    Games.remove(id)
+    computeGames()
+    updatePlayerScores()
   },
 
   updateGameScore(
@@ -27,15 +27,15 @@ Meteor.methods({
     playerId: string,
     score: string
   ) {
-    const newScore: number = parseInt(score);
+    const newScore: number = parseInt(score)
 
     Games.update(gameId, {
       $set: {
         [`scores.${playerId}`]: newScore,
       },
-    });
-    computeGames();
-    updatePlayerScores();
+    })
+    computeGames()
+    updatePlayerScores()
   },
 
   updateGameRank(
@@ -43,15 +43,15 @@ Meteor.methods({
     rank: number | undefined
   ) {
     if (rank == 0) {
-      rank = undefined;
+      rank = undefined
     }
     Games.update(gameId, {
       $set: {
         rank: rank,
       },
-    });
-    computeGames();
-    updatePlayerScores();
+    })
+    computeGames()
+    updatePlayerScores()
   },
 
   updateGameActiveStatus(
@@ -62,9 +62,9 @@ Meteor.methods({
       $set: {
         active: active,
       },
-    });
-    computeGames();
-    updatePlayerScores();
+    })
+    computeGames()
+    updatePlayerScores()
   },
   updateGamesActiveStatus(active: boolean) {
     Games.update(
@@ -77,8 +77,8 @@ Meteor.methods({
       {
         multi: true,
       }
-    );
-    computeGames();
-    updatePlayerScores();
+    )
+    computeGames()
+    updatePlayerScores()
   },
-});
+})

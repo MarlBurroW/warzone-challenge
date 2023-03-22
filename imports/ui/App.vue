@@ -31,5 +31,5 @@
 </template>
 
 <script setup lang="ts">
-import { Squares2X2Icon, TableCellsIcon } from '@heroicons/vue/24/solid';
+  import { Squares2X2Icon, TableCellsIcon } from '@heroicons/vue/24/solid'
 </script>

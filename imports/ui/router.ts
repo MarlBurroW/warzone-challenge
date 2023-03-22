@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Data from './Data.vue';
-import Dashboard from './Dashboard.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import Data from './Data.vue'
+import Dashboard from './Dashboard.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -16,4 +16,4 @@ export const router = createRouter({
       component: Data,
     },
   ],
-});
+})
