@@ -2,6 +2,7 @@ import { Games, IComputedGame, IComputedScore } from '../api/collections/Games';
 import { Players, Player } from '../api/collections/Players';
 import { ComponentOptionsMixin } from 'vue';
 import _, { toArray } from 'lodash';
+import moment from 'moment';
 
 export interface IDataMixin extends ComponentOptionsMixin {
   activeOnly: boolean;
@@ -49,54 +50,65 @@ const dataMixin: IDataMixin = {
     },
   },
   computed: {
-    groupedComputedGames(): { [sessionId: string]: IComputedGame[] } {
-      // return computedGames grouped by sessionId in an array
-      return _.groupBy(this.computedGames, 'sessionId');
+    groupedComputedGames() {
+      const groupedGames = _.groupBy(this.computedGames, 'sessionId');
+
+      const groupedGamesArray = [];
+
+      for (let key in groupedGames) {
+        groupedGamesArray.push(groupedGames[key]);
+      }
+
+      return groupedGamesArray;
     },
     computedGames() {
-      const games: IComputedGame[] = [];
+      const games = [];
 
       const allGames = this.activeOnly ? this.activeGames : this.games;
+
       for (let i = 0; i < allGames.length; i++) {
         const game = allGames[i];
-        const computedGame: IComputedGame = {
+
+        const computedGame = {
           _id: game._id,
           sessionId: game.sessionId,
+          scores: [],
+          date:
+            moment(game.createdAt).format('DD/MM HH:mm') +
+            ' (' +
+            moment(game.createdAt).fromNow() +
+            ')',
           createdAt: game.createdAt,
-          scores: [] as IComputedScore[],
           rank: game.rank,
-          bestNumberKill: 0,
+          bestNumberKill: null,
           active: game.active,
         };
+
         for (let j = 0; j < this.players.length; j++) {
           const player = this.players[j];
-
-          const score: IComputedScore = {
-            score: Object.prototype.hasOwnProperty.call(game.scores, player._id)
+          computedGame.scores.push({
+            score: game.scores.hasOwnProperty(player._id)
               ? game.scores[player._id]
               : null,
             nickname: player.nickname,
             playerId: player._id,
-          };
-          computedGame.scores.push(score);
+          });
 
           // Find the best number of kills
-          // TODO: find a better way to do this
-          /* if (
+
+          if (
             !computedGame.bestNumberKill ||
             computedGame.bestNumberKill < game.scores[player._id]
           ) {
             computedGame.bestNumberKill = game.scores[player._id];
-          }*/
+          }
         }
-
+        console.log(computedGame);
         games.push(computedGame);
       }
 
       return games.sort((a, b) => {
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+        return new Date(b.createdAt) - new Date(a.createdAt);
       });
     },
   },

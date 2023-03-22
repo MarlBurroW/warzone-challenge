@@ -9,55 +9,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="add rank parsing">
-      <change afterPath="$PROJECT_DIR$/.eslintrc.cjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/main.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imports/api/collections/Games.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imports/api/collections/Players.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/imports/api/methods/games.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imports/api/methods/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imports/api/methods/players.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imports/api/publications/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imports/ui/main.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/main.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/vite-env.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tsconfig.node.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_13_03_2023_18_35__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_13_03_2023_18_35__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/0/3/03a27f523d08ed9049eff182ba39e3ab6209eb14" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/f/2f1c94c28c2f3092e6a120e828cb57d1d9127c99" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/6/f6be8c91bfd848485f7c74c28d2573684e049014" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/0/3/03a27f523d08ed9049eff182ba39e3ab6209eb14" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/2/f/2f1c94c28c2f3092e6a120e828cb57d1d9127c99" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/f/6/f6be8c91bfd848485f7c74c28d2573684e049014" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/faa75e11-c25d-41c4-aeaf-2eeee0a0420f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/faa75e11-c25d-41c4-aeaf-2eeee0a0420f.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/packages" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/release" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/release" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/versions" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/versions" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/collections/Games.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/collections/Players.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/methods/games.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/methods/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/methods/players.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/publications/games.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/publications/games.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/publications/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/publications/players.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/publications/players.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/methods/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/methods/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imports/ui/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Dashboard.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imports/ui/Data.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Data.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/Fire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Fire.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/data-mixin.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/data-mixin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/ui/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/router.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/data-mixin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/data-mixin.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/postcss.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/postcss.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,11 +49,15 @@
                 <list>
                   <RecentBranch>
                     <option name="branchName" value="typescript" />
-                    <option name="lastUsedInstant" value="1678844230" />
+                    <option name="lastUsedInstant" value="1679427356" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="typescriptBak" />
+                    <option name="lastUsedInstant" value="1679427319" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1678808733" />
+                    <option name="lastUsedInstant" value="1677966544" />
                   </RecentBranch>
                 </list>
               </option>
@@ -118,45 +83,45 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;HbShouldOpenHtmlAsHb&quot;: &quot;enabled&quot;,
-    &quot;RESTKit.sync.cert.Ide&quot;: &quot;true&quot;,
-    &quot;RESTKit.sync.env.Ide&quot;: &quot;true&quot;,
-    &quot;RESTKit.sync.requestConfig.Ide&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.laravel-idea.search-composer-json&quot;: &quot;true&quot;,
-    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
-    &quot;js.meteor.library.was.enabled&quot;: &quot;true&quot;,
-    &quot;js.meteor.project&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/projets/warzone-challenge/node_modules/vite/bin/vite.js&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\projets\\warzone-challenge\\node_modules\\prettier&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ssh.settings&quot;,
-    &quot;settings.editor.splitter.proportion&quot;: &quot;0.3071038&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\projets\\warzone-challenge\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "HbShouldOpenHtmlAsHb": "enabled",
+    "RESTKit.sync.cert.Ide": "true",
+    "RESTKit.sync.env.Ide": "true",
+    "RESTKit.sync.requestConfig.Ide": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.laravel-idea.search-composer-json": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "false",
+    "WebServerToolWindowFactoryState": "false",
+    "full.screen.before.presentation.mode": "false",
+    "js.meteor.library.was.enabled": "true",
+    "js.meteor.project": "true",
+    "last_opened_file_path": "D:/projets/warzone-challenge/node_modules/vite/bin/vite.js",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "D:\\projets\\warzone-challenge\\node_modules\\prettier",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.rainbow.brackets",
+    "settings.editor.splitter.proportion": "0.3071038",
+    "ts.external.directory.path": "D:\\projets\\warzone-challenge\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;,
-      &quot;mongo&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql",
+      "mongo"
     ],
-    &quot;js.meteor.library.cached&quot;: [
-      &quot;D:/projets/warzone-challenge/.meteor&quot;
+    "js.meteor.library.cached": [
+      "D:/projets/warzone-challenge/.meteor"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\projets\warzone-challenge\server" />
@@ -282,12 +247,6 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-    <option name="exactExcludedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/client/main.js" />
-        <option value="$PROJECT_DIR$/imports/api/collections/Players.js" />
-      </list>
-    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

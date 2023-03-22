@@ -29,8 +29,7 @@
     "mainModule": {
       "client": "client/main.ts",
       "server": "server/main.ts"
-    },
-    "testModule": "tests/main.js"
+    }
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191",

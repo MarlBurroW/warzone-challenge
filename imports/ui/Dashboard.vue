@@ -579,8 +579,7 @@ export default defineComponent({
 
   computed: {
     currentSessionMaxPlayerKill() {
-      const currentSession =
-        this.groupedComputedGames[this.groupedComputedGames.length - 1];
+      const currentSession : any[] = this.groupedComputedGames[this.groupedComputedGames.length - 1];
 
       // Iterate over all score and find the max
 
@@ -594,7 +593,7 @@ export default defineComponent({
     },
 
     globalChartData() {
-      const sessions = this.groupedComputedGames;
+      const sessions : [] = this.groupedComputedGames;
       const latestSession = this.currentSession ? this.currentSession : [];
       const latestSessionKills = latestSession
         .slice()
@@ -664,11 +663,11 @@ export default defineComponent({
         },
 
         teamAverageKillsPerSession: {
-          labels: [...sessions.map((session, index) => `Session ${index + 1}`)],
+          labels: sessions ? [...sessions.map((session, index) => `Session ${index + 1}`)] : [],
           datasets: [
             {
               label: "Team avg kills",
-              data: sessions.map((session) => {
+              data: sessions ? sessions.map((session) => {
                 return (
                   session
                     .map((g) => {
@@ -680,12 +679,13 @@ export default defineComponent({
                     .reduce((acc, s) => Number(acc) + Number(s), 0) /
                   session.length
                 );
-              }),
+              }) : [],
               backgroundColor: 'rgba(16, 185, 129, 0.50)',
 
               borderWidth: 1,
             },
           ],
+
         },
 
         sessionsPlayerAvgKillsPerSession: {

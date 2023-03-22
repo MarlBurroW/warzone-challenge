@@ -57,7 +57,7 @@
     </h1>
     <form class="flex flex-col items-center p-5 mb-5" @submit.prevent="addGame">
       <div class="flex mb-5 gap-2 text-center w-full">
-        <div v-for="player in activePlayers" :key="player._id" class="w-full">
+        <div v-for="player in activePlayers" key="player._id" class="w-full">
           <div class="font-bold mb-2 text-white">{{ player.nickname }}</div>
           <input
             v-model="gameScore[player._id]"
@@ -151,7 +151,7 @@
             </th>
             <th
               v-for="player in activePlayers"
-              :key="player._id"
+              key="player._id"
               scope="col"
               :style="{ backgroundColor: player.color }"
               class="w-[13rem] text-left uppercase text-center text-white p-2 font-bold"
@@ -220,11 +220,11 @@
                 <ClockIcon
                   class="h-6 w-6 text-white-300 cursor-pointer mr-3"
                 ></ClockIcon>
-                {{ game.date }}
+              {{ game.date }}
               </div>
             </td>
             <td
-              v-for="(score, index) in game.scores.filter(() => {
+              v-for="(score, index) in game.scores.filter((score) => {
                 return activePlayers
                   .map((player) => player._id)
                   .includes(score.playerId);
@@ -536,7 +536,7 @@ export default defineComponent({
         players: this.players,
         games: this.games,
       };
-
+      console.log("mdr");
       // create variable formattedCurrentDatetime containing current date in format YYYY-MM-DD-HH-MM-SS
       const formattedCurrentDatetime = new Date()
         .toISOString()
@@ -720,5 +720,5 @@ export default defineComponent({
       ],
     };
   },
-};
+});
 </script>
