@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AnalysisUIOptions">
+    <option name="GROUP_BY_SEVERITY" value="true" />
     <option name="ANALYZE_INJECTED_CODE" value="false" />
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="add rank parsing">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+    <list default="true" id="3c4ce4ed-a1b0-409b-9351-c676317b6830" name="Changes" comment="fix merge dinguerie">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/prettier.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/prettier.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/methods/players.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/methods/players.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imports/api/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.prettierrc" beforeDir="false" afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/collections/Games.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/collections/Games.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/collections/Players.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/collections/Players.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/methods/games.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/methods/games.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/methods/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/methods/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/methods/players.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/methods/players.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/publications/games.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/publications/games.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/publications/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/publications/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/publications/players.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/publications/players.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/api/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/api/utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Dashboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/Data.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Data.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/Fire.vue" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/Fire.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/data-mixin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/data-mixin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imports/ui/router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/imports/ui/router.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/vite-env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/vite-env.d.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +41,13 @@
   </component>
   <component name="ComposerSettings">
     <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -37,12 +62,16 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1677966544" />
+                    <option name="branchName" value="typescript" />
+                    <option name="lastUsedInstant" value="1679427356" />
                   </RecentBranch>
                   <RecentBranch>
-                    <option name="branchName" value="mmr" />
-                    <option name="lastUsedInstant" value="1677966197" />
+                    <option name="branchName" value="typescriptBak" />
+                    <option name="lastUsedInstant" value="1679427319" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1677966544" />
                   </RecentBranch>
                 </list>
               </option>
@@ -59,37 +88,81 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="PhpDebugGeneral" listening_started="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectId" id="2MWnGF91wxCt6t6vbMwB0vgMveu" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "HbShouldOpenHtmlAsHb": "enabled",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.laravel-idea.search-composer-json": "true",
-    "SONARLINT_PRECOMMIT_ANALYSIS": "false",
-    "WebServerToolWindowFactoryState": "false",
-    "js.meteor.library.was.enabled": "true",
-    "js.meteor.project": "true",
-    "last_opened_file_path": "D:/projets/warzone-challenge",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "tv.twelvetone.intellij.plugins.intellivue.preferences.IntellivueConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;HbShouldOpenHtmlAsHb&quot;: &quot;enabled&quot;,
+    &quot;RESTKit.sync.cert.Ide&quot;: &quot;true&quot;,
+    &quot;RESTKit.sync.env.Ide&quot;: &quot;true&quot;,
+    &quot;RESTKit.sync.requestConfig.Ide&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.laravel-idea.search-composer-json&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;js.linters.configure.manually.selectedeslint&quot;: &quot;true&quot;,
+    &quot;js.meteor.library.was.enabled&quot;: &quot;true&quot;,
+    &quot;js.meteor.project&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/projets/warzone-challenge/node_modules/vite/bin/vite.js&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;C:\\Program Files\\nodejs\\node_modules\\eslint&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Program Files\\nodejs\\node_modules\\prettier&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.linters.eslint&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.3071038&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\projets\\warzone-challenge\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "js.meteor.library.cached": [
-      "D:/projets/warzone-challenge/.meteor"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;,
+      &quot;mongo&quot;
+    ],
+    &quot;js.meteor.library.cached&quot;: [
+      &quot;D:/projets/warzone-challenge/.meteor&quot;
     ]
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\projets\warzone-challenge\server" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Meteor.warzone challenge">
+    <configuration name="vite.js" type="NodeJSConfigurationType" application-parameters="serve" nameIsGenerated="true" path-to-js-file="node_modules/vite/bin/vite.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <configuration name="warzone challenge" type="meteor-app-runner" factoryName="Meteor">
+      <option name="exePath" value="$USER_HOME$/AppData/Local/.meteor/meteor.bat" />
+      <option name="startBrowserSettings">
+        <browser url="http://localhost:3000" />
+      </option>
+      <meteor-runner-state>
+        <startBrowserSettings>
+          <browser url="http://localhost:3000" />
+        </startBrowserSettings>
+      </meteor-runner-state>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Meteor.warzone challenge" />
+      <item itemvalue="Node.js.vite.js" />
+    </list>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -111,7 +184,30 @@
       <workItem from="1678762830392" duration="1651000" />
       <workItem from="1678780830313" duration="2000" />
       <workItem from="1678780847454" duration="192000" />
-      <workItem from="1678781171848" duration="2310000" />
+      <workItem from="1678781171848" duration="21910000" />
+      <workItem from="1678873751777" duration="5045000" />
+      <workItem from="1678931414930" duration="103000" />
+      <workItem from="1678931548804" duration="1470000" />
+      <workItem from="1678933112641" duration="3108000" />
+      <workItem from="1679000593560" duration="2776000" />
+      <workItem from="1679042742521" duration="1494000" />
+      <workItem from="1679093193735" duration="141000" />
+      <workItem from="1679093376594" duration="2447000" />
+      <workItem from="1679123058112" duration="596000" />
+      <workItem from="1679123701213" duration="88000" />
+      <workItem from="1679123813066" duration="5724000" />
+      <workItem from="1679197979733" duration="987000" />
+      <workItem from="1679207518178" duration="1623000" />
+      <workItem from="1679209190863" duration="3623000" />
+      <workItem from="1679220468963" duration="6665000" />
+      <workItem from="1679233858663" duration="12852000" />
+      <workItem from="1679273667129" duration="2881000" />
+      <workItem from="1679323786506" duration="29259000" />
+      <workItem from="1679375295674" duration="868000" />
+      <workItem from="1679376214522" duration="224000" />
+      <workItem from="1679376461867" duration="20175000" />
+      <workItem from="1679417881215" duration="6055000" />
+      <workItem from="1679449712635" duration="425000" />
     </task>
     <task id="LOCAL-00001" summary="add mmr">
       <created>1677903031858</created>
@@ -162,7 +258,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678734706224</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="fix merge dinguerie">
+      <created>1679447456470</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1679447456470</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,7 +302,8 @@
     <MESSAGE value="add rank icon" />
     <MESSAGE value="equilibrage mmr" />
     <MESSAGE value="add rank parsing" />
-    <option name="LAST_COMMIT_MESSAGE" value="add rank parsing" />
+    <MESSAGE value="fix merge dinguerie" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix merge dinguerie" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

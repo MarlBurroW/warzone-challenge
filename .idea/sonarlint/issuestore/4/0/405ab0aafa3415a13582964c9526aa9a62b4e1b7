@@ -1,0 +1,18 @@
+
+T	Web:S4084"3Add subtitles and description files for this video.(½ö³‘ÿÿÿÿÿ8ï›ş”ğ0
+QWeb:AvoidCommentedOutCodeCheckê"Remove this commented out code.(›Ññæ8ğ›ş”ğ0
+yWeb:MaxLineLengthCheck
+"KSplit this 134 characters long line (which is greater than 120 authorized).(­Ò¾üÿÿÿÿ8ğ›ş”ğ0
+yWeb:MaxLineLengthCheck"KSplit this 159 characters long line (which is greater than 120 authorized).(…˜ì»ıÿÿÿÿ8ğ›ş”ğ0
+uWeb:MaxLineLengthCheck¤"KSplit this 122 characters long line (which is greater than 120 authorized).(ÅÂ¤8ğ›ş”ğ0
+^typescript:S1128ú"5Remove this unused import of 'InformationCircleIcon'.(Õ†üïúÿÿÿÿ8‰‘€•ğ0
+Mtypescript:S1128ü")Remove this unused import of 'tinycolor'.(ĞÔüÕ8‰‘€•ğ0
+}typescript:S3776Õ"TRefactor this function to reduce its Cognitive Complexity from 40 to the 15 allowed.(ŠÍšâÿÿÿÿÿ8’‘€•ğ0
+•typescript:S138Õ"mThis function has 263 lines, which is greater than the 200 lines authorized. Split it into smaller functions.(ŠÍšâÿÿÿÿÿ8’‘€•ğ0
+Štypescript:S1172ª"aRemove the unused function parameter "index" or rename it to "_index" to make intention explicit.(—ßŞõûÿÿÿÿ8’‘€•ğ0
+…typescript:S1172Ù"aRemove the unused function parameter "index" or rename it to "_index" to make intention explicit.(Éıú8’‘€•ğ0
+…typescript:S1172ñ"aRemove the unused function parameter "index" or rename it to "_index" to make intention explicit.(Éıú8’‘€•ğ0
+…typescript:S1172Ï"aRemove the unused function parameter "index" or rename it to "_index" to make intention explicit.(Éıú8’‘€•ğ0
+utypescript:S4138‡"LExpected a `for-of` loop instead of a `for` loop with this simple iteration.(Ôî¥Ôûÿÿÿÿ8“‘€•ğ0
+Htypescript:S1440Ò"$Expected '!==' and instead saw '!='.(½–òä8“‘€•ğ0
+Mtypescript:S1440Ô"$Expected '!==' and instead saw '!='.(ñæèâşÿÿÿÿ8“‘€•ğ0

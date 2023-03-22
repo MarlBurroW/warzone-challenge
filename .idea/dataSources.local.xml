@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="PS-223.8836.42">
+    <data-source name="warzone challenge local" uuid="faa75e11-c25d-41c4-aeaf-2eeee0a0420f">
+      <database-info product="Mongo DB" version="6.0.3" jdbc-version="4.2" driver-name="MongoDB JDBC Driver" driver-version="1.18" dbms="MONGO" exact-version="6.0.3" exact-driver-version="1.18" />
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <auth-provider>no-auth</auth-provider>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="meteor" />
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+  </component>
+</project>

@@ -1,0 +1,9 @@
+
+Htypescript:S1128"%Remove this unused import of 'Score'.(¨ÈÑÃ8¤€€•ğ0
+Itypescript:S1128"&Remove this unused import of 'Player'.(…Ïó8¤€€•ğ0
+mtypescript:S1117-"E'player' is already declared in the upper scope on line 45 column 13.(Í®ÆÉûÿÿÿÿ8¤€€•ğ0
+atypescript:S1535<"9Restrict what this loop acts on by testing each property.(ÁÜ½¿ùÿÿÿÿ8¤€€•ğ0
+otypescript:S4138G"LExpected a `for-of` loop instead of a `for` loop with this simple iteration.(€‰ÍŒ8Üèˆ•ğ0
+Ctypescript:S3512O" Unexpected string concatenation.(æ”‡Ú8¥€€•ğ0
+[typescript:S1854Y"3Remove this useless assignment to variable "score".(°¡ôıÿÿÿÿ8¥€€•ğ0
+ttypescript:S4138`"LExpected a `for-of` loop instead of a `for` loop with this simple iteration.( É•Áùÿÿÿÿ8¥€€•ğ0
