@@ -112,13 +112,11 @@ export const computePlayerScoreFromBacklog = function (
       const playerScore = game.scores[
         playerId as keyof typeof game.scores
       ] as number
-      if (playerScore) {
-        player.totalKills = player.totalKills + playerScore
-        player.gamesPlayed = player.gamesPlayed + 1
-        playerKillList.push(playerScore)
-        if (playerScore >= maxScore) {
-          player.topPlayer++
-        }
+      player.totalKills = player.totalKills + playerScore
+      player.gamesPlayed = player.gamesPlayed + 1
+      playerKillList.push(playerScore)
+      if (playerScore >= maxScore) {
+        player.topPlayer++
       }
     }
 
