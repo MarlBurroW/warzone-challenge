@@ -649,8 +649,10 @@
           this.$refs[ref][0].select()
         }, 1)
       },
-      updateScore(gameId: string, playerId: string, score: number) {
-        Meteor.call('updateGameScore', gameId, playerId, score)
+      updateScore(gameId: string, playerId: string, score: string) {
+        const scoreParse = parseInt(score)
+        const newScore = !isNaN(scoreParse) ? scoreParse : null
+        Meteor.call('updateGameScore', gameId, playerId, newScore)
         this.editedCells[`${gameId}-${playerId}`] = false
       },
       updateRank(gameId: string, rank: number) {
