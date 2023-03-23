@@ -25,7 +25,7 @@ const computeGames = function () {
   // Sort games by createdDate asc to compute in the right order
 
   games = games.sort((a: Game, b: Game) => {
-    return a.createdAt.getTime() - b.createdAt.getTime()
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   })
 
   games.forEach((game, i) => {
@@ -73,7 +73,7 @@ export const computePlayerScoreFromBacklog = function (
   // Sort games by createdDate asc to compute in the right order
 
   games = games.sort((a, b) => {
-    return a.createdAt.getTime() - b.createdAt.getTime()
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   })
 
   // Iterate over games
