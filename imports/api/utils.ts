@@ -93,7 +93,7 @@ export const computePlayerScoreFromBacklog = function (
     // Check if player has played in this game, and only compute score if so
     if (
       Object.prototype.hasOwnProperty.call(game.scores, playerId) &&
-      game.scores[playerId as keyof typeof game.scores]
+      typeof game.scores[playerId as keyof typeof game.scores] === 'number'
     ) {
       if (game.rank) {
         const bonus = getBonus(game.rank)
